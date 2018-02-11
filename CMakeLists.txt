@@ -4,33 +4,16 @@ project( Animesh
          VERSION 0.1 
          LANGUAGES CXX CUDA)
 
-message( "Source directory is ${CMAKE_SOURCE_DIRECTORY}")
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add the binary tree to the search path for inlcude files
-include_directories( "src")
-include_directories( "${PROJECT_BINARY_DIR}" )
+add_subdirectory( main )
+add_subdirectory( tests )
+add_subdirectory( libVectorAngle )
 
 # Write targets to bin directory
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../bin)
-
-# configure a header file to pass some of the CMake settings
-# to the source code
-configure_file (
-  "src/AnimeshConfig.h.in"
-  "include/AnimeshConfig.h"
-  )
-
-# Add the binary tree to the search path for inlcude files
-file(GLOB SOURCES "src/*.cpp")
-
-
-
-# Building the executable
-add_executable(Animesh ${SOURCES})
-
-# We need GTest for testing
-enable_testing()
-find_package(GTest REQUIRED)
 
 
 # We need OpenCV 
@@ -43,9 +26,6 @@ find_package(GTest REQUIRED)
 #include_directories(${freenect2_INCLUDE_DIRS})
 #target_link_libraries(CopyMe3D ${freenect2_LIBRARIES})
 
-# And Eigen3
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
 
 # And CUDA
 #find_package( CUDA REQUIRED )
@@ -56,10 +36,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 # And libpng
 #find_package( PNG REQUIRED )
 #include_directories(${PNG_INCLUDE_DIRECTORIES})
-
-target_compile_features(Animesh PUBLIC cxx_std_11)
-set_target_properties( Animesh PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-
+	
 # Add TSDF
 #include_directories( ${CMAKE_SOURCE_DIR}/../libsdf/include)
 #target_link_libraries(CopyMe3D ${CMAKE_SOURCE_DIR}/../libsdf/library/libsdf.a ${CUDA_LIBRARIES} ${PNG_LIBRARIES})
