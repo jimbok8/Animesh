@@ -30,7 +30,7 @@ add_executable(Animesh ${SOURCES})
 
 # We need GTest for testing
 enable_testing()
-find_package(GTest REUIRED)
+find_package(GTest REQUIRED)
 
 
 # We need OpenCV 
