@@ -28,6 +28,9 @@ file(GLOB SOURCES "src/*.cpp")
 # Building the executable
 add_executable(Animesh ${SOURCES})
 
+# We need GTest for testing
+enable_testing()
+find_package(GTest REUIRED)
 
 
 # We need OpenCV 
