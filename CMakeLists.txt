@@ -7,14 +7,21 @@ project( Animesh
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+
+# Write targets to bin directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
+
+set(CMAKE_CXX_STANDARD 11)
+
+
+# Enable Test 
+enable_testing( )
+
 # Add the binary tree to the search path for inlcude files
 add_subdirectory( main )
 add_subdirectory( tests )
 add_subdirectory( libVectorAngle )
-
-# Write targets to bin directory
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../bin)
-
 
 # We need OpenCV 
 #find_package(OpenCV REQUIRED)

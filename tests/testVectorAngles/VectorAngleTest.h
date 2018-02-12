@@ -1,5 +1,3 @@
-#include "../src/vector_angle.cpp"
- 
 #include "gtest/gtest.h"
 
 // The fixture for testing class Foo.
