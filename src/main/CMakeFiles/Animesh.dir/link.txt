@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/Animesh.dir/main.cpp.o  -o /home/dave/Shared/Projects/Animesh/src/bin/Animesh /home/dave/Shared/Projects/Animesh/src/lib/libVectorAngle.a 

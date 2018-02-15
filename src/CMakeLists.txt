@@ -5,7 +5,7 @@ project( Animesh
          LANGUAGES CXX CUDA)
 
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 # Write targets to bin directory
