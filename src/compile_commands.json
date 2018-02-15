@@ -1,0 +1,37 @@
+[
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/main",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/usr/include/eigen3 -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/include    -std=gnu++11 -o CMakeFiles/Animesh.dir/main.cpp.o -c /home/dave/Shared/Projects/Animesh/src/main/main.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/main/main.cpp"
+},
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/libVectorAngle",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/include -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/src -I/usr/include/eigen3    -std=gnu++11 -o CMakeFiles/VectorAngle.dir/src/angleBetweenVectors.cpp.o -c /home/dave/Shared/Projects/Animesh/src/libVectorAngle/src/angleBetweenVectors.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/libVectorAngle/src/angleBetweenVectors.cpp"
+},
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/libVectorAngle",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/usr/include/eigen3 -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/include    -std=gnu++11 -o CMakeFiles/testVectorAngles.dir/tests/TestAngleBetweenVectors.cpp.o -c /home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/TestAngleBetweenVectors.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/TestAngleBetweenVectors.cpp"
+},
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/libVectorAngle",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/usr/include/eigen3 -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/include    -std=gnu++11 -o CMakeFiles/testVectorAngles.dir/tests/TestMinimiseKL.cpp.o -c /home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/TestMinimiseKL.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/TestMinimiseKL.cpp"
+},
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/libVectorAngle",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/usr/include/eigen3 -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/include    -std=gnu++11 -o CMakeFiles/testVectorAngles.dir/tests/TestVectorRotation.cpp.o -c /home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/TestVectorRotation.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/TestVectorRotation.cpp"
+},
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/libVectorAngle",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/usr/include/eigen3 -I/home/dave/Shared/Projects/Animesh/src/libVectorAngle/include    -std=gnu++11 -o CMakeFiles/testVectorAngles.dir/tests/main.cpp.o -c /home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/main.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/libVectorAngle/tests/main.cpp"
+},
+{
+  "directory": "/media/barracuda/Ubuntu/Projects/Animesh/src/libGraph",
+  "command": "/usr/bin/c++   -I/home/dave/Shared/Projects/Animesh/src -I/usr/include/eigen3 -I/home/dave/Shared/Projects/Animesh/src/libGraph    -std=gnu++11 -o CMakeFiles/Mesh.dir/GraphNode.cpp.o -c /home/dave/Shared/Projects/Animesh/src/libGraph/GraphNode.cpp",
+  "file": "/home/dave/Shared/Projects/Animesh/src/libGraph/GraphNode.cpp"
+}
+]

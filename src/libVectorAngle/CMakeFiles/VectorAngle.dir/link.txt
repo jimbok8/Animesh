@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/dave/Shared/Projects/Animesh/src/lib/libVectorAngle.a  CMakeFiles/VectorAngle.dir/src/angleBetweenVectors.cpp.o
+/usr/bin/ranlib /home/dave/Shared/Projects/Animesh/src/lib/libVectorAngle.a

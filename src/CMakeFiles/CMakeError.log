@@ -1,0 +1,55 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/dave/Shared/Projects/Animesh/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_0f3b6/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0f3b6.dir/build.make CMakeFiles/cmTC_0f3b6.dir/build
+make[1]: Entering directory '/media/barracuda/Ubuntu/Projects/Animesh/src/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0f3b6.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -std=gnu++11 -o CMakeFiles/cmTC_0f3b6.dir/CheckSymbolExists.cxx.o -c /home/dave/Shared/Projects/Animesh/src/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+Linking CXX executable cmTC_0f3b6
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0f3b6.dir/link.txt --verbose=1
+/usr/bin/c++       CMakeFiles/cmTC_0f3b6.dir/CheckSymbolExists.cxx.o  -o cmTC_0f3b6 
+CMakeFiles/cmTC_0f3b6.dir/CheckSymbolExists.cxx.o: In function `main':
+CheckSymbolExists.cxx:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_0f3b6.dir/build.make:97: recipe for target 'cmTC_0f3b6' failed
+make[1]: *** [cmTC_0f3b6] Error 1
+make[1]: Leaving directory '/media/barracuda/Ubuntu/Projects/Animesh/src/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_0f3b6/fast' failed
+make: *** [cmTC_0f3b6/fast] Error 2
+
+File /home/dave/Shared/Projects/Animesh/src/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/dave/Shared/Projects/Animesh/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a1392/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a1392.dir/build.make CMakeFiles/cmTC_a1392.dir/build
+make[1]: Entering directory '/media/barracuda/Ubuntu/Projects/Animesh/src/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a1392.dir/CheckFunctionExists.cxx.o
+/usr/bin/c++    -DCHECK_FUNCTION_EXISTS=pthread_create   -std=gnu++11 -o CMakeFiles/cmTC_a1392.dir/CheckFunctionExists.cxx.o -c /home/dave/Shared/Projects/Animesh/src/CMakeFiles/CheckLibraryExists/CheckFunctionExists.cxx
+Linking CXX executable cmTC_a1392
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a1392.dir/link.txt --verbose=1
+/usr/bin/c++   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_a1392.dir/CheckFunctionExists.cxx.o  -o cmTC_a1392 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_a1392.dir/build.make:97: recipe for target 'cmTC_a1392' failed
+make[1]: *** [cmTC_a1392] Error 1
+make[1]: Leaving directory '/media/barracuda/Ubuntu/Projects/Animesh/src/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_a1392/fast' failed
+make: *** [cmTC_a1392/fast] Error 2
+
+
