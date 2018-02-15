@@ -13,4 +13,4 @@ target_link_libraries(testVectorAngles VectorAngle ${GTEST_LIBRARIES}  ${CMAKE_T
 # Stash it
 install(TARGETS testVectorAngles DESTINATION bin)
 
-add_test( VectorAngleTest bin/testVectorAngles)
+add_test( NAME VectorAngleTest COMMAND testVectorAngles)
