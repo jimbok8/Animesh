@@ -3,7 +3,7 @@
 #include <VectorAngle/angleBetweenVectors.h>
 
 namespace {
-TEST(TestAngleBetweenVectors, ZeroLengthVectorsShouldThrow) { 
+TEST(TestAngleBetweenVectors, ZeroLengthVectorsShouldThrow) {
     Eigen::Vector3f v1{ 0.1f, 0.2f, 0.3f };
     Eigen::Vector3f v2{ 0.0f, 0.0f, 0.0f };
 
@@ -11,14 +11,14 @@ TEST(TestAngleBetweenVectors, ZeroLengthVectorsShouldThrow) {
         angleBetweenVectors( v1, v2 );
         FAIL() << "Expected std::invalid_argument";
     }
-    catch ( std::invalid_argument const & err ){
+    catch ( std::invalid_argument const & err ) {
         EXPECT_EQ( err.what(), std::string( "Vector may not be zero length") );
     }
-    catch( ... ) {
-        FAIL( ) <<"Expected std::invalid_argument";
+    catch ( ... ) {
+        FAIL( ) << "Expected std::invalid_argument";
     }
 }
- 
+
 TEST(TestAngleBetweenVectors, IdenticalVectorsShouldReturnZero) {
     Eigen::Vector3f v1{ 0.1f, 0.2f, 0.3f };
     Eigen::Vector3f v2{ 0.1f, 0.2f, 0.3f };
@@ -30,7 +30,7 @@ TEST(TestAngleBetweenVectors, IdenticalVectorsShouldReturnZero) {
 }
 
 //
-// Z Plane 
+// Z Plane
 //
 
 // 45 Degrees
@@ -124,7 +124,7 @@ TEST(TestAngleBetweenVectors, Test360DegreesShouldReturnZero) {
 
 
 //
-// XZ Plane 
+// XZ Plane
 //
 
 // 45 Degrees
@@ -196,7 +196,7 @@ TEST(TestAngleBetweenVectors, Test315DegreesInYPlaneShouldReturnPIOverFour) {
 
 
 //
-// YZ Plane 
+// YZ Plane
 //
 
 // 45 Degrees
@@ -266,102 +266,6 @@ TEST(TestAngleBetweenVectors, Test360DegreesInXPlaneShouldReturnZero) {
 
     EXPECT_FLOAT_EQ( expected, actual );
 }
-
-
-//
-// Test the 4-RoSy smallestAngle code
-//
-
-// TEST(TestAngleBetweenVectors, ZeroLengthRoSyVectorsShouldThrow) { 
-//     Eigen::Vector3f v1{ 0.1f, 0.2f, 0.3f };
-//     Eigen::Vector3f v2{ 0.0f, 0.0f, 0.0f };
-
-//     try {
-//         int i=-1, j=-1;
-//         smallestAngleBetween4RoSyVectors( v1, v2, i, j );
-//         FAIL() << "Expected std::invalid_argument";
-//     }
-//     catch ( std::invalid_argument const & err ){
-//         EXPECT_EQ( err.what(), std::string( "Vector may not be zero length") );
-//     }
-//     catch( ... ) {
-//         FAIL( ) <<"Expected std::invalid_argument";
-//     }
-// }
- 
-// TEST(TestAngleBetweenVectors, IdenticalRoSyVectorsShouldReturnZero) {
-//     Eigen::Vector3f v1{ 0.1f, 0.2f, 0.3f };
-//     Eigen::Vector3f v2{ 0.1f, 0.2f, 0.3f };
-
-//     int i=-1, j=-1;
-//     float expected = 0.0f;
-//     float actual   = smallestAngleBetween4RoSyVectors( v1, v2, i, j );
-
-//     EXPECT_FLOAT_EQ( expected, actual );
-//     EXPECT_EQ( 0, i );
-//     EXPECT_EQ( 0, j );
-// }
-
-// //
-// // Z Plane 
-// //
-
-// // 30 Degrees
-// TEST(TestAngleBetweenVectors, Test30DegreeZPlaneRoSyShouldReturn_30_0_0) {
-//     Eigen::Vector3f v1{ sqrt( 3.0f ), 0.0f, 0.0f };
-//     Eigen::Vector3f v2{ sqrt( 3.0f ), 1.0f, 0.0f };
-
-//     int i=-1, j=-1;
-//     float expected = M_PI / 6;
-//     float actual   = smallestAngleBetween4RoSyVectors( v1, v2, i, j );
-
-//     EXPECT_FLOAT_EQ( expected, actual );
-//     EXPECT_EQ( 0, i );
-//     EXPECT_EQ( 0, j );
-// }
-
-// // 45 Degrees
-// TEST(TestAngleBetweenVectors, Test45DegreeZPlaneRoSyShouldReturn_45_0_0) {
-//     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
-//     Eigen::Vector3f v2{ 1.0f, 1.0f, 0.0f };
-
-//     int i=-1, j=-1;
-//     float expected = M_PI / 4.0f;
-//     float actual   = smallestAngleBetween4RoSyVectors( v1, v2, i, j );
-
-//     EXPECT_FLOAT_EQ( expected, actual );
-//     EXPECT_EQ( 0, i );
-//     EXPECT_EQ( 0, j );
-// }
-
-// // 60 Degrees
-// TEST(TestAngleBetweenVectors, Test60DegreeZPlaneRoSyShouldReturn_60_1_0) {
-//     Eigen::Vector3f v1{ 1.0f, 0.0f, 0.0f };
-//     Eigen::Vector3f v2{ 1.0f, 2.0f, 0.0f };
-
-//     int i=-1, j=-1;
-//     float expected = M_PI / 4.0f;
-//     float actual   = smallestAngleBetween4RoSyVectors( v1, v2, i, j );
-
-//     EXPECT_FLOAT_EQ( expected, actual );
-//     EXPECT_EQ( 1, i );
-//     EXPECT_EQ( 0, j );
-// }
-
-// // 90 Degrees
-// TEST(TestAngleBetweenVectors, Test60DegreeZPlaneRoSyShouldReturn_0_1_0) {
-//     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
-//     Eigen::Vector3f v2{ 0.0f, 1.0f, 0.0f };
-
-//     int i=-1, j=-1;
-//     float expected = M_PI / 4.0f;
-//     float actual   = smallestAngleBetween4RoSyVectors( v1, v2, i, j );
-
-//     EXPECT_FLOAT_EQ( expected, actual );
-//     EXPECT_EQ( 1, i );
-//     EXPECT_EQ( 0, j );
-// }
-
 }
 
 

@@ -31,12 +31,12 @@ add_executable(
 target_link_libraries(
 	testGraph Graph ${GTEST_LIBRARIES}  ${CMAKE_THREAD_LIBS_INIT} )
 
-add_test( NAME ZeroLengthVectorsShouldThrow COMMAND testGraph --gtest_filter=ZeroLengthVectorsShouldThrow)
-add_test( NAME TestNormalSetCorrectlyFromConstructor COMMAND testGraph --gtest_filter=TestNormalSetCorrectlyFromConstructor)
-add_test( NAME TestPointSetCorrectlyFromConstructor COMMAND testGraph --gtest_filter=TestPointSetCorrectlyFromConstructor)
-add_test( NAME TestPointsAndNormalsWithDifferentSizeShouldThrow COMMAND testGraph --gtest_filter=TestPointsAndNormalsWithDifferentSizeShouldThrow)
-add_test( NAME TestNeighboursIncorrectlySizedShouldThrow COMMAND testGraph --gtest_filter=TestNeighboursIncorrectlySizedShouldThrow)
-add_test( NAME TestSizeIsCorrectlySet COMMAND testGraph --gtest_filter=TestSizeIsCorrectlySet)
+add_test( NAME TestGraphZeroLengthVectorsShouldThrow COMMAND testGraph --gtest_filter=ZeroLengthVectorsShouldThrow)
+add_test( NAME TestGraphNormalSetCorrectlyFromConstructor COMMAND testGraph --gtest_filter=TestNormalSetCorrectlyFromConstructor)
+add_test( NAME TestGraphPointSetCorrectlyFromConstructor COMMAND testGraph --gtest_filter=TestPointSetCorrectlyFromConstructor)
+add_test( NAME TestGraphPointsAndNormalsWithDifferentSizeShouldThrow COMMAND testGraph --gtest_filter=TestPointsAndNormalsWithDifferentSizeShouldThrow)
+add_test( NAME TestGraphNeighboursIncorrectlySizedShouldThrow COMMAND testGraph --gtest_filter=TestNeighboursIncorrectlySizedShouldThrow)
+add_test( NAME TestGraphSizeIsCorrectlySet COMMAND testGraph --gtest_filter=TestSizeIsCorrectlySet)
 
 # Stash it
 install(TARGETS testGraph DESTINATION bin)
