@@ -21,6 +21,7 @@ enable_testing( )
 add_subdirectory( main )
 add_subdirectory( libVectorAngle )
 add_subdirectory( libGraph )
+add_subdirectory( libElement )
 
 
 # We need OpenCV 
