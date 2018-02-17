@@ -1,5 +1,7 @@
 #include <Eigen/Core>
 
+#pragma once
+
 /*
  * GraphNode is a node in a Graph. It stores the 3D location of the element
  * and it's unit normal vector

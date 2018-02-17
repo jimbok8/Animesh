@@ -1,5 +1,8 @@
 #include <Eigen/Core>
 #include <Graph/GraphNode.h>
+#include <vector>
+
+#pragma once
 
 
 /*
@@ -18,5 +21,15 @@ public:
 	 * @param normals A 3xN matrix where the ith column is the normal for the ith point
 	 * @param neighbours An NxN sparse matrix with the entry at (i,j) being 1 if points i and j are neighbours otherwise 0.
 	 */
-	Graph( const Eigen::Matrix<float, 3, Eigen::Dynamic>& points, const Eigen::Matrix<float, 3, Eigen::Dynamic>& normals, Eigen::MatrixXf& neighbours );
+	Graph( const Eigen::Matrix<float, 3, Eigen::Dynamic>& points, const Eigen::Matrix<float, 3, Eigen::Dynamic>& normals, Eigen::MatrixXi& neighbours );
+
+	/**
+	 * @return the size of the Graph which is the number of GraphNodes
+	 */
+	std::size_t size();
+
+
+private:
+	/** The nodes for this graph */
+	std::vector<GraphNode> mNodes;
 };
