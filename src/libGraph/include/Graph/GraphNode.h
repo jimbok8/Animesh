@@ -1,4 +1,5 @@
 #include <Eigen/Core>
+#include <Element/Element.h>
 
 #pragma once
 
@@ -10,27 +11,18 @@
 class GraphNode {
 public:
 	/**
-	 * Make a GraphNode given an existing point and normal
-	 * @param point The point
-	 * @param normak The normal (assumed to be a unit vector );
+	 * Make a GraphNode given an Element
+	 * @param element The Element to store in the node
 	 */
-	GraphNode( const Eigen::Vector3f& point, const Eigen::Vector3f& normal );
+	GraphNode( const Element& element );
 
 	/**
-	 * @return the normal for this node
+	 * @return the Element for this node
 	 */
-	const Eigen::Vector3f& normal() const {return mNormal; }
-
-	/**
-	 * @return the point for this node
-	 */
-	const Eigen::Vector3f& point() const {return mPoint; };
+	const Element& element() const { return mElement; };
 
 
 private:	
-	/** The point in space */
-	Eigen::Vector3f mPoint;
-
-	/** The normal to the point */
-	Eigen::Vector3f mNormal;
+	/** The Element */
+	Element mElement;
 };

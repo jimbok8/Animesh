@@ -1,9 +1,10 @@
 #include <Eigen/Core>
 #include <Graph/GraphNode.h>
+#include <Graph/EdgeManager.h>
 #include <vector>
+#include <unordered_map>
 
 #pragma once
-
 
 /*
  * Graph is graph representing a 3D structure (point cloud, mesh, triangle soup.
@@ -16,20 +17,30 @@
 class Graph {
 public:
 	/**
-	 * Construct a Graph given an array of 3D points, their normals and their neighbours.
-	 * @param points A 3xN matrix where N is the number of points and the ith column is the 3D location of that point
-	 * @param normals A 3xN matrix where the ith column is the normal for the ith point
-	 * @param neighbours An NxN sparse matrix with the entry at (i,j) being 1 if points i and j are neighbours otherwise 0.
+	 * Construct a Graph with no nodes
+	 * @param edgeManager A class responsible for updating the edges of a graph as new Elements are added
 	 */
-	Graph( const Eigen::Matrix<float, 3, Eigen::Dynamic>& points, const Eigen::Matrix<float, 3, Eigen::Dynamic>& normals, Eigen::MatrixXi& neighbours );
+	Graph( const EdgeManager * const edgeManager );
+
+	/**
+	 * Add an element to the Graph, updating neighbourhoods accordingly
+	 */
+	void addElement( const Element& element );
 
 	/**
 	 * @return the size of the Graph which is the number of GraphNodes
 	 */
-	std::size_t size();
+	std::size_t size() const;
 
 
 private:
 	/** The nodes for this graph */
-	std::vector<GraphNode> mNodes;
+	std::vector<GraphNode> 	mNodes;
+
+	/** The EdgeManager */
+	const EdgeManager 			* const mEdgeManager;
+
+
+	/** Neighbours of nodes */
+	//std::unordered_map<GraphNode, std::vector<GraphNode *>> mNeighbours;
 };

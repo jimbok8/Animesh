@@ -8,6 +8,13 @@ target_include_directories(
 	${EIGEN3_INCLUDE_DIR}
 	PRIVATE src)
 
+
+# Depend on a library that we defined in the top-level file
+target_link_libraries(
+	Graph 
+    Element)
+
+
 # This makes the project importable from the build directory
 export(
 	TARGETS Graph
@@ -17,11 +24,19 @@ export(
 # Every library has unit tests, of course
 
 # GTest requires pthreads
-find_package( Threads REQUIRED )
-find_package( GTest REQUIRED )
+# find_package( Threads REQUIRED )
+# find_package( GTest REQUIRED )
+# find_package( GMock REQUIRED )
 
-# Include specific tests
-include_directories("${GTEST_INCLUDE_DIRS}")
+# # Include specific tests
+# include_directories(
+# 	"${GTEST_INCLUDE_DIRS}"
+# 	"${GMOCK_INCLUDE_DIRS}")
+
+# Need Eigen3
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 
 file( GLOB TEST_SOURCES "tests/*.cpp" )
 add_executable(
@@ -29,18 +44,14 @@ add_executable(
     ${TEST_SOURCES})
 
 target_link_libraries(
-	testGraph Graph ${GTEST_LIBRARIES}  ${CMAKE_THREAD_LIBS_INIT} )
+	testGraph Graph gtest gmock
+	# ${GTEST_LIBRARIES}
+	# ${GMOCK_LIBRARIES}
+	${CMAKE_THREAD_LIBS_INIT} )
 
-add_test( NAME TestGraphZeroLengthVectorsShouldThrow COMMAND testGraph --gtest_filter=ZeroLengthVectorsShouldThrow)
-add_test( NAME TestGraphNormalSetCorrectlyFromConstructor COMMAND testGraph --gtest_filter=TestNormalSetCorrectlyFromConstructor)
-add_test( NAME TestGraphPointSetCorrectlyFromConstructor COMMAND testGraph --gtest_filter=TestPointSetCorrectlyFromConstructor)
-add_test( NAME TestGraphPointsAndNormalsWithDifferentSizeShouldThrow COMMAND testGraph --gtest_filter=TestPointsAndNormalsWithDifferentSizeShouldThrow)
-add_test( NAME TestGraphNeighboursIncorrectlySizedShouldThrow COMMAND testGraph --gtest_filter=TestNeighboursIncorrectlySizedShouldThrow)
-add_test( NAME TestGraphSizeIsCorrectlySet COMMAND testGraph --gtest_filter=TestSizeIsCorrectlySet)
+add_test( NAME TestGraphAddElementShouldMakeSizeLargerByOne COMMAND testGraph --gtest_filter=TestGraph.AddElementShouldMakeSizeLargerByOne)
+add_test( NAME TestGraphNullEdgeManagerShouldThrow COMMAND testGraph --gtest_filter=TestGraph.NullEdgeManagerShouldThrow)
+add_test( NAME TestGraphAddElementShouldCallEdgeManager COMMAND testGraph --gtest_filter=TestGraph.AddElementShouldCallEdgeManager)
 
 # Stash it
 install(TARGETS testGraph DESTINATION bin)
-
-# Need Eigen3
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
