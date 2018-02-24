@@ -10,12 +10,15 @@ void TestField::TearDown( ) {}
 
 /* **********************************************************************
  * *                                                                    *
- * * Graph Constructor tests                                            *
+ * * Field Constructor tests                                            *
  * *                                                                    *
  * **********************************************************************/
 
-TEST_F(TestField, TestGraphIsSetFromConstructor) { 
+TEST_F(TestField, CanIterateOverAllElements) { 
         Graph graph{ new NNEdgeManager{ 3} };
+        graph.addElement( el_1_1_1 );
+        graph.addElement( el_1_1_2 );
+        graph.addElement( el_1_1_3 );
+
         Field field{ &graph };
-        FAIL( );
 }

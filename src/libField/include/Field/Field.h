@@ -1,5 +1,7 @@
 #pragma once 
 
+#include <unordered_map>
+
 #include "FieldData.h"
 #include <Graph/Graph.h>
 #include <unordered_map>
@@ -11,6 +13,8 @@ public:
 	 * This method will create a map from location to FieldData for each location in the Graph.
 	 */
 	Field( const Graph * const graph );
+
+	~Field( );
 
 
 private:

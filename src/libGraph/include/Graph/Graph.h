@@ -24,6 +24,8 @@ public:
 	 */
 	Graph( const EdgeManager * const edge_manager );
 
+	~Graph( );
+
 	/**
 	 * Add an element to the Graph, updating neighbourhoods accordingly
 	 */
@@ -34,6 +36,14 @@ public:
 	 */
 	std::size_t size() const;
 
+	/** Iterator type */
+	typedef std::vector<GraphNode *>::const_iterator const_iterator;
+
+	/** */
+ 	const_iterator begin() const { return m_nodes.begin(); }
+
+ 	/** */
+  	const_iterator end() const { return m_nodes.end(); }
 
 private:
 	/** The nodes for this graph */

@@ -5,6 +5,12 @@ Graph::Graph( const EdgeManager * const edge_manager ) : m_edge_manager{ edge_ma
         throw std::invalid_argument{ "EdgeManager may not be null" };
 }
 
+Graph::~Graph( ) {
+	// Delete all GraphNodes
+	for( auto iter = m_nodes.begin(); iter != m_nodes.end(); ++iter ) {
+		delete (*iter);
+	}
+}
 
 void Graph::addElement( const Element& element ) {
     // Make a new GraphNode

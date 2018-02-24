@@ -2,14 +2,13 @@
 #include "gmock/gmock.h"
 
 #include <Graph/Graph.h>
-#include <Graph/GraphNode.h>
 
 #include "MockEdgeManager.h"
 #include "TestGraph.h"
 
-using ::testing::_;
+void TestGraph::SetUp( ) {}
+void TestGraph::TearDown( ) {}
 
-namespace {
 
     /* **********************************************************************
      * *                                                                    *
@@ -17,7 +16,7 @@ namespace {
      * *                                                                    *
      * **********************************************************************/
 
-    TEST(TestGraph, NullEdgeManagerShouldThrow) { 
+    TEST_F(TestGraph, NullEdgeManagerShouldThrow) { 
         try {
             Graph graph{ nullptr };
             FAIL() << "Expected std::invalid_argument";
@@ -31,17 +30,14 @@ namespace {
     }
     
 
-    TEST(TestGraph, AddElementShouldMakeSizeLargerByOne) { 
+    TEST_F(TestGraph, AddElementShouldMakeSizeLargerByOne) { 
     	MockEdgeManager em; 
     	Graph graph{ &em };
 
     	std::size_t old_size = graph.size();
     	std::size_t expected_size = old_size + 1;
-        Eigen::Vector3f location{ 1.0f, 2.0f, 3.0f };
-        Eigen::Vector3f   normal{ 1.0f, 0.0f, 0.0f };
-        Element element{ location, normal };
 
-        graph.addElement( element );
+      graph.addElement( el_1_1_1 );
 
     	std::size_t actual_size = graph.size();
     	EXPECT_EQ( expected_size, actual_size );
@@ -52,16 +48,34 @@ namespace {
       * *  Add Elements                                                      *
       * *                                                                    *
       * **********************************************************************/
-    TEST(TestGraph, AddElementShouldCallEdgeManager) { 
+    TEST_F(TestGraph, AddElementShouldCallEdgeManager) { 
+      using ::testing::_;
+
+
     	MockEdgeManager em; 
     	Graph graph{ &em };
 
-      Eigen::Vector3f location{ 1.0f, 2.0f, 3.0f };
-      Eigen::Vector3f   normal{ 1.0f, 0.0f, 0.0f };
-      Element element{ location, normal };
-
   		EXPECT_CALL( em, performEdgeManagement( _, _) ).Times( 1 ); 
 
-      graph.addElement( element );
+      graph.addElement( el_1_1_1 );
     }
-}
+
+
+    TEST_F(TestGraph, IteratorShouldWork ) { 
+      MockEdgeManager em; 
+      Graph graph{ &em };
+
+      graph.addElement( el_1_1_1 );
+      graph.addElement( el_1_1_2 );
+      graph.addElement( el_1_1_3 );
+
+      auto iter = graph.begin();
+        // Should be three elements
+      EXPECT_EQ( el_1_1_1, (*iter)->element() );
+      ++iter;
+      EXPECT_EQ( el_1_1_2, (*iter)->element() );
+      ++iter;
+      EXPECT_EQ( el_1_1_3, (*iter)->element() );
+      ++iter;
+      EXPECT_EQ( graph.end(), iter );
+    }

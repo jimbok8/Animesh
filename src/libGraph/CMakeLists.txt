@@ -42,6 +42,8 @@ target_link_libraries(
 add_test( NAME TestGraphAddElementShouldMakeSizeLargerByOne COMMAND testGraph --gtest_filter=TestGraph.AddElementShouldMakeSizeLargerByOne)
 add_test( NAME TestGraphNullEdgeManagerShouldThrow COMMAND testGraph --gtest_filter=TestGraph.NullEdgeManagerShouldThrow)
 add_test( NAME TestGraphAddElementShouldCallEdgeManager COMMAND testGraph --gtest_filter=TestGraph.AddElementShouldCallEdgeManager)
+add_test( NAME TestGraphIteratorShouldWork COMMAND testGraph --gtest_filter=TestGraph.IteratorShouldWork)
+
 
 add_test( NAME TestNNEdgeManagerInsertNodeInEmptyListShouldInsertANode COMMAND testGraph --gtest_filter=TestNNEdgeManager.insertNodeInEmptyListShouldInsertANode)
 add_test( NAME TestNNEdgeManagerInsertNodeInEmptyListShouldInsertTheRightNode COMMAND testGraph --gtest_filter=TestNNEdgeManager.insertNodeInEmptyListShouldInsertTheRightNode)
