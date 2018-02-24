@@ -35,7 +35,7 @@ public:
 
 private:
 	/** The nodes for this graph */
-	std::vector<GraphNode> 	mNodes;
+	std::vector<GraphNode *> 	mNodes;
 
 	/** The EdgeManager */
 	const EdgeManager 			* const mEdgeManager;

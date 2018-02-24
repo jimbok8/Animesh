@@ -16,5 +16,5 @@ public:
 	/**
 	 * Perform edge management
 	 */
-	virtual void performEdgeManagement( GraphNode& newNode, std::vector<GraphNode> existingNodes ) = 0;
+	virtual void performEdgeManagement( GraphNode * newNode, std::vector<GraphNode *>& existingNodes ) const = 0;
 };

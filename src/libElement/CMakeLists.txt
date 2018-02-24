@@ -20,11 +20,11 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 # Every library has unit tests, of course
 
 # GTest requires pthreads
-find_package( Threads REQUIRED )
-find_package( GTest REQUIRED )
+# find_package( Threads REQUIRED )
+# find_package( GTest REQUIRED )
 
 # Include specific tests
-include_directories("${GTEST_INCLUDE_DIRS}")
+# include_directories("${GTEST_INCLUDE_DIRS}")
 
 file( GLOB TEST_SOURCES "tests/*.cpp" )
 add_executable(
@@ -32,7 +32,9 @@ add_executable(
     ${TEST_SOURCES})
 
 target_link_libraries(
-	testElement Element ${GTEST_LIBRARIES}  ${CMAKE_THREAD_LIBS_INIT} )
+	testElement 
+	Element gtest gmock)
+
 
 # Stash it
 install(TARGETS testElement DESTINATION bin)

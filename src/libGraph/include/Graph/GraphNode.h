@@ -1,5 +1,6 @@
 #include <Eigen/Core>
 #include <Element/Element.h>
+#include <vector>
 
 #pragma once
 
@@ -19,10 +20,18 @@ public:
 	/**
 	 * @return the Element for this node
 	 */
-	const Element& element() const { return mElement; };
+	const Element& element() const { return m_element; };
+
+	/**
+	 * @return the neighbours of this GraphNode
+	 */
+	std::vector<GraphNode *>& 	neighbours()  { return m_neighbours; };
 
 
 private:	
 	/** The Element */
-	Element mElement;
+	Element						m_element;
+
+	/** Neighbours of this node */
+	std::vector<GraphNode *> 	m_neighbours;
 };

@@ -1,15 +1,17 @@
 #include <iostream>
 
 #include <VectorAngle/angleBetweenVectors.h>
+#include <Graph/Graph.h>
+
 
 int main( int argc, char * argv[] ) {
 	using namespace Eigen;
 
-	Vector3f v1{ 1.0f, 2.0f, 3.0f };
-	Vector3f v2{ 1.0f, 2.0f, 3.0f };
 
-	float a = angleBetweenVectors( v1, v2 );
+	Graph g{ };
 
-	std::cout << "Angle is " << a << std::endl;
+	g.add
+
+
     return 0;
 }

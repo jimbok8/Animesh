@@ -20,4 +20,4 @@ add_executable(Animesh ${SOURCES})
 target_link_libraries(Animesh VectorAngle )
 
 target_compile_features(Animesh PUBLIC cxx_std_11)
-set_target_properties( Animesh PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+#set_target_properties( Animesh PROPERTIES CUDA_SEPARABLE_COMPILATION ON)

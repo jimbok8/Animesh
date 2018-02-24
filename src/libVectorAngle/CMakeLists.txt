@@ -22,11 +22,11 @@ export(
 # Every library has unit tests, of course
 
 # GTest requires pthreads
-find_package( Threads REQUIRED )
-find_package( GTest REQUIRED )
+# find_package( Threads REQUIRED )
+#find_package( GTest REQUIRED )
 
 # Include specific tests
-include_directories("${GTEST_INCLUDE_DIRS}")
+# include_directories("${GTEST_INCLUDE_DIRS}")
 
 file( GLOB TEST_SOURCES "tests/*.cpp" )
 add_executable(
@@ -34,7 +34,7 @@ add_executable(
     ${TEST_SOURCES})
 
 target_link_libraries(
-	testVectorAngles VectorAngle ${GTEST_LIBRARIES}  ${CMAKE_THREAD_LIBS_INIT} )
+	testVectorAngles VectorAngle gtest gmock)
 
 add_test( NAME ZeroLengthVectorsShouldThrow COMMAND testVectorAngles --gtest_filter=ZeroLengthVectorsShouldThrow)
 
