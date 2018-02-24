@@ -1,7 +1,7 @@
 #include <Graph/Graph.h>
 
-Graph::Graph( const EdgeManager * const edgeManager ) : mEdgeManager{ edgeManager } {
-    if( edgeManager == nullptr ) 
+Graph::Graph( const EdgeManager * const edge_manager ) : m_edge_manager{ edge_manager } {
+    if( edge_manager == nullptr ) 
         throw std::invalid_argument{ "EdgeManager may not be null" };
 }
 
@@ -11,13 +11,13 @@ void Graph::addElement( const Element& element ) {
     GraphNode * graph_node = new GraphNode{ element };
 
     // Use the edge manager to update the graph
-    mEdgeManager->performEdgeManagement( graph_node, mNodes );
+    m_edge_manager->performEdgeManagement( graph_node, m_nodes );
 
     // Add the new node to the graph
-    mNodes.push_back( graph_node );
+    m_nodes.push_back( graph_node );
 }
 
 
 std::size_t Graph::size() const {
-	return mNodes.size();
+	return m_nodes.size();
 }

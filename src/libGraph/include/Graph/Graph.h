@@ -20,9 +20,9 @@ class Graph {
 public:
 	/**
 	 * Construct a Graph with no nodes
-	 * @param edgeManager A class responsible for updating the edges of a graph as new Elements are added
+	 * @param edge_manager A class responsible for updating the edges of a graph as new Elements are added
 	 */
-	Graph( const EdgeManager * const edgeManager );
+	Graph( const EdgeManager * const edge_manager );
 
 	/**
 	 * Add an element to the Graph, updating neighbourhoods accordingly
@@ -37,8 +37,8 @@ public:
 
 private:
 	/** The nodes for this graph */
-	std::vector<GraphNode *> 	mNodes;
+	std::vector<GraphNode *> 	m_nodes;
 
 	/** The EdgeManager */
-	const EdgeManager 			* const mEdgeManager;
+	const EdgeManager 			* const m_edge_manager;
 };
