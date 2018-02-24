@@ -12,12 +12,14 @@ file(GLOB SOURCES "*.cpp")
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-
-
 # Building the executable
 add_executable(Animesh ${SOURCES})
 
-target_link_libraries(Animesh VectorAngle )
+target_link_libraries(Animesh 
+	VectorAngle
+	Graph
+	Element
+	Field )
 
 target_compile_features(Animesh PUBLIC cxx_std_11)
 #set_target_properties( Animesh PROPERTIES CUDA_SEPARABLE_COMPILATION ON)

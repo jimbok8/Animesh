@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <VectorAngle/angleBetweenVectors.h>
+#include <VectorAngle/VectorAngle.h>
 
 /*
  * Test the function to return k,l that minimise the inter vectr angle

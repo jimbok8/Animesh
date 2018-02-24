@@ -23,16 +23,6 @@ export(
 
 # Every library has unit tests, of course
 
-# GTest requires pthreads
-# find_package( Threads REQUIRED )
-# find_package( GTest REQUIRED )
-# find_package( GMock REQUIRED )
-
-# # Include specific tests
-# include_directories(
-# 	"${GTEST_INCLUDE_DIRS}"
-# 	"${GMOCK_INCLUDE_DIRS}")
-
 # Need Eigen3
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})

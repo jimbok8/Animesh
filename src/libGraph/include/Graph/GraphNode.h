@@ -1,8 +1,9 @@
+#pragma once
+
+#include <vector>
 #include <Eigen/Core>
 #include <Element/Element.h>
-#include <vector>
 
-#pragma once
 
 /*
  * GraphNode is a node in a Graph. It stores the 3D location of the element

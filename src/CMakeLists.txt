@@ -17,11 +17,12 @@ set(CMAKE_CXX_STANDARD 11)
 # Enable Test 
 enable_testing( )
 
-# Add the binary tree to the search path for inlcude files
+# Add libraries
 add_subdirectory( main )
 add_subdirectory( libVectorAngle )
 add_subdirectory( libGraph )
 add_subdirectory( libElement )
+add_subdirectory( libField )
 
 
 # Download and unpack googletest at configure time

@@ -1,6 +1,6 @@
-#include <Graph/GraphNode.h>
-
 #pragma once
+
+#include "GraphNode.h"
 
 /*
  * EdgeManager is responsible for updating the lcoations of Edges in a graph when 

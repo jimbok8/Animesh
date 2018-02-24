@@ -1,6 +1,6 @@
-#include <Eigen/Geometry>
-#include <VectorAngle/angleBetweenVectors.h>
 #include <iostream>
+#include <Eigen/Geometry>
+#include <VectorAngle/VectorAngle.h>
 
 /**
  * Compute the angle between two vectors

@@ -1,6 +1,6 @@
 //#include "TestAngleBetweenVectors.h"
 #include "gtest/gtest.h"
-#include <VectorAngle/angleBetweenVectors.h>
+#include <VectorAngle/VectorAngle.h>
 
 namespace {
 TEST(TestAngleBetweenVectors, ZeroLengthVectorsShouldThrow) {

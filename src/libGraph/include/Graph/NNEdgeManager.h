@@ -1,6 +1,8 @@
-#include <Graph/EdgeManager.h>
+#pragma once
 
-class NNEdgeManager : EdgeManager {
+#include "EdgeManager.h"
+
+class NNEdgeManager : public EdgeManager {
 public:
 	NNEdgeManager( unsigned int max_neighbours ) : m_max_neighbours{ max_neighbours }{};
 	

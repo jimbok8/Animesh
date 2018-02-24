@@ -1,17 +1,14 @@
 #include <iostream>
 
-#include <VectorAngle/angleBetweenVectors.h>
+#include <VectorAngle/VectorAngle.h>
 #include <Graph/Graph.h>
 
 
 int main( int argc, char * argv[] ) {
-	using namespace Eigen;
 
+	EdgeManager *em = new NNEdgeManager{4};
 
-	Graph g{ };
-
-	g.add
-
-
+	Graph g{ em };
+	
     return 0;
 }

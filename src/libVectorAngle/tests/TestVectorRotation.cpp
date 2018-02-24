@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <VectorAngle/angleBetweenVectors.h>
+#include <VectorAngle/VectorAngle.h>
 
 /*
 * Test that rotating a vector around another unit vector gives the correct outptu

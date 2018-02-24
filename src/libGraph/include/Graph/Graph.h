@@ -1,10 +1,12 @@
-#include <Eigen/Core>
-#include <Graph/GraphNode.h>
-#include <Graph/EdgeManager.h>
-#include <vector>
-#include <unordered_map>
-
 #pragma once
+
+
+#include <vector>
+#include <Eigen/Core>
+
+#include "GraphNode.h"
+#include "NNEdgeManager.h"
+
 
 /*
  * Graph is graph representing a 3D structure (point cloud, mesh, triangle soup.
@@ -39,8 +41,4 @@ private:
 
 	/** The EdgeManager */
 	const EdgeManager 			* const mEdgeManager;
-
-
-	/** Neighbours of nodes */
-	//std::unordered_map<GraphNode, std::vector<GraphNode *>> mNeighbours;
 };
