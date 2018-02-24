@@ -2,6 +2,7 @@
 
 #include "FieldData.h"
 #include <Graph/Graph.h>
+#include <unordered_map>
 
 class Field {
 public:

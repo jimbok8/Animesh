@@ -19,18 +19,28 @@ public:
 	/**
 	 * @return the normal for this Element
 	 */
-	const Eigen::Vector3f& normal() const {return mNormal; }
+	const Eigen::Vector3f& normal() const {return m_normal; }
 
 	/**
 	 * @return the location for this Element
 	 */
-	const Eigen::Vector3f& location() const {return mLocation; };
+	const Eigen::Vector3f& location() const {return m_location; };
 
 
 private:	
 	/** The location in space */
-	Eigen::Vector3f mLocation;
+	Eigen::Vector3f m_location;
 
 	/** The normal to the Element */
-	Eigen::Vector3f mNormal;
+	Eigen::Vector3f m_normal;
 };
+
+
+inline bool operator==(const Element& lhs, const Element& rhs){ 
+	if( lhs.location() != rhs.location()) return false;
+	if( lhs.normal() != rhs.normal()) return false;
+	return true;
+}
+inline bool operator!=(const Element& lhs, const Element& rhs){
+	return !operator==(lhs,rhs);
+}
