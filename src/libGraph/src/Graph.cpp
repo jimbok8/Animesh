@@ -27,3 +27,13 @@ void Graph::addElement( const Element& element ) {
 std::size_t Graph::size() const {
 	return m_nodes.size();
 }
+
+/** 
+ * @return the index'th node of the graph
+ */
+const GraphNode * Graph::node( unsigned int index ) const {
+    if( index >= m_nodes.size() )
+        throw std::invalid_argument{ "Index out of range" };
+
+    return m_nodes[index];
+}

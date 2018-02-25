@@ -79,3 +79,36 @@ void TestGraph::TearDown( ) {}
       ++iter;
       EXPECT_EQ( graph.end(), iter );
     }
+
+    TEST_F(TestGraph, DirectAccessShoudWork ) { 
+      MockEdgeManager em; 
+      Graph graph{ &em };
+
+      graph.addElement( el_1_1_1 );
+      graph.addElement( el_1_1_2 );
+      graph.addElement( el_1_1_3 );
+
+      EXPECT_EQ( el_1_1_1, graph.node(0)->element() );
+      EXPECT_EQ( el_1_1_2, graph.node(1)->element() );
+      EXPECT_EQ( el_1_1_3, graph.node(2)->element() );
+    }
+
+    TEST_F(TestGraph, ShouldThrowIfIndexOutOfRange ) { 
+      MockEdgeManager em; 
+      Graph graph{ &em };
+
+      graph.addElement( el_1_1_1 );
+      graph.addElement( el_1_1_2 );
+      graph.addElement( el_1_1_3 );
+
+  try {
+        graph.node( 3 );
+        FAIL() << "Expected std::invalid_argument";
+    }
+    catch ( std::invalid_argument const & err ) {
+        EXPECT_EQ( err.what(), std::string( "Index out of range") );
+    }
+    catch ( ... ) {
+        FAIL( ) << "Expected std::invalid_argument";
+    }
+  }
