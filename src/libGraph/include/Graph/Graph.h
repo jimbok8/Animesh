@@ -45,6 +45,11 @@ public:
  	/** */
   	const_iterator end() const { return m_nodes.end(); }
 
+  	/** 
+  	 * @return the index'th node of the graph
+  	 */
+  	const GraphNode * node( unsigned int index ) const; 
+
 private:
 	/** The nodes for this graph */
 	std::vector<GraphNode *> 	m_nodes;
