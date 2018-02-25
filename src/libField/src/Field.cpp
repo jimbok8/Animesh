@@ -20,4 +20,3 @@ Field::Field( const Graph * const graph  ) : m_graph{ graph } {
 		m_node_to_field_data_map.insert( { gn, fd } );
 	}
 }
-
