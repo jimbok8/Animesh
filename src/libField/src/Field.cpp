@@ -42,3 +42,47 @@ const std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> Field::dataF
 
 	return std::make_tuple(  gn->element().location(), gn->element().normal(), fd->tangent() );
 }
+
+
+
+/**
+ * Smooth the field repeatedly until the error diminishes below
+ * a given theshold
+ */
+
+/**
+ * Smooth the field once. 
+ * Averages neghbouring tangents for each tangent node
+ * @return The maximum value by which any node changed
+ */
+
+/**
+ * Smooth node
+ * Smooth a node in the field by averaging it's neighbours
+ * @return The new vector.
+ */
+Eigen::Vector3f Field::get_smoothed_tangent_data( GraphNode * gn ) {
+	using namespace Eigen;
+
+	Vector3f	total{ 0.0f, 0.0f, 0.0f };
+	int 		count = 0;
+
+	FieldData * node_field_data = m_node_to_field_data_map.at( gn );
+
+	for( auto g = gn->neighbours().begin(); g != gn->neighbours().end(); ++g ) {
+		// Pick up field data
+		FieldData * other_field_data = m_node_to_field_data_map.at( *g );
+
+		// Get the best version given current node data
+		Vector3f best = best_rosy_vector_for( node_field_data->tangent(), gn->element().normal(), 0, 
+											  other_field_data->tangent(),(*g)->element().normal() );
+
+		// Add into running total
+		total += best;
+		count++;
+	}
+
+	// Compute mean
+	total /= count;
+	return total;
+}

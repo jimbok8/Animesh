@@ -25,3 +25,19 @@ private:
 	/** The k-rosy mutiple of 2pi/k for this field node */
 	unsigned int		m_k;
 };
+
+
+/**
+ * @param targetVector The vector we're trying to match
+ * @param targetK The value of K for the target vector which should be locked
+ * @param normal The normal about which to rotate the sourceVector
+ * @param sourceVector the vector to be matched
+ * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
+ * 
+ */
+Eigen::Vector3f best_rosy_vector_for( const Eigen::Vector3f& targetVector, 
+									  const Eigen::Vector3f& targetNormal, 
+									  int targetK, 
+									  const Eigen::Vector3f& sourceVector, 
+									  const Eigen::Vector3f& sourceNormal );
+

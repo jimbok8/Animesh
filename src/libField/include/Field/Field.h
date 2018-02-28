@@ -25,6 +25,13 @@ public:
 	 */
 	unsigned int size() const;
 
+	/**
+	 * Smooth node
+	 * Smooth a node in the field by averaging it's neighbours
+	 * @return The new vector.
+	 */
+	Eigen::Vector3f get_smoothed_tangent_data(  GraphNode * gn );
+
 
 private:
 	/** The Graph - helps us get neghbours */

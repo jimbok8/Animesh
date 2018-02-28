@@ -26,7 +26,7 @@ public:
 	/**
 	 * @return the neighbours of this GraphNode
 	 */
-	std::vector<GraphNode *>& 	neighbours()  { return m_neighbours; };
+	std::vector<GraphNode *>& 	neighbours() { return m_neighbours; };
 
 
 private:	

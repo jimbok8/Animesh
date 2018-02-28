@@ -79,3 +79,7 @@ TEST_F(TestField, GetByIndexReturnsCorrectTangent) {
 
     EXPECT_FLOAT_EQ( 0.0f, el_1_1_2.normal().dot( tangent ) );
 }
+
+TEST_F( TestField, SmoothFieldWorks ) {
+    FAIL();
+}

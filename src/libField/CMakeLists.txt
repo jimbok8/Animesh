@@ -10,6 +10,7 @@ target_include_directories(
 
 target_link_libraries( Field 
 	Element 
+	VectorAngle
 	Graph)
 
 # This makes the project importable from the build directory
@@ -29,14 +30,6 @@ file( GLOB TEST_SOURCES "tests/*.cpp" )
 add_executable(
 	testField
     ${TEST_SOURCES})
-
-# target_link_libraries(
-# 	testField 
-# 	Field 
-# 	Element
-# 	Graph
-# 	gtest gmock
-# 	${CMAKE_THREAD_LIBS_INIT} )
 
 target_link_libraries(
 	testField
