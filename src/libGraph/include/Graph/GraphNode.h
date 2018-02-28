@@ -24,9 +24,20 @@ public:
 	const Element& element() const { return m_element; };
 
 	/**
-	 * @return the neighbours of this GraphNode
+	 * @return the number of neighbours
 	 */
-	std::vector<GraphNode *>& 	neighbours() { return m_neighbours; };
+	std::size_t num_neighbours() const;
+
+	/** Iterator type */
+	typedef std::vector<GraphNode *>::const_iterator const_iterator;
+
+	/** */
+ 	const_iterator begin() const { return m_neighbours.begin(); }
+
+ 	/** */
+  	const_iterator end() const { return m_neighbours.end(); }
+
+  	std::vector<GraphNode *>& 	neighbours( ) { return m_neighbours; } 
 
 
 private:	
