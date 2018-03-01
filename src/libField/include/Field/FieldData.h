@@ -14,6 +14,11 @@ public:
 	Eigen::Vector3f		tangent( ) const;
 
 	/**
+	 * @return the tangent for this FieldData
+	 */
+	void				set_tangent( const Eigen::Vector3f& new_tangent );
+
+	/**
 	 * @return the k value for this field data
 	 */
 	unsigned int		k( ) const;

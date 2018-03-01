@@ -2,7 +2,7 @@
 #include <Eigen/Geometry>
 #include <VectorAngle/VectorAngle.h>
 
-FieldData::FieldData( const Element& e ) {
+FieldData::FieldData( const Element& e )  {
 	// Construct a random tangent vector by:
 	//    Construct random unit vector
 	//    Find cross product with normal-> this is tangent
@@ -20,6 +20,10 @@ FieldData::FieldData( const Element& e ) {
  */
 Eigen::Vector3f FieldData::tangent( ) const {
 	return m_tangent;
+}
+
+void FieldData::set_tangent( const Eigen::Vector3f& new_tangent ) {
+	m_tangent = new_tangent;
 }
 
 /**

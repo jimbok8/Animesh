@@ -61,15 +61,30 @@ const std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> Field::dataF
  * Smooth a node in the field by averaging it's neighbours
  * @return The new vector.
  */
-Eigen::Vector3f Field::get_smoothed_tangent_data( GraphNode * gn ) {
+Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const {
 	using namespace Eigen;
 
-	Vector3f	total{ 0.0f, 0.0f, 0.0f };
-	int 		count = 0;
+	std::vector<Vector3f> neighbour_tangents = best_rosy_vectors_for_neighbours_of_node( gn );
+
+	Vector3f mean = compute_mean_vector( neighbour_tangents );
+
+	return mean;
+}
+
+
+/**
+ * Get a vectpr of the best fit vectors from the neighbours of a specific 
+ * node in the graph.
+ * @return the vector of tangents
+ */
+std::vector<Eigen::Vector3f> Field::best_rosy_vectors_for_neighbours_of_node( const GraphNode * const gn ) const {
+	using namespace Eigen;
+
+	std::vector<Vector3f> neighbours;
 
 	FieldData * node_field_data = m_node_to_field_data_map.at( gn );
 
-	for( auto g = gn->neighbours().begin(); g != gn->neighbours().end(); ++g ) {
+	for( auto g = gn->begin(); g != gn->end(); ++g ) {
 		// Pick up field data
 		FieldData * other_field_data = m_node_to_field_data_map.at( *g );
 
@@ -77,12 +92,62 @@ Eigen::Vector3f Field::get_smoothed_tangent_data( GraphNode * gn ) {
 		Vector3f best = best_rosy_vector_for( node_field_data->tangent(), gn->element().normal(), 0, 
 											  other_field_data->tangent(),(*g)->element().normal() );
 
-		// Add into running total
-		total += best;
-		count++;
+		neighbours.push_back( best );
+	}
+	return neighbours;
+}
+
+
+/**
+ * Smooth the field once, applying smoothing to each node
+ * @return the largest error in tangent
+ */
+float Field::smooth_once( ) {
+	using namespace Eigen;
+
+	std::vector<Vector3f> new_tangents;
+
+	// For each graphnode, compute the smoothed tangent
+	for( auto gn = m_graph->begin(); gn != m_graph->end(); ++gn ) {
+		GraphNode * g = (*gn);
+		Vector3f v = get_smoothed_tangent_data_for_node( g );
+		new_tangents.push_back( v );
+	}
+
+	// And then update the tangents
+	auto gn = m_graph->begin();
+	auto vn = new_tangents.begin();
+	for( ; gn != m_graph->end(); ++gn, ++vn ) {
+		FieldData * fd = m_node_to_field_data_map.at( (*gn) );
+		fd->set_tangent( (*vn) );
+	}
+
+	return 0.0f;
+}
+
+
+
+/**
+ * Compute the average of a set of tangent vectors
+ * 
+ * @return The average vector.
+ */
+Eigen::Vector3f compute_mean_vector( const std::vector<Eigen::Vector3f>& sourceVectors ) {
+
+	if( sourceVectors.size()== 0 ) 
+		throw std::invalid_argument{ "Vector can't be empty" };
+
+	using namespace Eigen;
+
+	Vector3f	total{ 0.0f, 0.0f, 0.0f };
+	int 		count = sourceVectors.size();
+
+	for( auto vi = sourceVectors.begin(); vi != sourceVectors.end(); ++vi ) {
+		total += (*vi);
 	}
 
 	// Compute mean
 	total /= count;
 	return total;
 }
+
