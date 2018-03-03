@@ -6,6 +6,7 @@
 
 #include "GraphNode.h"
 #include "NNEdgeManager.h"
+#include "GridEdgeManager.h"
 
 
 /*

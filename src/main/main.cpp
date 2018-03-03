@@ -11,11 +11,11 @@ using namespace Eigen;
 
 int main( int argc, char * argv[] ) {
 
-	EdgeManager *em = new NNEdgeManager{4};
+	EdgeManager *em = new GridEdgeManager{1.0f};
 	Graph *g = new Graph( em );
 
-	for( int y = 0; y<3; y++ ) {
-		for( int x = 0; x< 3; x++ ) {
+	for( int y = 0; y<10; y++ ) {
+		for( int x = 0; x< 10; x++ ) {
 
 			Vector3f location { x, y, 0.0f };
 			Vector3f normal{ 0.0f, 0.0f, 1.0f };
