@@ -4,324 +4,210 @@
 #include <Graph/Graph.h>
 #include <Graph/GraphNode.h>
 #include <Element/Element.h>
-#include <Graph/NNEdgeManager.h>
-#include "TestNNEdgeManager.h"
+
+#include <Graph/GridEdgeManager.h>
+#include "TestGridEdgeManager.h"
 
 using ::testing::_;
 
 void TestGridEdgeManager::SetUp( ) {
-    gn_origin = new GraphNode{ el_origin };
     gn_1_1_1  = new GraphNode{ el_1_1_1 };
-    gn_1_0_0  = new GraphNode{ el_1_0_0 };
+    gn_2_1_1  = new GraphNode{ el_2_1_1 };
     gn_1_1_2  = new GraphNode{ el_1_1_2 };
-    gn_1_1_3  = new GraphNode{ el_1_1_3 };
-    gn_1_1_4  = new GraphNode{ el_1_1_4 };
-    gn_1_1_5  = new GraphNode{ el_1_1_5 };
+    gn_1_2_1  = new GraphNode{ el_1_2_1 };
+    gn_2_2_1  = new GraphNode{ el_2_2_1 };
+    gn_2_1_2  = new GraphNode{ el_2_1_2 };
+    gn_1_2_2  = new GraphNode{ el_1_2_2 };
 }
 
 
 void TestGridEdgeManager::TearDown( ) {
-    delete gn_origin;
     delete gn_1_1_1;
-    delete gn_1_0_0;
+    delete gn_2_1_1;
     delete gn_1_1_2;
-    delete gn_1_1_3;
-    delete gn_1_1_4;
-    delete gn_1_1_5;
+    delete gn_1_2_1;
+    delete gn_1_2_2;
+    delete gn_2_1_2;
+    delete gn_2_2_1;
 }
 
 
+/* **********************************************************************
+ * *                                                                    *
+ * * Manage edges from node                                             *
+ * *                                                                    *
+ * **********************************************************************/
+TEST_F(TestGridEdgeManager, newNodeAtXGridSpacingShouldBeInserted) { 
 
-    /* **********************************************************************
-     * *                                                                    *
-     * * Adding new edges.                                                  *
-     * *                                                                    *
-     * **********************************************************************/
+	GridEdgeManager edgeManager{ 1.0f };
 
-    TEST_F(TestNNEdgeManager, insertNodeInEmptyListShouldInsertANode) { 
-    	NNEdgeManager edgeManager{3};
+	// Insert
+    GraphNode * gn_new_node = new GraphNode( el_2_1_1 );
+	edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	// Insert
-    	edgeManager.insertNodeInList( gn_1_0_0, gn_origin );
+	EXPECT_EQ( 1, gn_1_1_1->neighbours().size() );
+	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
 
-    	// Expect node was added to list
-    	EXPECT_EQ( 1, gn_origin->neighbours().size() );
-    }
+	EXPECT_EQ( 1, gn_new_node->neighbours().size() );
+    EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
 
+	delete gn_new_node;
+}
 
-    TEST_F(TestNNEdgeManager, insertNodeInEmptyListShouldInsertTheRightNode) { 
-    	NNEdgeManager edgeManager{3};
+TEST_F(TestGridEdgeManager, newNodeFurtherThanXGridSpacingShouldNotBeInserted ) { 
 
-    	// Insert
-    	edgeManager.insertNodeInList( gn_1_0_0, gn_origin );
+    GridEdgeManager edgeManager{ 0.5f };
 
-    	EXPECT_EQ( gn_1_0_0, gn_origin->neighbours().front() );
-    }
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_2_1_1 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
-    TEST_F(TestNNEdgeManager, insertSmallestNodeInListShouldInsertTheNodeAtTheStart) { 
-    	gn_1_1_1->neighbours().push_back( gn_1_1_2);
-    	gn_1_1_1->neighbours().push_back( gn_1_1_4);
+    delete gn_new_node;
+}
 
-    	// Make existing closest to base
-    	Eigen::Vector3f closest{ 1.0f, 0.5f, 1.0f };
-    	Element el_closest{ closest, normal };
-    	GraphNode * gn_closest = new GraphNode{ el_closest };
+TEST_F(TestGridEdgeManager, newNodeCloserThanXGridSpacingShouldNotBeInserted ) { 
 
-    	NNEdgeManager edgeManager{3};
+    GridEdgeManager edgeManager{ 2.0f };
 
-    	// Insert
-    	edgeManager.insertNodeInList( gn_closest, gn_1_1_1 );
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_2_1_1 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	EXPECT_EQ( gn_closest, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->neighbours()[2] );
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
-    	delete gn_closest;
-    }
+    delete gn_new_node;
+}
 
+TEST_F(TestGridEdgeManager, newNodeAtYGridSpacingShouldBeInserted) { 
 
-    TEST_F(TestNNEdgeManager, insertLargestNodeInListShouldInsertTheNodeAtTheEnd) { 
-    	gn_1_1_1->neighbours().push_back( gn_1_1_2);
-    	gn_1_1_1->neighbours().push_back( gn_1_1_4);
+    GridEdgeManager edgeManager{ 1.0f };
 
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_2_1 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	// Make existing furthest to base
-    	Eigen::Vector3f furthest{ 15.0f, 1.0f, 1.0f };
-    	Element el_furthest{ furthest, normal };
-    	GraphNode * gn_furthest = new GraphNode{ el_furthest };
+    EXPECT_EQ( 1, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
 
+    EXPECT_EQ( 1, gn_new_node->neighbours().size() );
+    EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
 
-    	NNEdgeManager edgeManager{3};
+    delete gn_new_node;
+}
 
-    	// Insert
-    	edgeManager.insertNodeInList( gn_furthest, gn_1_1_1);
+TEST_F(TestGridEdgeManager, newNodeFurtherThanYGridSpacingShouldNotBeInserted ) { 
 
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( gn_furthest, gn_1_1_1->neighbours()[2] );
+    GridEdgeManager edgeManager{ 0.5f };
 
-    	delete gn_furthest;
-    }
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_2_1 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    TEST_F(TestNNEdgeManager, insertMiddleNodeInListShouldInsertTheNodeInTheMiddle) { 
-    	gn_1_1_1->neighbours().push_back( gn_1_1_2);
-    	gn_1_1_1->neighbours().push_back( gn_1_1_4);
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
+    delete gn_new_node;
+}
 
-    	// Make existing new_node to base
-    	Eigen::Vector3f new_node{ 1.0f, 3.0f, 1.0f };
-    	Element el_new_node{ new_node, normal };
-    	GraphNode * gn_new_node = new GraphNode{ el_new_node };
+TEST_F(TestGridEdgeManager, newNodeCloserThanYGridSpacingShouldNotBeInserted ) { 
 
-    	NNEdgeManager edgeManager{3};
+    GridEdgeManager edgeManager{ 2.0f };
 
-    	// Insert
-    	edgeManager.insertNodeInList( gn_new_node, gn_1_1_1 );
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_2_1 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->neighbours() [2] );
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
+    delete gn_new_node;
+}
 
-    	delete gn_new_node;
-    }
+TEST_F(TestGridEdgeManager, newNodeAtZGridSpacingShouldBeInserted) { 
 
-    /* **********************************************************************
-     * *                                                                    *
-     * * Manage edges from node                                             *
-     * *                                                                    *
-     * **********************************************************************/
-    TEST_F(TestNNEdgeManager, insertNewNodeToFullNodeRemovesFurthest) { 
+    GridEdgeManager edgeManager{ 1.0f };
 
-    	NNEdgeManager edgeManager{2};
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_1_2 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_2 );
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_4 );
+    EXPECT_EQ( 1, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
 
-    	// Insert
-        GraphNode * gn_new_node = new GraphNode( el_1_1_3 );
-    	edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
+    EXPECT_EQ( 1, gn_new_node->neighbours().size() );
+    EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
 
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[1] );
+    delete gn_new_node;
+}
 
-    	delete gn_new_node;
-    }
+TEST_F(TestGridEdgeManager, newNodeFurtherThanZGridSpacingShouldNotBeInserted ) { 
 
-    TEST_F(TestNNEdgeManager, insertNewNodeToFullNodeRemovesFurthestAddClosest) { 
-    	// Make existing new_node to base
-    	Eigen::Vector3f new_node{ 1.0f, 1.5f, 1.0f };
-    	Element el_new_node{ new_node, normal };
-    	GraphNode * gn_new_node = new GraphNode{ el_new_node };
+    GridEdgeManager edgeManager{ 0.5f };
 
-    	NNEdgeManager edgeManager{2};
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_1_2 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_2 );
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_4 );
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
+    delete gn_new_node;
+}
 
-    	// Insert
-    	edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node);
+TEST_F(TestGridEdgeManager, newNodeCloserThanZGridSpacingShouldNotBeInserted ) { 
 
-    	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
+    GridEdgeManager edgeManager{ 2.0f };
 
-    	delete gn_new_node;
-    }
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_1_2 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
-    /* **********************************************************************
-     * *                                                                    *
-     * * Check that node insertion works well                               *
-     * *                                                                    *
-     * **********************************************************************/
+    delete gn_new_node;
+}
 
+TEST_F(TestGridEdgeManager, newNodeWithXAndYDeltasShouldNotBeInserted ) { 
 
-	TEST_F(TestNNEdgeManager, insertNewNodeMakesEachItsNeghbour ) { 
-		NNEdgeManager edgeManager{2};
-		std::vector<GraphNode *> all_nodes;
-    	edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-    	all_nodes.push_back( gn_1_1_1 );
-    	edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-    	all_nodes.push_back( gn_1_1_5 );
+    GridEdgeManager edgeManager{ 1.0f };
 
-    	// Assert both nodes have one neighbour and it's the other node
-    	EXPECT_EQ( 1, all_nodes[0]->neighbours().size() );
-    	EXPECT_EQ( 1, all_nodes[1]->neighbours().size() );
-        EXPECT_EQ( gn_1_1_5, all_nodes[0]->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_1, all_nodes[1]->neighbours()[0] );
-    }
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_2_2_1 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
+    delete gn_new_node;
+}
+TEST_F(TestGridEdgeManager, newNodeWithXAndZDeltasShouldNotBeInserted ) { 
 
-    TEST_F(TestNNEdgeManager, insert_113_Updates_111 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
+    GridEdgeManager edgeManager{ 1.0f };
 
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_2_1_2 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-    	all_nodes.push_back( gn_1_1_3 );
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
+    delete gn_new_node;
+}
+TEST_F(TestGridEdgeManager, newNodeWithYAndZDeltasShouldNotBeInserted ) { 
 
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_3, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_5, gn_1_1_1->neighbours()[1] );
-    }
+    GridEdgeManager edgeManager{ 1.0f };
 
+    // Insert
+    GraphNode * gn_new_node = new GraphNode( el_1_2_2 );
+    edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    TEST_F(TestNNEdgeManager, insert_113_Updates_115 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
+    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
 
-        edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-        all_nodes.push_back( gn_1_1_3 );
-
-    	EXPECT_EQ( 2, gn_1_1_5->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_3, gn_1_1_5->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_1, gn_1_1_5->neighbours()[1] );
-    }
-
-
-    TEST_F(TestNNEdgeManager, insert_113_Updates_113 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
-
-        edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-        all_nodes.push_back( gn_1_1_3 );
-
-    	EXPECT_EQ( 2, gn_1_1_3->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_1, gn_1_1_3->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_5, gn_1_1_3->neighbours()[1] );
-    }
-
-
-    TEST_F(TestNNEdgeManager, insert_112_updates_111 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
-        edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-        all_nodes.push_back( gn_1_1_3 );
-
-
-    	edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
-    	all_nodes.push_back( gn_1_1_2 );
-
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_3, gn_1_1_1->neighbours()[1] );
-    }
-
-
-    TEST_F(TestNNEdgeManager, insert_112_updates_113 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
-        edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-        all_nodes.push_back( gn_1_1_3 );
-
-        edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
-        all_nodes.push_back( gn_1_1_2 );
-
-        EXPECT_EQ( 2, gn_1_1_3->neighbours().size() );
-        EXPECT_EQ( gn_1_1_2, gn_1_1_3->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_1, gn_1_1_3->neighbours()[1] );
-    }
-
-
-    TEST_F(TestNNEdgeManager, insert_112_updates_115 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
-        edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-        all_nodes.push_back( gn_1_1_3 );
-
-        edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
-        all_nodes.push_back( gn_1_1_2 );
-
-        EXPECT_EQ( 2, gn_1_1_5->neighbours().size() );
-        EXPECT_EQ( gn_1_1_3, gn_1_1_5->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_2, gn_1_1_5->neighbours()[1] );
-    }
-
-
-    TEST_F(TestNNEdgeManager, insert_112_updates_112 ) { 
-        NNEdgeManager edgeManager{2};
-        std::vector<GraphNode *> all_nodes;
-        edgeManager.performEdgeManagement( gn_1_1_1, all_nodes );
-        all_nodes.push_back( gn_1_1_1 );
-        edgeManager.performEdgeManagement( gn_1_1_5, all_nodes );
-        all_nodes.push_back( gn_1_1_5 );
-        edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
-        all_nodes.push_back( gn_1_1_3 );
-
-        edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
-        all_nodes.push_back( gn_1_1_2 );
-
-        EXPECT_EQ( 2, gn_1_1_2->neighbours().size() );
-        EXPECT_EQ( gn_1_1_1, gn_1_1_2->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_3, gn_1_1_2->neighbours()[1] );
-    }
+    delete gn_new_node;
+}

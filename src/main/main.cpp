@@ -27,17 +27,21 @@ int main( int argc, char * argv[] ) {
 
 	Field field{ g };
 
-	for( int i=0; i<10; i++ ) {
+
+	std::ofstream initial_file{ "/Users/dave/Desktop/initial.mat" };
+	FieldExporter * fe = new MatlabFieldExporter( initial_file );
+	fe->exportField( field );
+	delete fe;
+
+	for( int i=0; i<1000; i++ ) {
 		field.smooth_once( );
-
-		std::ostringstream oss;
-		oss << "/Users/dave/Desktop/blob" << i << ".mat";
-		std::ofstream file{ oss.str() };
-		FieldExporter * fe = new MatlabFieldExporter( file );
-		fe->exportField( field );
-
-		delete fe;
 	}
 	
+	std::ofstream final_file{ "/Users/dave/Desktop/final.mat" };
+	fe = new MatlabFieldExporter( final_file);
+	fe->exportField( field );
+	delete fe;
+
+
     return 0;
 }

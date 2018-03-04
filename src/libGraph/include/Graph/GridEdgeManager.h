@@ -8,15 +8,16 @@
  */
 class GridEdgeManager : public EdgeManager {
 public:
-	GridEdgeManager( float grid_spacing ) : m_grid_spacing{ grid_spacing }{};
+	GridEdgeManager( float grid_spacing ) : m_grid_spacing{ grid_spacing }{}
 
 	/**
 	 * Perform edge management
 	 */
 	virtual void performEdgeManagement( GraphNode * newNode, std::vector<GraphNode *>& existingNodes ) const;
 
-private:
 	void manageEdgesFromNode( GraphNode * node, GraphNode * new_node ) const;
+
+private:
 
 	float 			m_grid_spacing;
 };

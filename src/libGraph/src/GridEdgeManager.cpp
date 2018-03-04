@@ -24,17 +24,17 @@ void GridEdgeManager::manageEdgesFromNode( GraphNode * node, GraphNode * new_nod
 	Eigen::Vector3f delta = node_location - new_node_location;
 
 
-	if ( ( (fabs( delta[0] - m_grid_spacing ) < EPSILON ) 
-		&& (fabs( delta[1] )                < EPSILON ) 
-		&& (fabs( delta[2] )                < EPSILON ) ) ||
+	if ( ( (fabs( fabs( delta[0] ) - m_grid_spacing)  < EPSILON ) 
+		&& (fabs( delta[1] )                          < EPSILON ) 
+		&& (fabs( delta[2] )                          < EPSILON ) ) ||
 
-		 ( (fabs( delta[0] )                < EPSILON ) 
-		&& (fabs( delta[1] - m_grid_spacing ) < EPSILON ) 
-		&& (fabs( delta[2] )                < EPSILON ) ) ||
+		 ( (fabs( delta[0] )                          < EPSILON ) 
+		&& (fabs( fabs( delta[1] ) - m_grid_spacing)  < EPSILON ) 
+		&& (fabs( delta[2] )                          < EPSILON ) ) ||
 
-		 ( (fabs( delta[0] )                < EPSILON ) 
-		&& (fabs( delta[1] )                < EPSILON ) 
-		&& (fabs( delta[2]- m_grid_spacing )  < EPSILON ) ) ) {
+		 ( (fabs( delta[0] )                          < EPSILON ) 
+		&& (fabs( delta[1] )                          < EPSILON ) 
+		&& (fabs( fabs( delta[2] ) - m_grid_spacing)  < EPSILON ) ) ) {
 
 		new_node->neighbours( ).push_back( node );
 		node->neighbours( ).push_back( new_node );
