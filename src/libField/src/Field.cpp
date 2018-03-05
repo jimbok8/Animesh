@@ -112,9 +112,8 @@ float Field::smooth_once( ) {
 	}
 
 	// And then update the tangents
-	auto gn = m_graph->begin();
 	auto vn = new_tangents.begin();
-	for( ; gn != m_graph->end(); ++gn, ++vn ) {
+	for( auto gn = m_graph->begin(); gn != m_graph->end(); ++gn, ++vn ) {
 		FieldData * fd = m_node_to_field_data_map.at( (*gn) );
 		fd->set_tangent( (*vn) );
 	}

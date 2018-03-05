@@ -194,3 +194,29 @@ TEST_F( TestField, TangentsShouldBeUnitLengthAfterSmooth ) {
     Vector3f tangent = field.get_smoothed_tangent_data_for_node( gn );
     EXPECT_FLOAT_EQ( 1.0f, tangent.norm() );
 }
+
+// TEST_F( TestField, SmoothFieldShouldGIveGoodValues ) {
+//     using namespace Eigen; 
+
+//     EdgeManager *em = new GridEdgeManager{1.0f};
+//     Graph *g = new Graph( em );
+
+//     for( int x = 0; x< 5; x++ ) {
+//         Vector3f location { x, 0.0f, 0.0f };
+//         Vector3f normal{ 0.0f, 0.0f, 1.0f };
+//         Element *e = new Element( location, normal );
+
+//         g->addElement( *e );
+//     }
+
+//     Field field{ g };
+
+//     // Manually set tangents in field
+//     field.dataForGraphNode( 0 )->set_tangent( Vector3f{ 0.0f, 1.0f, 0.0f } );
+//     field.dataForGraphNode( 1 )->set_tangent( Vector3f{ 1.0f, 0.0f, 0.0f } );
+//     field.dataForGraphNode( 2 )->set_tangent( Vector3f{ 0.0f, 1.0f, 0.0f } );
+
+//     field.smooth_once( );
+
+//     EXPECT_FLOAT_EQ( 1.0f, tangent.norm() );
+// }
