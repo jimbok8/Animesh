@@ -93,8 +93,26 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 											  neighbour_field_data->tangent(), (*gi)->element().normal() );
 
 		smoothed = smoothed + best;
-		smoothed.normalize( );
+
+		smoothed = reproject_to_tangent_space( smoothed, gn->element().normal( ) );
 	}
 
 	return smoothed;
+}
+
+
+/**
+ * Given an arbitrary vector v, project it into the plane whose normal is given as n
+ * also unitize it.
+ * @param v The vector
+ * @param n The normal
+ * @return a unit vector in the tangent plane
+ */
+Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eigen::Vector3f& n) {
+	using namespace Eigen;
+
+	float error = v.dot( n );
+	Vector3f projection = v - ( error * n );
+	projection.normalize();
+	return projection;
 }

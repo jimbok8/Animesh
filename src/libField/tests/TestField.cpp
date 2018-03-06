@@ -108,6 +108,40 @@ TEST_F( TestField, TangentsShouldBeUnitLengthAfterSmooth ) {
     EXPECT_FLOAT_EQ( 1.0f, tangent.norm() );
 }
 
+
+// Test that reprojection works
+TEST_F( TestField, ProjectionOfVectorParallelToNormalShouldBeZero) {
+    Eigen::Vector3f vector{ 1, 0, 0 };
+    Eigen::Vector3f normal{ 1, 0, 0 };
+
+    Eigen::Vector3f actual = reproject_to_tangent_space( vector, normal );
+
+    EXPECT_FLOAT_EQ( 0.0f, actual[0]);
+    EXPECT_FLOAT_EQ( 0.0f, actual[1]);
+    EXPECT_FLOAT_EQ( 0.0f, actual[2]);
+}
+
+TEST_F( TestField, ProjectionOfVectorPerpendicularToNormalShouldBeVector) {
+    Eigen::Vector3f vector{ 0, 1, 0 };
+    Eigen::Vector3f normal{ 1, 0, 0 };
+
+    Eigen::Vector3f actual = reproject_to_tangent_space( vector, normal );
+
+    EXPECT_FLOAT_EQ( vector[0], actual[0]);
+    EXPECT_FLOAT_EQ( vector[1], actual[1]);
+    EXPECT_FLOAT_EQ( vector[2], actual[2]);
+}
+
+TEST_F( TestField, ProjectionOfVectorShouldHaveUnitLength) {
+    Eigen::Vector3f vector{ 0, 17, 0 };
+    Eigen::Vector3f normal{ 1, 0, 0 };
+
+    Eigen::Vector3f actual = reproject_to_tangent_space( vector, normal );
+
+    EXPECT_FLOAT_EQ( 1.0f, actual.norm());
+}
+
+
 // TEST_F( TestField, SmoothFieldShouldGIveGoodValues ) {
 //     using namespace Eigen; 
 
