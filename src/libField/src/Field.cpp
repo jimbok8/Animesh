@@ -44,52 +44,6 @@ const std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> Field::dataF
 }
 
 /**
- * Smooth node
- * Smooth a node in the field by averaging it's neighbours
- * @return The new vector.
- */
-Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const {
-	using namespace Eigen;
-
-	std::vector<Vector3f> neighbour_tangents = best_rosy_vectors_for_neighbours_of_node( gn );
-
-	Vector3f mean = compute_mean_vector( neighbour_tangents );
-
-	// Normalise
-	mean.normalize();
-
-
-	return mean;
-}
-
-
-/**
- * Get a vectpr of the best fit vectors from the neighbours of a specific 
- * node in the graph.
- * @return the vector of tangents
- */
-std::vector<Eigen::Vector3f> Field::best_rosy_vectors_for_neighbours_of_node( const GraphNode * const gn ) const {
-	using namespace Eigen;
-
-	std::vector<Vector3f> neighbours;
-
-	FieldData * node_field_data = m_node_to_field_data_map.at( gn );
-
-	for( auto g = gn->begin(); g != gn->end(); ++g ) {
-		// Pick up field data
-		FieldData * other_field_data = m_node_to_field_data_map.at( *g );
-
-		// Get the best version given current node data
-		Vector3f best = best_rosy_vector_for( node_field_data->tangent(), gn->element().normal(), 0, 
-											  other_field_data->tangent(),(*g)->element().normal() );
-
-		neighbours.push_back( best );
-	}
-	return neighbours;
-}
-
-
-/**
  * Smooth the field repeatedly until the error diminishes below
  * a given theshold
  */
@@ -122,28 +76,25 @@ float Field::smooth_once( ) {
 }
 
 
-
 /**
- * Compute the average of a set of tangent vectors
- * 
- * @return The average vector.
+ * Smooth node
+ * Smooth a node in the field by averaging it's neighbours
+ * @return The new vector.
  */
-Eigen::Vector3f compute_mean_vector( const std::vector<Eigen::Vector3f>& sourceVectors ) {
-
-	if( sourceVectors.size()== 0 ) 
-		throw std::invalid_argument{ "Vector can't be empty" };
-
+Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const {
 	using namespace Eigen;
 
-	Vector3f	total{ 0.0f, 0.0f, 0.0f };
-	int 		count = sourceVectors.size();
+	FieldData * this_field_data = m_node_to_field_data_map.at( gn );
+	Vector3f smoothed = this_field_data->tangent();
+	for( auto gi = gn->begin( ); gi != gn->end(); ++gi ) {
+		FieldData * neighbour_field_data = m_node_to_field_data_map.at( *gi );
 
-	for( auto vi = sourceVectors.begin(); vi != sourceVectors.end(); ++vi ) {
-		total += (*vi);
+		Vector3f best = best_rosy_vector_for( smoothed, gn->element().normal(), 0, 
+											  neighbour_field_data->tangent(), (*gi)->element().normal() );
+
+		smoothed = smoothed + best;
+		smoothed.normalize( );
 	}
 
-	// Compute mean
-	total /= count;
-	return total;
+	return smoothed;
 }
-

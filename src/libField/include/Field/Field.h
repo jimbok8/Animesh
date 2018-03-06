@@ -39,14 +39,6 @@ public:
 	 */
 	Eigen::Vector3f get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const;
 
-	/**
-	 * Get a vectpr of the best fit vectors from the neighbours of a specific 
-	 * node in the graph.
-	 * @return the vector of tangents
-	 */
-	std::vector<Eigen::Vector3f> best_rosy_vectors_for_neighbours_of_node( const GraphNode * const gn ) const;
-
-
 
 
 private:
@@ -56,11 +48,3 @@ private:
 	/** A Map from GraphNode to FieldData */
 	std::unordered_map<const GraphNode *, FieldData *>	m_node_to_field_data_map;
 };
-
-/**
- * Compute the average of a set of tangent vectors
- * 
- * @return The average vector.
- */
-Eigen::Vector3f compute_mean_vector( const std::vector<Eigen::Vector3f>& sourceVectors );
-

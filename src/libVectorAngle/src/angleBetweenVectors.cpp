@@ -2,6 +2,8 @@
 #include <Eigen/Geometry>
 #include <VectorAngle/VectorAngle.h>
 
+const float EPSILON = 1e-6;
+
 /**
  * Compute the angle between two vectors
  */
@@ -32,10 +34,10 @@ float angleBetweenVectors( Eigen::Vector3f v1, Eigen::Vector3f v2 ) {
  Eigen::Vector3f vectorByRotatingOAroundN( const Eigen::Vector3f & o, const Eigen::Vector3f & n, int k) {
  	using namespace Eigen;
 
- 	if( o.norm() == 0.0f )
+ 	if( fabs( o.norm() ) < EPSILON )
  		throw std::invalid_argument( "Vector may not be zero length" );
  	
- 	if( n.norm() != 1.0f )
+ 	if( fabs( n.norm() - 1.0f ) > EPSILON )
  		throw std::invalid_argument( "Normal must be unit vector" );
 
  	float angle = (M_PI * 2 * k) / 4.0f;
