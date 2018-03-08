@@ -33,7 +33,6 @@ unsigned int FieldData::k( ) const {
 	return m_k;
 }
 
-
 /**
  * @param targetVector The vector we're trying to match
  * @param normal The normal about which to rotate the sourceVector

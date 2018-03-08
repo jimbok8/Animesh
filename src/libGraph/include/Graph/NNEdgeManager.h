@@ -9,7 +9,7 @@ public:
 	/**
 	 * Perform edge management
 	 */
-	virtual void performEdgeManagement( GraphNode * new_node, std::vector<GraphNode *>& existing_nodes ) const;
+	virtual void performEdgeManagement( GraphNode * new_node, std::vector<GraphNode *>& existing_edges ) const;
 
 	/** 
 	 * For a given node, if the node does not have sufficient neghbours (less than max_neighbours) or

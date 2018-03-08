@@ -4,6 +4,8 @@
 #include <Eigen/Core>
 #include <Element/Element.h>
 
+#include "Edge.h"
+
 
 /*
  * GraphNode is a node in a Graph. It stores the 3D location of the element
@@ -28,22 +30,23 @@ public:
 	 */
 	std::size_t num_neighbours() const;
 
-	/** Iterator type */
-	typedef std::vector<GraphNode *>::const_iterator const_iterator;
+	/** Iterator type for read only access to edges */
+	typedef std::vector<Edge *>::const_iterator const_iterator;
 
 	/** */
- 	const_iterator begin() const { return m_neighbours.begin(); }
+ 	const_iterator begin() const { return m_edges.begin(); }
 
  	/** */
-  	const_iterator end() const { return m_neighbours.end(); }
+  	const_iterator end() const { return m_edges.end(); }
 
-  	std::vector<GraphNode *>& 	neighbours( ) { return m_neighbours; } 
 
+	/** Return the edges mutably until I can make EdgeManager a friedn  */
+  	std::vector<Edge *>& 	edges( ) { return m_edges; } 
 
 private:	
 	/** The Element */
 	Element						m_element;
 
 	/** Neighbours of this node */
-	std::vector<GraphNode *> 	m_neighbours;
+	std::vector<Edge *>		 	m_edges;
 };

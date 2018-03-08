@@ -86,11 +86,15 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 
 	FieldData * this_field_data = m_node_to_field_data_map.at( gn );
 	Vector3f smoothed = this_field_data->tangent();
-	for( auto gi = gn->begin( ); gi != gn->end(); ++gi ) {
-		FieldData * neighbour_field_data = m_node_to_field_data_map.at( *gi );
+
+	for( auto edge_iter = gn->begin( ); edge_iter != gn->end(); ++edge_iter ) {
+
+		const GraphNode * neighbouring_node = (*edge_iter)->dest_node();
+
+		FieldData * neighbour_field_data = m_node_to_field_data_map.at( neighbouring_node );
 
 		Vector3f best = best_rosy_vector_for( smoothed, gn->element().normal(), 0, 
-											  neighbour_field_data->tangent(), (*gi)->element().normal() );
+											  neighbour_field_data->tangent(), neighbouring_node->element().normal() );
 
 		smoothed = smoothed + best;
 

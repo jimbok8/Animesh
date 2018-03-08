@@ -45,11 +45,11 @@ TEST_F(TestGridEdgeManager, newNodeAtXGridSpacingShouldBeInserted) {
     GraphNode * gn_new_node = new GraphNode( el_2_1_1 );
 	edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-	EXPECT_EQ( 1, gn_1_1_1->neighbours().size() );
-	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
+	EXPECT_EQ( 1, gn_1_1_1->edges().size() );
+	EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[0]->dest_node() );
 
-	EXPECT_EQ( 1, gn_new_node->neighbours().size() );
-    EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
+	EXPECT_EQ( 1, gn_new_node->edges().size() );
+    EXPECT_EQ( gn_1_1_1, gn_new_node->edges()[0]->dest_node() );
 
 	delete gn_new_node;
 }
@@ -62,8 +62,8 @@ TEST_F(TestGridEdgeManager, newNodeFurtherThanXGridSpacingShouldNotBeInserted ) 
     GraphNode * gn_new_node = new GraphNode( el_2_1_1 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -76,8 +76,8 @@ TEST_F(TestGridEdgeManager, newNodeCloserThanXGridSpacingShouldNotBeInserted ) {
     GraphNode * gn_new_node = new GraphNode( el_2_1_1 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -90,11 +90,11 @@ TEST_F(TestGridEdgeManager, newNodeAtYGridSpacingShouldBeInserted) {
     GraphNode * gn_new_node = new GraphNode( el_1_2_1 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 1, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
+    EXPECT_EQ( 1, gn_1_1_1->edges().size() );
+    EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[0] );
 
-    EXPECT_EQ( 1, gn_new_node->neighbours().size() );
-    EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
+    EXPECT_EQ( 1, gn_new_node->edges().size() );
+    EXPECT_EQ( gn_1_1_1, gn_new_node->edges()[0]->dest_node() );
 
     delete gn_new_node;
 }
@@ -107,8 +107,8 @@ TEST_F(TestGridEdgeManager, newNodeFurtherThanYGridSpacingShouldNotBeInserted ) 
     GraphNode * gn_new_node = new GraphNode( el_1_2_1 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -121,8 +121,8 @@ TEST_F(TestGridEdgeManager, newNodeCloserThanYGridSpacingShouldNotBeInserted ) {
     GraphNode * gn_new_node = new GraphNode( el_1_2_1 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -135,10 +135,10 @@ TEST_F(TestGridEdgeManager, newNodeAtZGridSpacingShouldBeInserted) {
     GraphNode * gn_new_node = new GraphNode( el_1_1_2 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 1, gn_1_1_1->neighbours().size() );
+    EXPECT_EQ( 1, gn_1_1_1->edges().size() );
     EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
 
-    EXPECT_EQ( 1, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 1, gn_new_node->edges().size() );
     EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
 
     delete gn_new_node;
@@ -152,8 +152,8 @@ TEST_F(TestGridEdgeManager, newNodeFurtherThanZGridSpacingShouldNotBeInserted ) 
     GraphNode * gn_new_node = new GraphNode( el_1_1_2 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -166,8 +166,8 @@ TEST_F(TestGridEdgeManager, newNodeCloserThanZGridSpacingShouldNotBeInserted ) {
     GraphNode * gn_new_node = new GraphNode( el_1_1_2 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -180,8 +180,8 @@ TEST_F(TestGridEdgeManager, newNodeWithXAndYDeltasShouldNotBeInserted ) {
     GraphNode * gn_new_node = new GraphNode( el_2_2_1 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -193,8 +193,8 @@ TEST_F(TestGridEdgeManager, newNodeWithXAndZDeltasShouldNotBeInserted ) {
     GraphNode * gn_new_node = new GraphNode( el_2_1_2 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }
@@ -206,8 +206,8 @@ TEST_F(TestGridEdgeManager, newNodeWithYAndZDeltasShouldNotBeInserted ) {
     GraphNode * gn_new_node = new GraphNode( el_1_2_2 );
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    EXPECT_EQ( 0, gn_1_1_1->neighbours().size() );
-    EXPECT_EQ( 0, gn_new_node->neighbours().size() );
+    EXPECT_EQ( 0, gn_1_1_1->edges().size() );
+    EXPECT_EQ( 0, gn_new_node->edges().size() );
 
     delete gn_new_node;
 }

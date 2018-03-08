@@ -2,10 +2,10 @@
 
 const float EPSILON = 1e-6;
 
-void GridEdgeManager::performEdgeManagement( GraphNode * new_node, std::vector<GraphNode *>& existing_nodes ) const {
+void GridEdgeManager::performEdgeManagement( GraphNode * new_node, std::vector<GraphNode *>& all_nodes ) const {
 	// For each node in existing_nodes
-	for( auto & n : existing_nodes ) {
-		manageEdgesFromNode( n, new_node);
+	for( auto node : all_nodes ) {
+		manageEdgesFromNode( node, new_node);
 	}
 }
 	
@@ -17,12 +17,11 @@ void GridEdgeManager::performEdgeManagement( GraphNode * new_node, std::vector<G
  */
 void GridEdgeManager::manageEdgesFromNode( GraphNode * node, GraphNode * new_node ) const {
 	// Get the neghbours of the node under consideration
-	std::vector<GraphNode *>& current_neighbours = node->neighbours( );
+	std::vector<Edge *>& edges = node->edges( );
 
 	Eigen::Vector3f node_location = node->element().location();
 	Eigen::Vector3f new_node_location = new_node->element().location();
 	Eigen::Vector3f delta = node_location - new_node_location;
-
 
 	if ( ( (fabs( fabs( delta[0] ) - m_grid_spacing)  < EPSILON ) 
 		&& (fabs( delta[1] )                          < EPSILON ) 
@@ -36,7 +35,10 @@ void GridEdgeManager::manageEdgesFromNode( GraphNode * node, GraphNode * new_nod
 		&& (fabs( delta[1] )                          < EPSILON ) 
 		&& (fabs( fabs( delta[2] ) - m_grid_spacing)  < EPSILON ) ) ) {
 
-		new_node->neighbours( ).push_back( node );
-		node->neighbours( ).push_back( new_node );
+		Edge * edge1 = new Edge( node, new_node, 1.0f, nullptr );
+		Edge * edge2 = new Edge( new_node, node, 1.0f, nullptr );
+
+		node->edges( ).push_back( edge1 );
+		new_node->edges( ).push_back( edge2 );
 	}
 }
