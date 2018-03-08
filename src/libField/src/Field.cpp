@@ -1,5 +1,6 @@
 #include <Field/Field.h>
 #include <Element/Element.h>
+#include <VectorAngle/VectorAngle.h>
 
 Field::~Field( ) {
 	// Delete the field data objects  created
@@ -66,13 +67,18 @@ float Field::smooth_once( ) {
 	}
 
 	// And then update the tangents
+	float cost = 0.0f;
 	auto vn = new_tangents.begin();
 	for( auto gn = m_graph->begin(); gn != m_graph->end(); ++gn, ++vn ) {
 		FieldData * fd = m_node_to_field_data_map.at( (*gn) );
-		fd->set_tangent( (*vn) );
+
+		Vector3f current_tangent = fd->tangent();
+		Vector3f new_tangent = (*vn);
+		cost += angleBetweenVectors( current_tangent, new_tangent );
+		fd->set_tangent( new_tangent );
 	}
 
-	return 0.0f;
+	return cost;
 }
 
 

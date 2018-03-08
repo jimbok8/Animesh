@@ -17,8 +17,8 @@ const int SPHERE_THETA_STEPS = 20;
 const int SPHERE_PHI_STEPS = 10;
 const int CUBE_SIZE = 10;
 const int TRI_RADIUS = 4;
-const int SMOOTH_ITERATIONS = 400;
-const int EXPORT_FRAMES = 400;
+const int SMOOTH_ITERATIONS = 100;
+const int EXPORT_FRAMES = 10;
 const std::string OUTPUT_DIRECTORY = "/Users/dave/Desktop/animesh_output";
 const std::string OUTPUT_FILE_ROOT = "frame";
 
