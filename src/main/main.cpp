@@ -1,6 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdlib.h>
+#include <iostream>
 
 #include <Graph/Graph.h>
 #include <Element/Element.h>
@@ -11,12 +12,15 @@
 using namespace Eigen;
 
 const int DIM = 50;
-const int FRAMES = 10;
 const float RADIUS = 10.0f;
 const int SPHERE_THETA_STEPS = 20;
 const int SPHERE_PHI_STEPS = 10;
 const int CUBE_SIZE = 10;
 const int TRI_RADIUS = 4;
+const int SMOOTH_ITERATIONS = 400;
+const int EXPORT_FRAMES = 400;
+const std::string OUTPUT_DIRECTORY = "/Users/dave/Desktop/animesh_output";
+const std::string OUTPUT_FILE_ROOT = "frame";
 
 Field * planar_field( ) {
 	EdgeManager *em = new GridEdgeManager{1.0f};
@@ -140,42 +144,38 @@ Field * cubic_field( ) {
 }
 
 
+void write_matlab_file( Field * field, const std::string& file_name ) {
+	std::ostringstream oss;
+	oss << OUTPUT_DIRECTORY << "/" << file_name;
+	std::ofstream file{ oss.str() };
+	FieldExporter * fe = new MatlabFieldExporter( file );
+	fe->exportField( *field );
+	delete fe;
+}
+
+void write_matlab_file( Field * field, int index ) {
+	std::ostringstream oss;
+	oss << OUTPUT_FILE_ROOT << index << ".mat";
+	write_matlab_file( field, oss.str());
+}
+
+
 int main( int argc, char * argv[] ) {
 
 	Field * field = planar_field( );
 
+	write_matlab_file( field, "initial.mat" );
 
-	std::ofstream initial_file{ "/Users/dave/Desktop/initial.mat" };
-	FieldExporter * fe = new MatlabFieldExporter( initial_file );
-	fe->exportField( *field );
-	delete fe;
-
-	for( int i=0; i<FRAMES; i++ ) {
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-		field->smooth_once( );
-
-		std::ostringstream oss;
-		oss << "/Users/dave/Desktop/inter" << i << ".mat";
-		std::ofstream final_file{ oss.str() };
-		fe = new MatlabFieldExporter( final_file);
-		fe->exportField( *field );
-		delete fe;
+	int index = 0;
+	for( int i=0; i<SMOOTH_ITERATIONS; i++ ) {
+		float cost = field->smooth_once( );
+		std::cout << cost << std::endl;
+		if( i % EXPORT_FRAMES == 0 )
+			write_matlab_file( field, index++ );
 	}
 	
-	std::ofstream final_file{ "/Users/dave/Desktop/final.mat" };
-	fe = new MatlabFieldExporter( final_file);
-	fe->exportField( *field );
-	delete fe;
+	write_matlab_file( field, "final.mat" );
+
 	delete field;
-
-
     return 0;
 }
