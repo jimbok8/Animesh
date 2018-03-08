@@ -91,7 +91,7 @@ TEST_F(TestGridEdgeManager, newNodeAtYGridSpacingShouldBeInserted) {
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
     EXPECT_EQ( 1, gn_1_1_1->edges().size() );
-    EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[0] );
+    EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[0]->dest_node() );
 
     EXPECT_EQ( 1, gn_new_node->edges().size() );
     EXPECT_EQ( gn_1_1_1, gn_new_node->edges()[0]->dest_node() );
@@ -136,10 +136,10 @@ TEST_F(TestGridEdgeManager, newNodeAtZGridSpacingShouldBeInserted) {
     edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
     EXPECT_EQ( 1, gn_1_1_1->edges().size() );
-    EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
+    EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[0]->dest_node() );
 
     EXPECT_EQ( 1, gn_new_node->edges().size() );
-    EXPECT_EQ( gn_1_1_1, gn_new_node->neighbours()[0] );
+    EXPECT_EQ( gn_1_1_1, gn_new_node->edges()[0]->dest_node() );
 
     delete gn_new_node;
 }
@@ -233,7 +233,7 @@ TEST_F(TestGridEdgeManager, graphEdgeNodesHaveCadence3 ) {
     // Check
     int idx = 0;
     for( auto gi = g->begin(); gi != g->end(); ++gi ) {
-        int actual_size = (*gi)->neighbours().size();
+        int actual_size = (*gi)->edges().size();
 
         if (   (idx == 1) || (idx == 2) || (idx == 3 )
             || (idx == 5 ) || (idx == 9)
@@ -269,7 +269,7 @@ TEST_F(TestGridEdgeManager, graphCornerNodesHaveCadence2 ) {
     // Check
     int idx = 0;
     for( auto gi = g->begin(); gi != g->end(); ++gi ) {
-        int actual_size = (*gi)->neighbours().size();
+        int actual_size = (*gi)->edges().size();
 
         if( idx == 0 || idx == 4 || idx == 20 || idx == 24 ) {
             EXPECT_EQ( 2, actual_size );
@@ -299,7 +299,7 @@ TEST_F(TestGridEdgeManager, graphMidNodesHaveCadence4 ) {
     // Check
     int idx = 0;
     for( auto gi = g->begin(); gi != g->end(); ++gi ) {
-        int actual_size = (*gi)->neighbours().size();
+        int actual_size = (*gi)->edges().size();
 
         if( ( idx > 4 ) && ( idx < 20 ) && ( ( idx % 5 ) != 0 ) && ( ( idx % 5 ) != 4 ) ) {
             EXPECT_EQ( 4, actual_size );

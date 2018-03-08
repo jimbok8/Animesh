@@ -142,7 +142,7 @@ Field * cubic_field( ) {
 
 int main( int argc, char * argv[] ) {
 
-	Field * field = triangular_field( );
+	Field * field = planar_field( );
 
 
 	std::ofstream initial_file{ "/Users/dave/Desktop/initial.mat" };

@@ -45,7 +45,7 @@ void TestNNEdgeManager::TearDown( ) {
     	edgeManager.insertNodeInList( gn_1_0_0, gn_origin );
 
     	// Expect node was added to list
-    	EXPECT_EQ( 1, gn_origin->neighbours().size() );
+    	EXPECT_EQ( 1, gn_origin->edges().size() );
     }
 
 
@@ -55,13 +55,13 @@ void TestNNEdgeManager::TearDown( ) {
     	// Insert
     	edgeManager.insertNodeInList( gn_1_0_0, gn_origin );
 
-    	EXPECT_EQ( gn_1_0_0, gn_origin->neighbours().front() );
+    	EXPECT_EQ( gn_1_0_0, gn_origin->edges().front()->dest_node() );
     }
 
 
     TEST_F(TestNNEdgeManager, insertSmallestNodeInListShouldInsertTheNodeAtTheStart) { 
-    	gn_1_1_1->neighbours().push_back( gn_1_1_2);
-    	gn_1_1_1->neighbours().push_back( gn_1_1_4);
+    	gn_1_1_1->edges().push_back( new Edge( gn_1_1_1, gn_1_1_2, 1.0f, nullptr) );
+    	gn_1_1_1->edges().push_back( new Edge( gn_1_1_1, gn_1_1_4, 1.0f, nullptr) );
 
     	// Make existing closest to base
     	Eigen::Vector3f closest{ 1.0f, 0.5f, 1.0f };
@@ -73,17 +73,17 @@ void TestNNEdgeManager::TearDown( ) {
     	// Insert
     	edgeManager.insertNodeInList( gn_closest, gn_1_1_1 );
 
-    	EXPECT_EQ( gn_closest, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->neighbours()[2] );
+    	EXPECT_EQ( gn_closest, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->edges()[1]->dest_node() );
+    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->edges()[2]->dest_node() );
 
     	delete gn_closest;
     }
 
 
     TEST_F(TestNNEdgeManager, insertLargestNodeInListShouldInsertTheNodeAtTheEnd) { 
-    	gn_1_1_1->neighbours().push_back( gn_1_1_2);
-    	gn_1_1_1->neighbours().push_back( gn_1_1_4);
+    	gn_1_1_1->edges().push_back( new Edge( gn_1_1_1, gn_1_1_2, 1.0f, nullptr ) );
+    	gn_1_1_1->edges().push_back( new Edge( gn_1_1_1, gn_1_1_4, 1.0f, nullptr ) );
 
 
     	// Make existing furthest to base
@@ -97,16 +97,16 @@ void TestNNEdgeManager::TearDown( ) {
     	// Insert
     	edgeManager.insertNodeInList( gn_furthest, gn_1_1_1);
 
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( gn_furthest, gn_1_1_1->neighbours()[2] );
+    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->edges()[1]->dest_node() );
+    	EXPECT_EQ( gn_furthest, gn_1_1_1->edges()[2]->dest_node() );
 
     	delete gn_furthest;
     }
 
     TEST_F(TestNNEdgeManager, insertMiddleNodeInListShouldInsertTheNodeInTheMiddle) { 
-    	gn_1_1_1->neighbours().push_back( gn_1_1_2);
-    	gn_1_1_1->neighbours().push_back( gn_1_1_4);
+    	gn_1_1_1->edges().push_back( new Edge( gn_1_1_1, gn_1_1_2, 1.0f, nullptr) );
+    	gn_1_1_1->edges().push_back( new Edge( gn_1_1_1, gn_1_1_4, 1.0f, nullptr ) );
 
 
     	// Make existing new_node to base
@@ -119,9 +119,9 @@ void TestNNEdgeManager::TearDown( ) {
     	// Insert
     	edgeManager.insertNodeInList( gn_new_node, gn_1_1_1 );
 
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->neighbours() [2] );
+    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[1]->dest_node() );
+    	EXPECT_EQ( gn_1_1_4, gn_1_1_1->edges() [2]->dest_node() );
 
 
     	delete gn_new_node;
@@ -136,16 +136,16 @@ void TestNNEdgeManager::TearDown( ) {
 
     	NNEdgeManager edgeManager{2};
 
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_2 );
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_4 );
+    	gn_1_1_1->edges( ).push_back( new Edge( gn_1_1_1, gn_1_1_2, 1.0f, nullptr) );
+    	gn_1_1_1->edges( ).push_back( new Edge( gn_1_1_1, gn_1_1_4, 1.0f, nullptr) );
 
     	// Insert
         GraphNode * gn_new_node = new GraphNode( el_1_1_3 );
     	edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node );
 
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[1] );
+    	EXPECT_EQ( 2, gn_1_1_1->edges().size() );
+    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[1]->dest_node() );
 
     	delete gn_new_node;
     }
@@ -158,16 +158,16 @@ void TestNNEdgeManager::TearDown( ) {
 
     	NNEdgeManager edgeManager{2};
 
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_2 );
-    	gn_1_1_1->neighbours( ).push_back( gn_1_1_4 );
+    	gn_1_1_1->edges( ).push_back( new Edge( gn_1_1_1, gn_1_1_2, 1.0f, nullptr) );
+    	gn_1_1_1->edges( ).push_back( new Edge( gn_1_1_1, gn_1_1_4, 1.0f, nullptr) );
 
 
     	// Insert
     	edgeManager.manageEdgesFromNode( gn_1_1_1, gn_new_node);
 
-    	EXPECT_EQ( gn_new_node, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[1] );
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
+    	EXPECT_EQ( gn_new_node, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->edges()[1]->dest_node() );
+    	EXPECT_EQ( 2, gn_1_1_1->edges().size() );
 
     	delete gn_new_node;
     }
@@ -189,10 +189,10 @@ void TestNNEdgeManager::TearDown( ) {
     	all_nodes.push_back( gn_1_1_5 );
 
     	// Assert both nodes have one neighbour and it's the other node
-    	EXPECT_EQ( 1, all_nodes[0]->neighbours().size() );
-    	EXPECT_EQ( 1, all_nodes[1]->neighbours().size() );
-        EXPECT_EQ( gn_1_1_5, all_nodes[0]->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_1, all_nodes[1]->neighbours()[0] );
+    	EXPECT_EQ( 1, all_nodes[0]->edges().size() );
+    	EXPECT_EQ( 1, all_nodes[1]->edges().size() );
+        EXPECT_EQ( gn_1_1_5, all_nodes[0]->edges()[0]->dest_node() );
+        EXPECT_EQ( gn_1_1_1, all_nodes[1]->edges()[0]->dest_node() );
     }
 
 
@@ -210,9 +210,9 @@ void TestNNEdgeManager::TearDown( ) {
     	all_nodes.push_back( gn_1_1_3 );
 
 
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_3, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_5, gn_1_1_1->neighbours()[1] );
+    	EXPECT_EQ( 2, gn_1_1_1->edges().size() );
+    	EXPECT_EQ( gn_1_1_3, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_5, gn_1_1_1->edges()[1]->dest_node() );
     }
 
 
@@ -227,9 +227,9 @@ void TestNNEdgeManager::TearDown( ) {
         edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
         all_nodes.push_back( gn_1_1_3 );
 
-    	EXPECT_EQ( 2, gn_1_1_5->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_3, gn_1_1_5->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_1, gn_1_1_5->neighbours()[1] );
+    	EXPECT_EQ( 2, gn_1_1_5->edges().size() );
+    	EXPECT_EQ( gn_1_1_3, gn_1_1_5->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_1, gn_1_1_5->edges()[1]->dest_node() );
     }
 
 
@@ -244,9 +244,9 @@ void TestNNEdgeManager::TearDown( ) {
         edgeManager.performEdgeManagement( gn_1_1_3, all_nodes );
         all_nodes.push_back( gn_1_1_3 );
 
-    	EXPECT_EQ( 2, gn_1_1_3->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_1, gn_1_1_3->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_5, gn_1_1_3->neighbours()[1] );
+    	EXPECT_EQ( 2, gn_1_1_3->edges().size() );
+    	EXPECT_EQ( gn_1_1_1, gn_1_1_3->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_5, gn_1_1_3->edges()[1]->dest_node() );
     }
 
 
@@ -264,9 +264,9 @@ void TestNNEdgeManager::TearDown( ) {
     	edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
     	all_nodes.push_back( gn_1_1_2 );
 
-    	EXPECT_EQ( 2, gn_1_1_1->neighbours().size() );
-    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->neighbours()[0] );
-    	EXPECT_EQ( gn_1_1_3, gn_1_1_1->neighbours()[1] );
+    	EXPECT_EQ( 2, gn_1_1_1->edges().size() );
+    	EXPECT_EQ( gn_1_1_2, gn_1_1_1->edges()[0]->dest_node() );
+    	EXPECT_EQ( gn_1_1_3, gn_1_1_1->edges()[1]->dest_node() );
     }
 
 
@@ -283,9 +283,9 @@ void TestNNEdgeManager::TearDown( ) {
         edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
         all_nodes.push_back( gn_1_1_2 );
 
-        EXPECT_EQ( 2, gn_1_1_3->neighbours().size() );
-        EXPECT_EQ( gn_1_1_2, gn_1_1_3->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_1, gn_1_1_3->neighbours()[1] );
+        EXPECT_EQ( 2, gn_1_1_3->edges().size() );
+        EXPECT_EQ( gn_1_1_2, gn_1_1_3->edges()[0]->dest_node() );
+        EXPECT_EQ( gn_1_1_1, gn_1_1_3->edges()[1]->dest_node() );
     }
 
 
@@ -302,9 +302,9 @@ void TestNNEdgeManager::TearDown( ) {
         edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
         all_nodes.push_back( gn_1_1_2 );
 
-        EXPECT_EQ( 2, gn_1_1_5->neighbours().size() );
-        EXPECT_EQ( gn_1_1_3, gn_1_1_5->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_2, gn_1_1_5->neighbours()[1] );
+        EXPECT_EQ( 2, gn_1_1_5->edges().size() );
+        EXPECT_EQ( gn_1_1_3, gn_1_1_5->edges()[0]->dest_node() );
+        EXPECT_EQ( gn_1_1_2, gn_1_1_5->edges()[1]->dest_node() );
     }
 
 
@@ -321,7 +321,7 @@ void TestNNEdgeManager::TearDown( ) {
         edgeManager.performEdgeManagement( gn_1_1_2, all_nodes );
         all_nodes.push_back( gn_1_1_2 );
 
-        EXPECT_EQ( 2, gn_1_1_2->neighbours().size() );
-        EXPECT_EQ( gn_1_1_1, gn_1_1_2->neighbours()[0] );
-        EXPECT_EQ( gn_1_1_3, gn_1_1_2->neighbours()[1] );
+        EXPECT_EQ( 2, gn_1_1_2->edges().size() );
+        EXPECT_EQ( gn_1_1_1, gn_1_1_2->edges()[0]->dest_node() );
+        EXPECT_EQ( gn_1_1_3, gn_1_1_2->edges()[1]->dest_node() );
     }
