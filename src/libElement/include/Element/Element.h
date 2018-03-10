@@ -19,12 +19,12 @@ public:
 	/**
 	 * @return the normal for this Element
 	 */
-	const Eigen::Vector3f& normal() const {return m_normal; }
+	const Eigen::Vector3f normal() const {return m_normal; }
 
 	/**
 	 * @return the location for this Element
 	 */
-	const Eigen::Vector3f& location() const {return m_location; };
+	const Eigen::Vector3f location() const {return m_location; };
 
 
 private:	
