@@ -46,3 +46,16 @@ Eigen::Vector3f best_rosy_vector_for( const Eigen::Vector3f& targetVector,
 									  const Eigen::Vector3f& sourceVector, 
 									  const Eigen::Vector3f& sourceNormal );
 
+/**
+ * @param targetVector The vector we're trying to match
+ * @param normal The normal about which to rotate the sourceVector
+ * @param sourceVector the vector to be matched
+ * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
+ * 
+ */
+Eigen::Vector3f best_rosy_vector_by_dot_product( const Eigen::Vector3f& targetVector, 
+									  const Eigen::Vector3f& targetNormal, 
+									  int targetK, 
+									  const Eigen::Vector3f& sourceVector, 
+									  const Eigen::Vector3f& sourceNormal );
+

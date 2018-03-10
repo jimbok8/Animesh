@@ -40,7 +40,6 @@ public:
 	Eigen::Vector3f get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const;
 
 
-
 private:
 	/** The Graph - helps us get neghbours */
 	const Graph * const 	m_graph;

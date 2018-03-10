@@ -8,10 +8,23 @@ const float EPSILON = 1e-6;
  * Compute the angle between two vectors
  */
 float angleBetweenVectors( Eigen::Vector3f v1, Eigen::Vector3f v2 ) {
+	using namespace Eigen;
+
 	if( (v1[0] == 0.0f && v1[1] == 0.0f && v1[2] == 0.0f ) ||
 		(v2[0] == 0.0f && v2[1] == 0.0f && v2[2] == 0.0f ) ) {
 		throw std::invalid_argument( "Vector may not be zero length" );
 	}
+
+
+	Vector3f reference = v1.cross( v2 );
+	Vector3f      c = v1.cross(v2);
+    float     angle = std::atan2(c.norm(), v1.dot(v2));
+    return c.dot(reference) < 0.0f ? (2 * M_PI -angle) : angle;
+
+	/*
+		Code below was replaced by the arccos and triple product code
+		On the basis of this:
+		https://www.gamedev.net/forums/topic/503639-angle-between-3d-vectors/
 
 	// Compute the angle between the vectors using 
 	// θ=2 atan2(|| ||v||u−||u||v ||, || ||v||u+||u||v ||)
@@ -20,6 +33,7 @@ float angleBetweenVectors( Eigen::Vector3f v1, Eigen::Vector3f v2 ) {
 	float theta = 2 * atan2( (vu - uv).norm(), (vu + uv).norm() );	
 
 	return theta;
+	*/
 }
 
 /**

@@ -74,7 +74,8 @@ float Field::smooth_once( ) {
 
 		Vector3f current_tangent = fd->tangent();
 		Vector3f new_tangent = (*vn);
-		cost += angleBetweenVectors( current_tangent, new_tangent );
+		float a = angleBetweenVectors( current_tangent, new_tangent ) - M_PI;
+		cost += (a*a);
 		fd->set_tangent( new_tangent );
 	}
 
@@ -99,8 +100,12 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 
 		FieldData * neighbour_field_data = m_node_to_field_data_map.at( neighbouring_node );
 
-		Vector3f best = best_rosy_vector_for( smoothed, gn->element().normal(), 0, 
-											  neighbour_field_data->tangent(), neighbouring_node->element().normal() );
+		Vector3f best = best_rosy_vector_by_dot_product( 
+			smoothed, 
+			gn->element().normal(), 
+			0, 
+			neighbour_field_data->tangent(), 
+			neighbouring_node->element().normal() );
 
 		smoothed = smoothed + best;
 
@@ -109,6 +114,7 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 
 	return smoothed;
 }
+
 
 
 /**

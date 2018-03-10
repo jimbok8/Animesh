@@ -11,7 +11,8 @@
 
 using namespace Eigen;
 
-const int DIM = 50;
+const int DIM_X = 30;
+const int DIM_Y = 30;
 const float RADIUS = 10.0f;
 const int SPHERE_THETA_STEPS = 20;
 const int SPHERE_PHI_STEPS = 10;
@@ -26,8 +27,8 @@ Field * planar_field( ) {
 	EdgeManager *em = new GridEdgeManager{1.0f};
 	Graph *g = new Graph( em );
 
-	for( int y = 0; y<DIM; y++ ) {
-		for( int x = 0; x<DIM; x++ ) {
+	for( int y = 0; y<DIM_Y; y++ ) {
+		for( int x = 0; x<DIM_X; x++ ) {
 			Vector3f location { x, y, 0.0f };
 			Vector3f normal{ 0.0f, 0.0f, 1.0f };
 			Element *e = new Element( location, normal );

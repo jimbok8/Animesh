@@ -79,33 +79,33 @@ TEST(TestAngleBetweenVectors, Test180DegreesShouldReturnPI) {
 
 
 // 225 Degrees
-TEST(TestAngleBetweenVectors, Test225DegreesShouldReturnThreePIOverFour) {
+TEST(TestAngleBetweenVectors, Test225DegreesShouldReturnFivePIOverFour) {
     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
     Eigen::Vector3f v2{ -1.0f, -1.0f, 0.0f };
 
-    float expected = 3 * M_PI / 4.0f;
+    float expected = 5 * M_PI / 4.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
 }
 
 // 270 Degrees
-TEST(TestAngleBetweenVectors, Test270DegreesShouldReturnPIOverTwo) {
+TEST(TestAngleBetweenVectors, Test270DegreesShouldReturnThreePIOverTwo) {
     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
     Eigen::Vector3f v2{ 0.0f, -1.0f, 0.0f };
 
-    float expected = M_PI / 2.0f;
+    float expected = 3 * M_PI / 2.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
 }
 
 // 315 Degrees
-TEST(TestAngleBetweenVectors, Test315DegreesShouldReturnPIOverFour) {
+TEST(TestAngleBetweenVectors, Test315DegreesShouldReturnSevenPIOverFour) {
     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
     Eigen::Vector3f v2{ 1.0f, -1.0f, 0.0f };
 
-    float expected = M_PI / 4.0f;
+    float expected = 7 * M_PI / 4.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
@@ -162,33 +162,33 @@ TEST(TestAngleBetweenVectors, Test135DegreesInYPlaneShouldReturnThreePIOverFour)
 
 
 // 225 Degrees
-TEST(TestAngleBetweenVectors, Test225DegreesInYPlaneShouldReturnThreePIOverFour) {
+TEST(TestAngleBetweenVectors, Test225DegreesInYPlaneShouldReturnFivePIOverFour) {
     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
     Eigen::Vector3f v2{ -1.0f, 0.0f, -1.0f };
 
-    float expected = 3 * M_PI / 4.0f;
+    float expected = 5 * M_PI / 4.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
 }
 
 // 270 Degrees
-TEST(TestAngleBetweenVectors, Test270DegreesInYPlaneShouldReturnPIOverTwo) {
+TEST(TestAngleBetweenVectors, Test270DegreesInYPlaneShouldReturnThreePIOverTwo) {
     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
     Eigen::Vector3f v2{ 0.0f, 0.0f, -1.0f };
 
-    float expected = M_PI / 2.0f;
+    float expected = 3 * M_PI / 2.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
 }
 
 // 315 Degrees
-TEST(TestAngleBetweenVectors, Test315DegreesInYPlaneShouldReturnPIOverFour) {
+TEST(TestAngleBetweenVectors, Test315DegreesInYPlaneShouldReturnSevenPIOverFour) {
     Eigen::Vector3f v1{ 2.0f, 0.0f, 0.0f };
     Eigen::Vector3f v2{ 1.0f, 0.0f, -1.0f };
 
-    float expected = M_PI / 4.0f;
+    float expected = 7 * M_PI / 4.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
@@ -234,11 +234,11 @@ TEST(TestAngleBetweenVectors, Test180DegreesInXPlaneShouldReturnPI) {
 
 
 // 225 Degrees
-TEST(TestAngleBetweenVectors, Test225DegreesInXPlaneShouldReturnThreePIOverFour) {
+TEST(TestAngleBetweenVectors, Test225DegreesInXPlaneShouldReturnFivePIOverFour) {
     Eigen::Vector3f v1{ 0.0f, 0.0f, 2.0f };
     Eigen::Vector3f v2{ 0.0f, -1.0f, -1.0f };
 
-    float expected = 3 * M_PI / 4.0f;
+    float expected = 5 * M_PI / 4.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
@@ -246,11 +246,11 @@ TEST(TestAngleBetweenVectors, Test225DegreesInXPlaneShouldReturnThreePIOverFour)
 
 
 // 315 Degrees
-TEST(TestAngleBetweenVectors, Test315DegreesInXPlaneShouldReturnPIOverFour) {
+TEST(TestAngleBetweenVectors, Test315DegreesInXPlaneShouldReturnSevenPIOverFour) {
     Eigen::Vector3f v1{ 0.0f, 0.0f, 2.0f };
     Eigen::Vector3f v2{ 0.0f, -1.0f, 1.0f };
 
-    float expected = M_PI / 4.0f;
+    float expected = 7 * M_PI / 4.0f;
     float actual   = angleBetweenVectors( v1, v2 );
 
     EXPECT_FLOAT_EQ( expected, actual );
