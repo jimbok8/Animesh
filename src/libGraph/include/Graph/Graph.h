@@ -1,13 +1,19 @@
 #pragma once
 
-
+#include <map>
 #include <vector>
-#include <Eigen/Core>
 
-#include "GraphNode.h"
-#include "NNEdgeManager.h"
-#include "GridEdgeManager.h"
+/**
+ * A node in the graph
+ */
+struct GraphNode {
+	// For each adjacent node we store cost, an edge payload and the node
+    typedef std::tuple<float, void *, GraphNode*> 	Edge;		// weight, edge data, next node
+    std::vector<Edge>					 			m_edges;
+    const void * 									m_data;
 
+    GraphNode( const void * data) : m_data{ data } {}
+};
 
 /*
  * Graph is graph representing a 3D structure (point cloud, mesh, triangle soup.
@@ -19,42 +25,21 @@
 
 class Graph {
 public:
-	/**
-	 * Construct a Graph with no nodes
-	 * @param edge_manager A class responsible for updating the edges of a graph as new Elements are added
-	 */
-	Graph( const EdgeManager * const edge_manager );
-
-	~Graph( );
 
 	/**
-	 * Add an element to the Graph, updating neighbourhoods accordingly
+	 * Add a node with the given payload
+	 * @param data THe data to be added. This should not exist in the graph already.
+	 * We check this by doing a direct point comparison rather than a more sophisticated
+	 * equality test
 	 */
-	void addElement( const Element& element );
+	void add_node( const void * data );
 
 	/**
-	 * @return the size of the Graph which is the number of GraphNodes
+	 * Add an edge to the graph connecting two existing nodes
 	 */
-	std::size_t size() const;
+	void add_edge( const void * from_data, const void * to_data, float weight, void * edge_data);
 
-	/** Iterator type */
-	typedef std::vector<GraphNode *>::const_iterator const_iterator;
-
-	/** */
- 	const_iterator begin() const { return m_nodes.begin(); }
-
- 	/** */
-  	const_iterator end() const { return m_nodes.end(); }
-
-  	/** 
-  	 * @return the index'th node of the graph
-  	 */
-  	const GraphNode * node( unsigned int index ) const; 
-
-private:
-	/** The nodes for this graph */
-	std::vector<GraphNode *> 	m_nodes;
-
-	/** The EdgeManager */
-	const EdgeManager 			* const m_edge_manager;
+	/**  Map from data pointer to the node */
+	typedef std::map<const void *, GraphNode *> DataNodeMap;
+	DataNodeMap m_data_to_node_map;
 };

@@ -1,39 +1,23 @@
 #include <Graph/Graph.h>
 
-Graph::Graph( const EdgeManager * const edge_manager ) : m_edge_manager{ edge_manager } {
-    if( edge_manager == nullptr ) 
-        throw std::invalid_argument{ "EdgeManager may not be null" };
+void Graph::add_node ( const void * data  ) {
+    DataNodeMap::iterator itr = m_data_to_node_map.find(data);
+    if (itr == m_data_to_node_map.end()) {
+        GraphNode * gn = new GraphNode( data );
+        m_data_to_node_map[data] = gn;
+        return;
+    }
+    throw std::invalid_argument( "GraphNode already exists" );
 }
 
-Graph::~Graph( ) {
-	// Delete all GraphNodes
-	for( auto iter = m_nodes.begin(); iter != m_nodes.end(); ++iter ) {
-		delete (*iter);
-	}
-}
-
-void Graph::addElement( const Element& element ) {
-    // Make a new GraphNode
-    GraphNode * graph_node = new GraphNode{ element };
-
-    // Use the edge manager to update the graph
-    m_edge_manager->performEdgeManagement( graph_node, m_nodes );
-
-    // Add the new node to the graph
-    m_nodes.push_back( graph_node );
-}
-
-
-std::size_t Graph::size() const {
-	return m_nodes.size();
-}
-
-/** 
- * @return the index'th node of the graph
+/**
+ * Add an edge to the graph connecting two existing nodes
  */
-const GraphNode * Graph::node( unsigned int index ) const {
-    if( index >= m_nodes.size() )
-        throw std::invalid_argument{ "Index out of range" };
+void Graph::add_edge( const void * from_data, const void * to_data, float weight, void * edge_data) {
+    using namespace std;
 
-    return m_nodes[index];
+    GraphNode * from_node  = m_data_to_node_map.find(from_data)->second;
+    GraphNode * to_node    = m_data_to_node_map.find(to_data)->second;
+    GraphNode::Edge edge   = make_tuple(weight, edge_data, to_node);
+    from_node->m_edges.push_back(edge);
 }
