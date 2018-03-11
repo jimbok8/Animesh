@@ -1,11 +1,11 @@
 #include <Graph/Graph.h>
 
-void Graph::add_node ( const void * data  ) {
+GraphNode * Graph::add_node ( const void * data  ) {
     DataNodeMap::iterator itr = m_data_to_node_map.find(data);
     if (itr == m_data_to_node_map.end()) {
         GraphNode * gn = new GraphNode( data );
         m_data_to_node_map[data] = gn;
-        return;
+        return gn;
     }
     throw std::invalid_argument( "GraphNode already exists" );
 }

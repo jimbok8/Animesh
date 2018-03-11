@@ -34,7 +34,7 @@ public:
 	 * We check this by doing a direct point comparison rather than a more sophisticated
 	 * equality test
 	 */
-	void add_node( const void * data );
+	GraphNode * add_node( const void * data );
 
 	/**
 	 * Add an edge to the graph connecting two existing nodes
