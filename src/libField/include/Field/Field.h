@@ -4,26 +4,23 @@
 
 #include "FieldData.h"
 #include <Graph/Graph.h>
+#include <Graph/GraphBuilder.h>
+
 #include <unordered_map>
 
 class Field {
 public:
 	/**
-	 * Construct the field for an initial Graph
-	 * This method will create a map from location to FieldData for each location in the Graph.
+	 * Construct the field using a graph builder and some elements
 	 */
-	Field( const Graph * const graph );
+	Field( const GraphBuilder * const graph_builder, const std::vector<Element>& elements );
 
 	~Field( );
-
-	/** Access the index'th node of the field
-	*/
-	const std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> dataForGraphNode( unsigned int index ) const;
 
 	/**
 	 * @return the size of the ifled
 	 */
-	unsigned int size() const;
+	std::size_t size() const;
 
 
 	/**
@@ -40,12 +37,13 @@ public:
 	Eigen::Vector3f get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const;
 
 
+	/**
+	 * Return vector of elements */
+	const std::vector<const FieldElement *> elements( ) const;
+
 private:
 	/** The Graph - helps us get neghbours */
-	const Graph * const 	m_graph;
-
-	/** A Map from GraphNode to FieldData */
-	std::unordered_map<const GraphNode *, FieldData *>	m_node_to_field_data_map;
+	Graph *  	m_graph;
 };
 
 /**

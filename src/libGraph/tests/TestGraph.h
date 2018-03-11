@@ -1,4 +1,3 @@
-#include <Graph/GraphNode.h>
 #include <Element/Element.h>
 #include <Eigen/Core>
 

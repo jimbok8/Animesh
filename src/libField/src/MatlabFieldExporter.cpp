@@ -18,9 +18,12 @@ MatlabFieldExporter::~MatlabFieldExporter( ) {}
  */
 void MatlabFieldExporter::exportField( const Field& field  ) const {
 	writeHeader( m_out );
-	writeLocationData( m_out, field );
-	writeNormalData( m_out, field );
-	writeTangentData( m_out, field );
+
+	std::vector<const FieldElement *> elements = field.elements( );
+
+	writeLocationData( m_out, elements );
+	writeNormalData( m_out, elements );
+	writeTangentData( m_out, elements );
 }
 
 /**
@@ -44,43 +47,37 @@ void MatlabFieldExporter::writeHeader( std::ostream& out ) const {
 	writeShort( out, mi );
 }
 
-void MatlabFieldExporter::writeLocationData( std::ostream& out, const Field& field ) const {
+void MatlabFieldExporter::writeLocationData( std::ostream& out, std::vector<const FieldElement *>& elements ) const {
 	using namespace Eigen;
 	using namespace std;
 
-	int paddingLength = writeVectorsHeader( out, "location_matrix_", field.size() );
-	for( unsigned int i=0; i<field.size(); i++ ) {
-		tuple<Vector3f, Vector3f, Vector3f> fieldData = field.dataForGraphNode( i );
-		Vector3f location = get<0>( fieldData );
-		writeVector3f( out, location );
+	int paddingLength = writeVectorsHeader( out, "location_matrix_", elements.size() );
+	for( auto element : elements ) {
+		writeVector3f( out, element->m_location );
 	}
 	char padding[] = { (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0};
 	out.write( padding, paddingLength);
 }
 
-void MatlabFieldExporter::writeNormalData( std::ostream& out, const Field& field ) const {
+void MatlabFieldExporter::writeNormalData( std::ostream& out, std::vector<const FieldElement *>& elements ) const {
 	using namespace Eigen;
 	using namespace std;
 	
-	int paddingLength = writeVectorsHeader( out, "normal_matrix___", field.size() );
-	for( unsigned int i=0; i<field.size(); i++ ) {
-		tuple<Vector3f, Vector3f, Vector3f> fieldData = field.dataForGraphNode( i );
-		Vector3f normal = get<1>( fieldData );
-		writeVector3f( out, normal );
+	int paddingLength = writeVectorsHeader( out, "normal_matrix___", elements.size() );
+	for( auto element : elements ) {
+		writeVector3f( out, element->m_normal );
 	}
 	char padding[] = { (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0};
 	out.write( padding, paddingLength);
 }
 
-void MatlabFieldExporter::writeTangentData( std::ostream& out, const Field& field ) const {
+void MatlabFieldExporter::writeTangentData( std::ostream& out, std::vector<const FieldElement *>& elements ) const {
 	using namespace Eigen;
 	using namespace std;
 	
-	int paddingLength = writeVectorsHeader( out, "tangent_matrix__", field.size() );
-	for( unsigned int i=0; i<field.size(); i++ ) {
-		tuple<Vector3f, Vector3f, Vector3f> fieldData = field.dataForGraphNode( i );
-		Vector3f tangent = get<2>( fieldData );
-		writeVector3f( out, tangent );
+	int paddingLength = writeVectorsHeader( out, "tangent_matrix__", elements.size() );
+	for( auto element : elements ) {
+		writeVector3f( out, element->m_tangent );
 	}
 	char padding[] = { (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0, (char) 0};
 	out.write( padding, paddingLength);
@@ -92,10 +89,10 @@ void MatlabFieldExporter::writeInt( std::ostream& out, int i ) const {
 void MatlabFieldExporter::writeShort( std::ostream& out, short s ) const {
 	out.write( reinterpret_cast<char*>(&s), 2 );
 }
-void MatlabFieldExporter::writeVector3f( std::ostream& out, Eigen::Vector3f& vector ) const {
-	out.write( reinterpret_cast<char*>( &(vector[0]) ), sizeof( float ) );
-	out.write( reinterpret_cast<char*>( &(vector[1]) ), sizeof( float ) );
-	out.write( reinterpret_cast<char*>( &(vector[2]) ), sizeof( float ) );
+void MatlabFieldExporter::writeVector3f( std::ostream& out, const Eigen::Vector3f& vector ) const {
+	out.write( reinterpret_cast<const char*>( &(vector[0]) ), sizeof( float ) );
+	out.write( reinterpret_cast<const char*>( &(vector[1]) ), sizeof( float ) );
+	out.write( reinterpret_cast<const char*>( &(vector[2]) ), sizeof( float ) );
 }
 /**
  * Write the header for a vector

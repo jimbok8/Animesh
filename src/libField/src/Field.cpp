@@ -3,52 +3,25 @@
 #include <VectorAngle/VectorAngle.h>
 
 Field::~Field( ) {
-	// Delete the field data objects  created
-	for( auto iter = m_node_to_field_data_map.begin(); iter != m_node_to_field_data_map.end(); ++iter ) {
-		FieldData * value = iter->second;
-		delete value;
-	}
+	delete m_graph;
 }
 
 
-Field::Field( const Graph * const graph  ) : m_graph{ graph } {
-
-	for( auto iter = graph->begin( ); iter != graph->end(); ++iter ) {
-		GraphNode * gn = (*iter);
-
-		FieldData * fd = new FieldData( gn->element( ) );
-
-		m_node_to_field_data_map.insert( { gn, fd } );
-	}
+/**
+ * Construct the field using a graph builder and some elements
+ */
+Field::Field( const GraphBuilder * const graph_builder, const std::vector<Element>& elements ) {
+	m_graph = graph_builder->build_graph_for_elements( elements );
 }
 
 
 /**
  * @return the size of the ifled
  */
-unsigned int Field::size() const {
-	return m_node_to_field_data_map.size();
+std::size_t Field::size() const {
+	return m_graph->m_data_to_node_map.size();
 }
 
-
-/** Access the index'th node of the field
-*/
-const std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> Field::dataForGraphNode( unsigned int index ) const {
-	if( index >= m_node_to_field_data_map.size() )
-		throw std::invalid_argument{ "Index out of range" };
-
-
-	const GraphNode * gn = m_graph->node(index);
-	FieldData * fd = m_node_to_field_data_map.at( gn );
-
-	return std::make_tuple(  gn->element().location(), gn->element().normal(), fd->tangent() );
-}
-
-/**
- * Smooth the field repeatedly until the error diminishes below
- * a given theshold
- */
-// TODO
 
 /**
  * Smooth the field once, applying smoothing to each node
@@ -60,20 +33,20 @@ float Field::smooth_once( ) {
 	std::vector<Vector3f> new_tangents;
 
 	// For each graphnode, compute the smoothed tangent
-	for( auto gn = m_graph->begin(); gn != m_graph->end(); ++gn ) {
-		GraphNode * g = (*gn);
+	for( auto map_iter = m_graph->m_data_to_node_map.begin(); map_iter != m_graph->m_data_to_node_map.end(); ++map_iter ) {
+		GraphNode * g = (*map_iter).second;
 		Vector3f v = get_smoothed_tangent_data_for_node( g );
 		new_tangents.push_back( v );
 	}
 
 	// And then update the tangents
 	float cost = 0.0f;
-	auto vn = new_tangents.begin();
-	for( auto gn = m_graph->begin(); gn != m_graph->end(); ++gn, ++vn ) {
-		FieldData * fd = m_node_to_field_data_map.at( (*gn) );
+	auto tan_iter = new_tangents.begin();
+	for( auto map_iter = m_graph->m_data_to_node_map.begin(); map_iter != m_graph->m_data_to_node_map.end(); ++map_iter, ++tan_iter ) {
+		FieldData * fd = (FieldData *) (*map_iter).first;
 
 		Vector3f current_tangent = fd->tangent();
-		Vector3f new_tangent = (*vn);
+		Vector3f new_tangent = (*tan_iter);
 		float a = angleBetweenVectors( current_tangent, new_tangent ) - M_PI;
 		cost += (a*a);
 		fd->set_tangent( new_tangent );
@@ -91,25 +64,25 @@ float Field::smooth_once( ) {
 Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const {
 	using namespace Eigen;
 
-	FieldData * this_field_data = m_node_to_field_data_map.at( gn );
-	Vector3f smoothed = this_field_data->tangent();
+	FieldElement * this_fe = (FieldElement *) gn->m_data;
 
-	for( auto edge_iter = gn->begin( ); edge_iter != gn->end(); ++edge_iter ) {
+	Vector3f smoothed = this_fe->m_tangent;
 
-		const GraphNode * neighbouring_node = (*edge_iter)->dest_node();
+	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
 
-		FieldData * neighbour_field_data = m_node_to_field_data_map.at( neighbouring_node );
+		const GraphNode * neighbouring_node = std::get<2>(*edge_iter);
+		FieldElement * neighbour_fe = (FieldElement *) neighbouring_node->m_data;
 
 		Vector3f best = best_rosy_vector_by_dot_product( 
 			smoothed, 
-			gn->element().normal(), 
+			this_fe->m_normal,
 			0, 
-			neighbour_field_data->tangent(), 
-			neighbouring_node->element().normal() );
+			neighbour_fe->m_tangent, 
+			neighbour_fe->m_normal);
 
 		smoothed = smoothed + best;
 
-		smoothed = reproject_to_tangent_space( smoothed, gn->element().normal( ) );
+		smoothed = reproject_to_tangent_space( smoothed, this_fe->m_normal );
 	}
 
 	return smoothed;
@@ -131,4 +104,17 @@ Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eige
 	Vector3f projection = v - ( error * n );
 	projection.normalize();
 	return projection;
+}
+
+
+/**
+ * Return vector of elements */
+const std::vector<const FieldElement *> Field::elements( ) const {
+	std::vector<const FieldElement *> elements;
+	for( auto node_iter = m_graph->m_data_to_node_map.begin(); node_iter != m_graph->m_data_to_node_map.end(); ++node_iter ) {
+		const FieldElement * fe = (FieldElement *) (*node_iter).first;
+
+		elements.push_back( fe );
+	}
+	return elements;
 }
