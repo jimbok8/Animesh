@@ -2,6 +2,7 @@
 
 #include "TestMatlabFieldExporter.h"
 #include <Field/MatlabFieldExporter.h>
+#include <Graph/GridGraphBuilder.h>
 
 #include <fstream>
 
@@ -15,18 +16,22 @@ void TestMatlabFieldExporter::TearDown( ) {};
  * **********************************************************************/
 
 TEST_F(TestMatlabFieldExporter, ExportField) { 
-    Graph graph{ new NNEdgeManager{ 3} };
-    graph.addElement( el_1_1_1 );
-    graph.addElement( el_1_1_2 );
-    graph.addElement( el_1_1_3 );
-    graph.addElement( el_2_1_1 );
-    graph.addElement( el_2_1_2 );
-    graph.addElement( el_2_1_3 );
-    graph.addElement( el_3_1_1 );
-    graph.addElement( el_3_1_2 );
-    graph.addElement( el_3_1_3 );
 
-    Field field{ &graph };
+    std::vector<Element> elements;
+
+    elements.push_back( el_1_1_1 );
+    elements.push_back( el_1_1_2 );
+    elements.push_back( el_1_1_3 );
+    elements.push_back( el_2_1_1 );
+    elements.push_back( el_2_1_2 );
+    elements.push_back( el_2_1_3 );
+    elements.push_back( el_3_1_1 );
+    elements.push_back( el_3_1_2 );
+    elements.push_back( el_3_1_3 );
+
+    GridGraphBuilder * gb = new GridGraphBuilder( 1.0f );
+    Field field{ gb, elements };
+    delete gb;
 
     std::ostringstream out(std::ios::out | std::ios::binary);
 

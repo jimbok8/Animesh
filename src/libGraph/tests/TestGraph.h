@@ -19,13 +19,6 @@ public:
     	Element el_1_1_4 {  point_1_1_4, normal };
     	Element el_1_1_5 {  point_1_1_5, normal };
 
-    	GraphNode * gn_origin;
-        GraphNode * gn_1_1_1;
-    	GraphNode * gn_1_1_2;
-    	GraphNode * gn_1_1_3;
-    	GraphNode * gn_1_1_4;
-    	GraphNode * gn_1_1_5;
-
     	void SetUp( );
     	void TearDown( );
 };
