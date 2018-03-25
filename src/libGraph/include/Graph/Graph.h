@@ -30,9 +30,9 @@ public:
 
 	/**
 	 * Add a node with the given payload
-	 * @param data THe data to be added. This should not exist in the graph already.
+	 * @param data The data to be added. This should not exist in the graph already.
 	 * We check this by doing a direct point comparison rather than a more sophisticated
-	 * equality test
+	 * equality test.
 	 */
 	GraphNode * add_node( const void * data );
 

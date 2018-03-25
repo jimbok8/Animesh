@@ -71,9 +71,14 @@ public:
 
 	void dump( ) const;
 
+	void enable_tracing( bool enable_tracing ) { m_tracing_enabled = enable_tracing;}
+
 private:
 	/** The Graph - helps us get neghbours */
 	Graph *  	m_graph;
+
+	/** Flag to determine if we should trace field moothing */
+	bool 		m_tracing_enabled;
 };
 
 /**

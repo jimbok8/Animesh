@@ -1,5 +1,5 @@
 #include <Eigen/Core>
-
+#include <iostream>
 #pragma once
 
 /*
@@ -43,4 +43,12 @@ inline bool operator==(const Element& lhs, const Element& rhs){
 }
 inline bool operator!=(const Element& lhs, const Element& rhs){
 	return !operator==(lhs,rhs);
+}
+
+inline bool operator<(const Element& lhs, const Element& rhs){
+	std::cout << "op<() called";
+	if( lhs.location()[0] < rhs.location()[0] ) return true;
+	if( lhs.location()[1] < rhs.location()[1] ) return true;
+	if( lhs.location()[2] < rhs.location()[2] ) return true;
+	return false;
 }

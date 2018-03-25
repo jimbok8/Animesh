@@ -10,8 +10,6 @@
 
 const float EPSILON = 1e-6;
 
-#define TRACE 1
-
 Field::~Field( ) {
 	delete m_graph;
 }
@@ -31,7 +29,6 @@ Field::Field( const GraphBuilder * const graph_builder, const std::vector<Elemen
 		Eigen::Vector3f random = Eigen::VectorXf::Random(3);
 		random = random.cross( fe->m_normal ).normalized( );
 		fe->m_tangent = random;
-
 	}
 }
 
@@ -311,19 +308,18 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 
 	FieldElement * this_fe = (FieldElement *) gn->m_data;
 
-#ifdef TRACE
-	std::cout << "get_smoothed_tangent_data_for_node( l=( " 
-		<< this_fe->m_location[0] << ", "   
-	 	<< this_fe->m_location[1] << ", "   
-	 	<< this_fe->m_location[2] << ") " 
+	if( m_tracing_enabled ) {
+		std::cout << "get_smoothed_tangent_data_for_node( l=( " 
+			<< this_fe->m_location[0] << ", "   
+		 	<< this_fe->m_location[1] << ", "   
+		 	<< this_fe->m_location[2] << ") " 
 
-		<< ",  t=( " 
-		<< this_fe->m_tangent[0] << ", "   
-		<< this_fe->m_tangent[1] << ", "   
-		<< this_fe->m_tangent[2]
-		<< " )" << std::endl;
-#endif
-
+			<< ",  t=( " 
+			<< this_fe->m_tangent[0] << ", "   
+			<< this_fe->m_tangent[1] << ", "   
+			<< this_fe->m_tangent[2]
+			<< " )" << std::endl;
+	}
 	Vector3f smoothed{ 0.0f, 0.0f, 0.0f};
 	Vector3f new_tangent = this_fe->m_tangent;
 
@@ -333,39 +329,46 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 		FieldElement * neighbour_fe = (FieldElement *) neighbouring_node->m_data;
 
 
-#ifdef TRACE
-	std::cout << "    new_tang =( " 
-		<< new_tangent[0] << ", "   
-		<< new_tangent[1] << ", "   
-		<< new_tangent[2] << ") " << std::endl;
+		if( m_tracing_enabled ) {
+			std::cout << "    consider neighbour : l=( " 
+				<< neighbour_fe->m_location[0] << ", "   
+			 	<< neighbour_fe->m_location[1] << ", "   
+			 	<< neighbour_fe->m_location[2] << ") " 
 
-	std::cout << "    neighbour : l=( " 
-		<< neighbour_fe->m_location[0] << ", "   
-	 	<< neighbour_fe->m_location[1] << ", "   
-	 	<< neighbour_fe->m_location[2] << ") " 
-
-		<< ",  t=( " 
-		<< neighbour_fe->m_tangent[0] << ", "   
-		<< neighbour_fe->m_tangent[1] << ", "   
-		<< neighbour_fe->m_tangent[2]
-		<< " )" << std::endl;
-#endif
-
+				<< ",  t=( " 
+				<< neighbour_fe->m_tangent[0] << ", "   
+				<< neighbour_fe->m_tangent[1] << ", "   
+				<< neighbour_fe->m_tangent[2]
+				<< " )" << std::endl;
+		}
 
 		Vector3f best = best_rosy_vector_by_dot_product( 
-			new_tangent, 
-			// this_fe->m_tangent,
+//			new_tangent, 
+			this_fe->m_tangent,
 			this_fe->m_normal,
 			0, 
 			neighbour_fe->m_tangent, 
 			neighbour_fe->m_normal);
 
-		smoothed = smoothed + best;
+		smoothed = new_tangent + best;
 
 		smoothed = reproject_to_tangent_space( smoothed, this_fe->m_normal );
 		new_tangent = smoothed;
-	}
 
+		if( m_tracing_enabled ) {
+			std::cout << "    best fit was ( " 
+				<< best[0] << ", "   
+				<< best[1] << ", "   
+				<< best[2] << ") " << std::endl;
+
+			std::cout << "    new_tangent is now ( " 
+				<< new_tangent[0] << ", "   
+				<< new_tangent[1] << ", "   
+				<< new_tangent[2] << ") " << std::endl;
+		}
+	}
+	// TODO Remove this; it's a trial to see if it improves anything
+//	this_fe->m_tangent = smoothed;
 	return smoothed;
 }
 

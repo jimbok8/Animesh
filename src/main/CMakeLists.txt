@@ -19,6 +19,7 @@ target_link_libraries(Animesh
 	VectorAngle
 	Graph
 	Element
-	Field )
+	Field
+	Args )
 
 target_compile_features(Animesh PUBLIC cxx_std_11)

@@ -12,23 +12,14 @@
 #include <Field/FieldBuilder.h>
 #include <Field/MatlabFieldExporter.h>
 #include <PointCloud/PointCloud.h>
-
+#include <Args/Args.h>
 
 using namespace Eigen;
 
-const int DIM_X = 30;
-const int DIM_Y = 30;
-const float GRID_SPACING = 2.0f;
-const float RADIUS = 10.0f;
-const int SPHERE_THETA_STEPS = 30;
-const int SPHERE_PHI_STEPS = 15;
-const int CUBE_SIZE = 3;
 const int TRI_RADIUS = 4;
-const int SMOOTH_ITERATIONS = 100;
 const int EXPORT_FRAMES = 10;
 const std::string OUTPUT_DIRECTORY = "/Users/dave/Desktop/animesh_output";
 const std::string OUTPUT_FILE_ROOT = "frame";
-
 
 
 void write_matlab_file( Field * field, const std::string& file_name ) {
@@ -47,47 +38,31 @@ void write_matlab_file( Field * field, int index ) {
 }
 
 int main( int argc, char * argv[] ) {
-	bool make_field_fixed = true;
-	bool dump_field = true;
+	Args args{ argc, argv};
+
+	bool make_field_fixed = args.should_fix_tangents();
+	bool dump_field = args.should_dump_field();
 
 	Field * field = nullptr;
 
-	if( argc > 2 ) {
-		make_field_fixed = true;
-		std::cout << "fixed" << std::endl;
-	} else {
-		make_field_fixed = false;
-		std::cout << "random" << std::endl;
+	switch( args.default_shape()	 ) {
+		case Args::SPHERE:
+			field = Field::spherical_field( args.radius(), args.theta_steps(), args.phi_steps(), make_field_fixed );
+			std::cout << "sphere" << std::endl;
+			break;
+
+		case Args::CUBE: 
+			field = Field::cubic_field( args.cube_size(), make_field_fixed );
+			std::cout << "cube" << std::endl;
+			break;
+
+		case Args::PLANE:
+			field = Field::planar_field( args.plane_x(), args.plane_y(), args.grid_spacing(), make_field_fixed );
+			std::cout << "planar" << std::endl;
+			break;
 	}
 
-
-	if( argc > 1 ) {
-		switch( argv[1][0]) {
-			case 's': 
-				field = Field::spherical_field( 10.0f, 20, 10, make_field_fixed );
-				std::cout << "sphere" << std::endl;
-				break;
-
-			case 't': 
-				field = Field::triangular_field( TRI_RADIUS );
-				std::cout << "triangle" << std::endl;
-				break;
-
-			case 'c': 
-				field = Field::cubic_field( CUBE_SIZE, make_field_fixed );
-				std::cout << "cube" << std::endl;
-				break;
-
-			case 'p':
-				field = Field::planar_field( 10.0f, 20, 10, make_field_fixed );
-				std::cout << "planar" << std::endl;
-				break;
-		}
-	}
-
-	if( field == nullptr ) {
-		field = Field::planar_field( DIM_X, DIM_Y, GRID_SPACING, make_field_fixed );
-	}
+	field->enable_tracing( args.tracing_enabled() );
 
 
 	// PointCloud * pc = PointCloud::load_from_file( "" );
@@ -97,7 +72,7 @@ int main( int argc, char * argv[] ) {
 	write_matlab_file( field, "initial.mat" );
 
 	int index = 0;
-	for( int i=0; i<SMOOTH_ITERATIONS; i++ ) {
+	for( int i=0; i<args.num_iterations(); i++ ) {
 		float cost = field->smooth_once( );
 		std::cout << cost << std::endl;
 		if( i % EXPORT_FRAMES == 0 )
