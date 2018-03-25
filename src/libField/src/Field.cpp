@@ -320,8 +320,8 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 			<< this_fe->m_tangent[2]
 			<< " )" << std::endl;
 	}
+
 	Vector3f smoothed{ 0.0f, 0.0f, 0.0f};
-	Vector3f new_tangent = this_fe->m_tangent;
 
 	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
 
@@ -342,18 +342,14 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 				<< " )" << std::endl;
 		}
 
-		Vector3f best = best_rosy_vector_by_dot_product( 
-//			new_tangent, 
+		Vector3f best = best_rosy_vector_for( 
 			this_fe->m_tangent,
 			this_fe->m_normal,
 			0, 
 			neighbour_fe->m_tangent, 
 			neighbour_fe->m_normal);
 
-		smoothed = new_tangent + best;
-
-		smoothed = reproject_to_tangent_space( smoothed, this_fe->m_normal );
-		new_tangent = smoothed;
+		smoothed = smoothed + best;
 
 		if( m_tracing_enabled ) {
 			std::cout << "    best fit was ( " 
@@ -361,14 +357,19 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 				<< best[1] << ", "   
 				<< best[2] << ") " << std::endl;
 
-			std::cout << "    new_tangent is now ( " 
-				<< new_tangent[0] << ", "   
-				<< new_tangent[1] << ", "   
-				<< new_tangent[2] << ") " << std::endl;
+			std::cout << "    wip tangent is now ( " 
+				<< smoothed[0] << ", "   
+				<< smoothed[1] << ", "   
+				<< smoothed[2] << ") " << std::endl;
 		}
 	}
-	// TODO Remove this; it's a trial to see if it improves anything
-//	this_fe->m_tangent = smoothed;
+	smoothed = reproject_to_tangent_space( smoothed, this_fe->m_normal );
+	if( m_tracing_enabled ) {
+		std::cout << "    new tangent is ( " 
+			<< smoothed[0] << ", "   
+			<< smoothed[1] << ", "   
+			<< smoothed[2] << ") " << std::endl;
+	}
 	return smoothed;
 }
 
