@@ -2,27 +2,28 @@ file(GLOB SOURCES "src/*.cpp")
 
 add_library(Field STATIC ${SOURCES})
 
-target_include_directories(
-	Field PUBLIC 
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	${EIGEN3_INCLUDE_DIR}
-	PRIVATE src)
-
-target_link_libraries( Field 
-	Element 
-	VectorAngle
-	Graph)
-
-# This makes the project importable from the build directory
-export(
-	TARGETS Field
-	FILE FieldLibraryConfig.cmake)
-
 # Need Eigen3
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 
+target_include_directories(
+	Field PUBLIC 
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	${EIGEN3_INCLUDE_DIR}
+	${PCL_INCLUDE_DIRS}
+	PRIVATE src)
+
+target_link_libraries( Field 
+	Element 
+	VectorAngle
+	Graph
+	PointCloud)
+
+# This makes the project importable from the build directory
+export(
+	TARGETS Field
+	FILE FieldLibraryConfig.cmake)
 
 # Tests
 file( GLOB TEST_SOURCES "tests/*.cpp" )

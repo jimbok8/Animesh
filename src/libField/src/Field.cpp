@@ -10,6 +10,8 @@
 
 const float EPSILON = 1e-6;
 
+#define TRACE 1
+
 Field::~Field( ) {
 	delete m_graph;
 }
@@ -299,9 +301,6 @@ float Field::set_tangents( const std::vector<const Eigen::Vector3f>& new_tangent
 	return cost;
 }
 
-
-
-
 /**
  * Smooth node
  * Smooth a node in the field by averaging it's neighbours
@@ -326,7 +325,7 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 #endif
 
 	Vector3f smoothed{ 0.0f, 0.0f, 0.0f};
-	Vector3f  new_tangent = this_fe->m_tangent;
+	Vector3f new_tangent = this_fe->m_tangent;
 
 	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
 
@@ -355,6 +354,7 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 
 		Vector3f best = best_rosy_vector_by_dot_product( 
 			new_tangent, 
+			// this_fe->m_tangent,
 			this_fe->m_normal,
 			0, 
 			neighbour_fe->m_tangent, 
@@ -363,7 +363,7 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 		smoothed = smoothed + best;
 
 		smoothed = reproject_to_tangent_space( smoothed, this_fe->m_normal );
-//		new_tangent = smoothed;
+		new_tangent = smoothed;
 	}
 
 	return smoothed;
@@ -421,7 +421,7 @@ Eigen::Vector3f best_rosy_vector_by_dot_product( const Eigen::Vector3f& targetVe
 		Vector3f testVector = vectorByRotatingOAroundN( sourceVector, sourceNormal, k );
 
 		float dp = effectiveTarget.dot( testVector );
-		if( dp > bestDotProduct + EPSILON) {
+		if( dp > bestDotProduct) {
 			bestDotProduct = dp;
 			best = testVector;
 		}

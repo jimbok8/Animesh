@@ -23,6 +23,7 @@ add_subdirectory( libVectorAngle )
 add_subdirectory( libGraph )
 add_subdirectory( libElement )
 add_subdirectory( libField )
+add_subdirectory( libPointCloud )
 
 
 # Download and unpack googletest at configure time

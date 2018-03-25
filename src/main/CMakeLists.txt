@@ -22,4 +22,3 @@ target_link_libraries(Animesh
 	Field )
 
 target_compile_features(Animesh PUBLIC cxx_std_11)
-#set_target_properties( Animesh PROPERTIES CUDA_SEPARABLE_COMPILATION ON)

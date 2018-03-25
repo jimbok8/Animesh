@@ -9,7 +9,10 @@
 #include <Element/Element.h>
 #include <Field/Field.h>
 #include <Field/FieldExporter.h>
+#include <Field/FieldBuilder.h>
 #include <Field/MatlabFieldExporter.h>
+#include <PointCloud/PointCloud.h>
+
 
 using namespace Eigen;
 
@@ -43,17 +46,53 @@ void write_matlab_file( Field * field, int index ) {
 	write_matlab_file( field, oss.str());
 }
 
-
 int main( int argc, char * argv[] ) {
 	bool make_field_fixed = true;
 	bool dump_field = true;
 
-//	Field * field = Field::spherical_field( RADIUS, SPHERE_THETA_STEPS, SPHERE_PHI_STEPS, make_field_fixed);
-	Field * field = Field::planar_field( DIM_X, DIM_Y, GRID_SPACING, make_field_fixed);
+	Field * field = nullptr;
 
-	if(dump_field) {
-		field->dump( );
+	if( argc > 2 ) {
+		make_field_fixed = true;
+		std::cout << "fixed" << std::endl;
+	} else {
+		make_field_fixed = false;
+		std::cout << "random" << std::endl;
 	}
+
+
+	if( argc > 1 ) {
+		switch( argv[1][0]) {
+			case 's': 
+				field = Field::spherical_field( 10.0f, 20, 10, make_field_fixed );
+				std::cout << "sphere" << std::endl;
+				break;
+
+			case 't': 
+				field = Field::triangular_field( TRI_RADIUS );
+				std::cout << "triangle" << std::endl;
+				break;
+
+			case 'c': 
+				field = Field::cubic_field( CUBE_SIZE, make_field_fixed );
+				std::cout << "cube" << std::endl;
+				break;
+
+			case 'p':
+				field = Field::planar_field( 10.0f, 20, 10, make_field_fixed );
+				std::cout << "planar" << std::endl;
+				break;
+		}
+	}
+
+	if( field == nullptr ) {
+		field = Field::planar_field( DIM_X, DIM_Y, GRID_SPACING, make_field_fixed );
+	}
+
+
+	// PointCloud * pc = PointCloud::load_from_file( "" );
+	// Field * field = build_field_from_point_cloud( pc );
+	// delete pc;
 
 	write_matlab_file( field, "initial.mat" );
 
