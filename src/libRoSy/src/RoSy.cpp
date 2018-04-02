@@ -159,8 +159,8 @@ Eigen::Vector3f best_rosy_vector_for( const Eigen::Vector3f& target_vector,
  * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
  * 
  */
-Eigen::Vector3f best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, int& k_ij, 
-									  	 const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal, int& k_ji ) {
+void best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, Eigen::Vector3f& best_target, int& k_ij, 
+						  	  const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal, Eigen::Vector3f& best_source, int& k_ji ) {
 	using namespace Eigen;
 
 	float best_dot_product	= -2.0f;
@@ -174,19 +174,15 @@ Eigen::Vector3f best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, c
 			Vector3f test_source = vector_by_rotating_around_n( source_vector, source_normal, l );
 
 			float dp = test_target.dot( test_source );
-			// std::cout << "k_ij = " << k << "  k_ji = " << l << "  dp = " << dp << std::endl;
-			// Force a new solution to be better than an existing one
 			if( dp > best_dot_product ) {
 				best_dot_product = dp;
-				best_vector = test_source;
+				best_target = test_target;
 				k_ij = k;
 				k_ji = l;
-//				std::cout << "  New best"<< std::endl;
 			}
 		}
 	}
 
 	k_ij = k;
 	k_ji = l;
-	return best_vector;
 }

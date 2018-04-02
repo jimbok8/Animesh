@@ -329,12 +329,16 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 		// Find best matching rotation
 		int k_ij;
 		int k_ji;
-		Vector3f best = best_rosy_vector_and_kl( 
+		Vector3f best_target;
+		Vector3f best_source;
+		best_rosy_vector_and_kl( 
 			this_fe->m_tangent,
 			this_fe->m_normal,
+			best_target,
 			k_ij,
 			neighbour_fe->m_tangent, 
 			neighbour_fe->m_normal,
+			best_source,
 			k_ji);
 
 		// Update the computed new tangent
@@ -346,50 +350,6 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 	}
 }
 
-
-/**
- * Smooth node
- * Smooth a node in the field by averaging it's neighbours
- * @return The new vector.
- */
-Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const {
-	using namespace Eigen;
-
-	FieldElement * this_fe = (FieldElement *) gn->m_data;
-	if( m_tracing_enabled ) trace_node( "get_smoothed_tangent_data_for_node", this_fe);
-
-	Vector3f total{ 0.0f, 0.0f, 0.0f};
-
-	// For each edge from this node
-	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
-
-		// Get the adjacenty FieldElement
-		const GraphNode * neighbouring_node = std::get<2>(*edge_iter);
-		FieldElement * neighbour_fe = (FieldElement *) neighbouring_node->m_data;
-		if( m_tracing_enabled ) trace_node( "    consider neighbour", neighbour_fe );
-
-		// Find best matching rotation
-		int k_ij;
-		Vector3f best = best_rosy_vector_for( 
-			this_fe->m_tangent,
-			this_fe->m_normal,
-			neighbour_fe->m_tangent, 
-			neighbour_fe->m_normal,
-			k_ij);
-
-		// Update the computed new tangent
-		total = total + best;
-
-		if( m_tracing_enabled ) {
-			trace_vector( "         best fit is ", best );
-			trace_vector( "    running total is ", total );
-		}
-	}
-
-	Vector3f new_tangent = total.normalized();
-	if( m_tracing_enabled ) trace_vector( "      new_tangent is ", new_tangent );
-	return new_tangent;
-}
 
 /**
  * Set all the tangents in the field to specific values.

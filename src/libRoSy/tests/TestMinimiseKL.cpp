@@ -22,9 +22,10 @@ TEST_F( TestMinimiseKL, ShouldThrowIfN1IsNotUnitVector ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     try {
-        best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+        best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
         FAIL() << "Expected std::invalid_argument";
     }
     catch ( std::invalid_argument const & err ) {
@@ -45,9 +46,10 @@ TEST_F( TestMinimiseKL, ShouldThrowIfO1IsZero ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     try {
-        best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+        best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
         FAIL() << "Expected std::invalid_argument";
     }
     catch ( std::invalid_argument const & err ) {
@@ -68,9 +70,10 @@ TEST_F( TestMinimiseKL, ShouldThrowIfN2IsNotUnitVector ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     try {
-        best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+        best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
         FAIL() << "Expected std::invalid_argument";
     }
     catch ( std::invalid_argument const & err ) {
@@ -91,9 +94,10 @@ TEST_F( TestMinimiseKL, ShouldThrowIfO2IsZero ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     try {
-        best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+        best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
         FAIL() << "Expected std::invalid_argument";
     }
     catch ( std::invalid_argument const & err ) {
@@ -118,11 +122,12 @@ TEST_F( TestMinimiseKL, ShouldBe_0_0_For_0_DegreesCoplanar ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     int expectedK = 0;
     int expectedL = 0;
 
-    Vector3f best = best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+    best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
 
     EXPECT_EQ( expectedK, actualK );
     EXPECT_EQ( expectedL, actualL );
@@ -138,12 +143,13 @@ TEST_F( TestMinimiseKL, ShouldBe_0_0_For_30_DegreesCoplanar ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     int expectedK = 0;
     int expectedL = 0;
     float expectedTheta = M_PI / 6.0f;
 
-    Vector3f best = best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+    best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
 
     EXPECT_EQ( expectedK, actualK );
     EXPECT_EQ( expectedL, actualL );
@@ -160,12 +166,13 @@ TEST_F( TestMinimiseKL, ShouldBe_0_0_For_45_DegreesCoplanar ) {
 
     int actualK;
     int actualL;
+    Vector3f t1, t2;
 
     int expectedK = 0;
     int expectedL = 0;
     float expectedTheta = M_PI / 4.0f;
 
-    Vector3f best = best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+    best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
 
     EXPECT_EQ( expectedK, actualK );
     EXPECT_EQ( expectedL, actualL );
@@ -188,7 +195,8 @@ TEST_F( TestMinimiseKL, ShouldBe_0_1_For_60_DegreesCoplanar ) {
     int expectedL = 1;
     float expectedTheta = M_PI / 6.0f;
 
-    Vector3f best = best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL );
+    Vector3f t1, t2;
+    best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
 
     EXPECT_EQ( expectedK, actualK );
     EXPECT_EQ( expectedL, actualL );
@@ -205,5 +213,7 @@ TEST_F( TestMinimiseKL, SPROG ) {
 
     int actualK;
     int actualL;
-    Vector3f best = best_rosy_vector_and_kl( o1, n1, actualK, o2, n2, actualL);
+    Vector3f t1, t2;
+
+    best_rosy_vector_and_kl( o1, n1, t1, actualK, o2, n2, t2, actualL );
 }
