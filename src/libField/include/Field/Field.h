@@ -53,6 +53,11 @@ public:
 	 */
 	Eigen::Vector3f get_smoothed_tangent_data_for_node( const GraphNode * const gn ) const;
 
+	/**
+	 * Smooth the specified node (and neighbours)
+	 * @return The new vector.
+	 */
+	void smooth_node_and_neighbours( const GraphNode * const gn ) const;
 
 	/**
 	 * @return vector of elements 
