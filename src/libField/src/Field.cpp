@@ -315,6 +315,7 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 	if( m_tracing_enabled ) trace_node( "get_smoothed_tangent_data_for_node", this_fe);
 
 	Vector3f o_i_dash{ 0.0f, 0.0f, 0.0f };
+	Vector3f new_tangent = this_fe->m_tangent;
 
 	// For each edge from this node
 	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
@@ -340,10 +341,10 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 			k_ji);
 
 		// Update the computed new tangent
-		o_i_dash = o_i_dash + best_target;
-		this_fe->m_tangent = reproject_to_tangent_space( o_i_dash, this_fe->m_normal );
-		neighbour_fe->m_tangent = reproject_to_tangent_space( best_source, neighbour_fe->m_normal );
+		o_i_dash = o_i_dash + best_source;
+		neighbour_fe->m_tangent = reproject_to_tangent_space( best_target, neighbour_fe->m_normal );
 	}
+	this_fe->m_tangent = reproject_to_tangent_space( o_i_dash, this_fe->m_normal );
 }
 
 
