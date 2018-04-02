@@ -216,9 +216,6 @@ Field * Field::cubic_field( std::size_t cube_size, bool make_fixed) {
 			if( fabsf(fe->m_tangent[0]) < EPSILON && 
 				fabsf(fe->m_tangent[1]) < EPSILON && 
 				fabsf(fe->m_tangent[2]) < EPSILON ) {
-#ifdef TRACE
-				std::cout << "location " << fe->m_location[0] << "," << fe->m_location[1] << "," << fe->m_location[2] << ")" << std::endl;
-#endif
 				throw std::invalid_argument( "Found zero tangent for fe");
 			}
 
@@ -269,16 +266,19 @@ float Field::get_smoothness_for_node( const GraphNode* gn ) const {
 		const GraphNode * neighbouring_node = std::get<2>(*edge_iter);
 		FieldElement * neighbour_fe = (FieldElement *) neighbouring_node->m_data;
 
-		int k;
-		Eigen::Vector3f best_vector = best_rosy_vector_for( 
+		int k_ij, k_ji;
+		Eigen::Vector3f best_target, best_source;
+		best_rosy_vector_and_kl( 
 			this_fe->m_tangent,
 			this_fe->m_normal,
+			best_target,
+			k_ij,
 			neighbour_fe->m_tangent, 
 			neighbour_fe->m_normal,
-			k);
+			best_source,
+			k_ji);
 
-		float theta = angle_between_vectors( this_fe->m_tangent, 
-											 best_vector);
+		float theta = angle_between_vectors( best_target, best_source );
 		smoothness += (theta*theta);
 	}
 	return smoothness;
@@ -290,9 +290,7 @@ float Field::get_smoothness_for_node( const GraphNode* gn ) const {
  * @return the largest error in tangent
  */
 void Field::smooth_once( ) {
-#ifdef TRACE
-	std::cout << "smooth_once" << std::endl;
-#endif
+	if( m_tracing_enabled )	std::cout << "smooth_once" << std::endl;
 
 	using namespace Eigen;
 
@@ -342,11 +340,9 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 			k_ji);
 
 		// Update the computed new tangent
-		o_i_dash = o_i_dash + vector_by_rotating_around_n( this_fe->m_tangent, this_fe->m_normal, k_ij);
+		o_i_dash = o_i_dash + best_target;
 		this_fe->m_tangent = reproject_to_tangent_space( o_i_dash, this_fe->m_normal );
-
-		Vector3f o_j_dash = vector_by_rotating_around_n( neighbour_fe->m_tangent, neighbour_fe->m_normal, k_ji);
-		neighbour_fe->m_tangent = reproject_to_tangent_space( o_i_dash, neighbour_fe->m_normal );
+		neighbour_fe->m_tangent = reproject_to_tangent_space( best_source, neighbour_fe->m_normal );
 	}
 }
 

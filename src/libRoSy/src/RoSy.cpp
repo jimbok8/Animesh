@@ -177,6 +177,7 @@ void best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen:
 			if( dp > best_dot_product ) {
 				best_dot_product = dp;
 				best_target = test_target;
+				best_source = test_source;
 				k_ij = k;
 				k_ji = l;
 			}
