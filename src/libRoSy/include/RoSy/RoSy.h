@@ -62,6 +62,6 @@ Eigen::Vector3f best_dp_rosy_vector_for( const Eigen::Vector3f& target_vector,
  * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
  * 
  */
-void best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, Eigen::Vector3f& best_target, int& k_ij, 
-						  	  const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal, Eigen::Vector3f& best_source, int& k_ji );
+std::pair<Eigen::Vector3f, Eigen::Vector3f>  best_rosy_vector_pair( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, 
+						  	  									  const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal);
 

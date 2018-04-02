@@ -159,18 +159,17 @@ Eigen::Vector3f best_rosy_vector_for( const Eigen::Vector3f& target_vector,
  * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
  * 
  */
-void best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, Eigen::Vector3f& best_target, int& k_ij, 
-						  	  const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal, Eigen::Vector3f& best_source, int& k_ji ) {
+std::pair<Eigen::Vector3f, Eigen::Vector3f> best_rosy_vector_pair( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, 
+						  	  									 const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal ) {
 	using namespace Eigen;
 
-	float best_dot_product	= -2.0f;
-	Vector3f best_vector{ 0.0f, 0.0f, 0.0f };
+	float best_dot_product	= -2;
+	Vector3f best_target, best_source;
 
-	int k, l;
-	for( k = 0; k < 4; ++k ) {
+	for( int k = 0; k < 4; ++k ) {
 		Vector3f test_target = vector_by_rotating_around_n( target_vector, target_normal, k );
 
-		for( l = 0; l < 4; ++l ) {
+		for( int l = 0; l < 4; ++l ) {
 			Vector3f test_source = vector_by_rotating_around_n( source_vector, source_normal, l );
 
 			float dp = test_target.dot( test_source );
@@ -178,12 +177,9 @@ void best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen:
 				best_dot_product = dp;
 				best_target = test_target;
 				best_source = test_source;
-				k_ij = k;
-				k_ji = l;
 			}
 		}
 	}
 
-	k_ij = k;
-	k_ji = l;
+	return std::make_pair( best_target, best_source);
 }
