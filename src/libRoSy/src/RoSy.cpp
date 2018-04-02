@@ -73,8 +73,7 @@ Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eige
 	using namespace Eigen;
 
 	Vector3f error = v.dot( n ) * n;
-	Vector3f projection = (v - error).normalized();
-	return projection;
+	return (v - error);
 }
 
 
@@ -163,23 +162,27 @@ std::pair<Eigen::Vector3f, Eigen::Vector3f> best_rosy_vector_pair( const Eigen::
 						  	  									 const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal ) {
 	using namespace Eigen;
 
+	// We'll compare 0 and 90 degree rotations of each vector
+	const Vector3f target_candidates[2] = { target_vector, target_normal.cross(target_vector) };
+    const Vector3f source_candidates[2] = { source_vector, source_normal.cross(source_vector) };
+
+
 	float best_dot_product	= -std::numeric_limits<float>::infinity();;
-	Vector3f best_target, best_source;
+	int best_target_idx = 0;
+	int best_source_idx = 0;
 
-	for( int k = 0; k < 4; ++k ) {
-		Vector3f test_target = vector_by_rotating_around_n( target_vector, target_normal, k );
+	for( int i = 0; i<2; ++i ) {
+		for( int j = 0; j < 2; ++j ) {
 
-		for( int l = 0; l < 4; ++l ) {
-			Vector3f test_source = vector_by_rotating_around_n( source_vector, source_normal, l );
-
-			float dp = test_target.dot( test_source );
+			float dp =  std::abs( target_candidates[i].dot( source_candidates[j] ) );
 			if( dp > best_dot_product ) {
 				best_dot_product = dp;
-				best_target = test_target;
-				best_source = test_source;
+				best_target_idx = i;
+				best_source_idx = j;
 			}
 		}
 	}
 
-	return std::make_pair( best_target, best_source);
+    const float dp = target_candidates[best_target_idx].dot(source_candidates[best_source_idx]);
+    return std::make_pair(target_candidates[best_target_idx], source_candidates[best_source_idx] * std::copysign( 1.0f, dp ));
 }

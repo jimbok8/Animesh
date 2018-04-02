@@ -88,7 +88,12 @@ Field * Field::spherical_field( float radius, std::size_t theta_steps, std::size
 	std::vector<Element> elements;
 	for( float theta = 0.0f; theta < maxTheta; theta +=  deltaTheta) {
 		for( float phi = deltaPhi; phi<maxPhi; phi += deltaPhi ) {
+
 			Vector3f location { radius * sin(phi) * cos(theta),   radius * cos( phi ), radius * sin(phi) * sin(theta) };
+			// Force random location on sphere
+			// location = Vector3f::Random();
+			// location = location.normalized() * radius;
+
 			Vector3f normal = location.normalized();
 
 			Element e{ location, normal };
@@ -96,7 +101,7 @@ Field * Field::spherical_field( float radius, std::size_t theta_steps, std::size
 		}
 	}
 
-	NearestNeighbourGraphBuilder * gb = new NearestNeighbourGraphBuilder( 8 );
+	NearestNeighbourGraphBuilder * gb = new NearestNeighbourGraphBuilder( 4 );
 	Field * field = new Field( gb, elements );
 	delete gb;
 
@@ -308,7 +313,8 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 	FieldElement * this_fe = (FieldElement *) gn->m_data;
 	if( m_tracing_enabled ) trace_node( "get_smoothed_tangent_data_for_node", this_fe);
 
-	Vector3f new_tangent = this_fe->m_tangent;
+	Vector3f sum = this_fe->m_tangent;
+	float weight_sum = 0.0f;
 
 	// For each edge from this node
 	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
@@ -320,16 +326,19 @@ void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
 
 		// Find best matching rotation
 		std::pair<Vector3f, Vector3f> result = best_rosy_vector_pair( 
-			this_fe->m_tangent,
+			sum,
 			this_fe->m_normal,
 			neighbour_fe->m_tangent, 
 			neighbour_fe->m_normal);
 
 		// Update the computed new tangent
-		this_fe->m_tangent = reproject_to_tangent_space( result.second, this_fe->m_normal );
-//		neighbour_fe->m_tangent = reproject_to_tangent_space( result.second, neighbour_fe->m_normal );
+		float weight = std::get<0>(*edge_iter);
+		sum = result.first * weight_sum + result.second * weight;
+		weight_sum += weight;
+		sum = reproject_to_tangent_space( result.second, this_fe->m_normal );
+		sum.normalize();
 	}
-	
+	this_fe->m_tangent = sum;
 }
 
 
