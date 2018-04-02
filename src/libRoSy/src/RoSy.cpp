@@ -163,7 +163,7 @@ std::pair<Eigen::Vector3f, Eigen::Vector3f> best_rosy_vector_pair( const Eigen::
 						  	  									 const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal ) {
 	using namespace Eigen;
 
-	float best_dot_product	= -2;
+	float best_dot_product	= -std::numeric_limits<float>::infinity();;
 	Vector3f best_target, best_source;
 
 	for( int k = 0; k < 4; ++k ) {
