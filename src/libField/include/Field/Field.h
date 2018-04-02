@@ -50,7 +50,7 @@ public:
 	 * Smooth the specified node (and neighbours)
 	 * @return The new vector.
 	 */
-	void smooth_node_and_neighbours( const GraphNode * const gn ) const;
+	void smooth_node( const GraphNode * const gn ) const;
 
 	/**
 	 * @return vector of elements 

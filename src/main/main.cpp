@@ -71,12 +71,15 @@ int main( int argc, char * argv[] ) {
 
 	write_matlab_file( field, "initial.mat" );
 
-	int index = 0;
-	for( int i=0; i<args.num_iterations(); i++ ) {
+	int frame_index = 0;
+	for( int i=0; i< args.num_iterations(); ++i ) {
 		field->smooth_once( );
-		std::cout << field->smoothness() << std::endl;
+		float smoo = field->smoothness();
+		std::cout << smoo << std::endl;
+		if( smoo < 1 ) break;
+
 		if( i % EXPORT_FRAMES == 0 )
-			write_matlab_file( field, index++ );
+			write_matlab_file( field, frame_index++ );
 	}
 	
 	write_matlab_file( field, "final.mat" );

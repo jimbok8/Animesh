@@ -298,7 +298,7 @@ void Field::smooth_once( ) {
 	// For each graphnode, compute the smoothed tangent
 	for( auto map_iter = m_graph->m_data_to_node_map.begin(); map_iter != m_graph->m_data_to_node_map.end(); ++map_iter ) {
 		GraphNode * g = (*map_iter).second;
-		smooth_node_and_neighbours( g );
+		smooth_node( g );
 	}
 }
 
@@ -307,7 +307,7 @@ void Field::smooth_once( ) {
  * Smooth the specified node (and neighbours)
  * @return The new vector.
  */
-void Field::smooth_node_and_neighbours( const GraphNode * const gn ) const {
+void Field::smooth_node( const GraphNode * const gn ) const {
 	using namespace Eigen;
 
 	FieldElement * this_fe = (FieldElement *) gn->m_data;
