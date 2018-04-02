@@ -73,8 +73,8 @@ int main( int argc, char * argv[] ) {
 
 	int index = 0;
 	for( int i=0; i<args.num_iterations(); i++ ) {
-		float cost = field->smooth_once( );
-		std::cout << cost << std::endl;
+		field->smooth_once( );
+		std::cout << field->smoothness() << std::endl;
 		if( i % EXPORT_FRAMES == 0 )
 			write_matlab_file( field, index++ );
 	}

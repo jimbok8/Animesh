@@ -1,6 +1,6 @@
 #include <Field/Field.h>
 #include <Element/Element.h>
-#include <VectorAngle/VectorAngle.h>
+#include <RoSy/RoSy.h>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
@@ -54,14 +54,13 @@ Field * Field::planar_field( std::size_t dim_x, std::size_t dim_y, float grid_sp
 
 	GridGraphBuilder * ggb = new GridGraphBuilder( grid_spacing );
 	Field * field = new Field( ggb, elements );
-
 	delete ggb;
-
 
 	// Make a set of planar tangents
 	if( make_fixed ) {
 		std::vector< const Eigen::Vector3f > good_tangents;
 		for( std::size_t i=0; i< field->size(); ++i ) {
+			float noise = random( );
 			good_tangents.push_back( Eigen::Vector3f{ 0.0f, 1.0f, 0.0f } );
 		}
 
@@ -81,7 +80,7 @@ Field * Field::planar_field( std::size_t dim_x, std::size_t dim_y, float grid_sp
 Field * Field::spherical_field( float radius, std::size_t theta_steps, std::size_t phi_steps, bool make_fixed ) {
 	using namespace Eigen;
 
-	float maxTheta = 1 * M_PI;
+	float maxTheta = 2 * M_PI;
 	float maxPhi = M_PI / 2.0f;
 	float deltaTheta = maxTheta / theta_steps;
 	float deltaPhi   = maxPhi / phi_steps;
@@ -247,10 +246,50 @@ std::size_t Field::size() const {
 
 
 /**
+ * @return the smoothness of the entire Field
+ */
+float Field::smoothness( ) const {
+	// E(O, k) :=      (oi, Rso (oji, ni, kij ))
+	// For each node
+	float smoothness = 0.0f;
+	for( auto map_iter = m_graph->m_data_to_node_map.begin(); map_iter != m_graph->m_data_to_node_map.end(); ++map_iter ) {
+		GraphNode * g = (*map_iter).second;
+		smoothness += get_smoothness_for_node( g );
+	}
+	return smoothness;
+}
+
+/**
+ * @return the smoothness of one node
+ */
+float Field::get_smoothness_for_node( const GraphNode* gn ) const {
+	float smoothness = 0.0f;
+	FieldElement * this_fe = (FieldElement *) gn->m_data;
+	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
+		const GraphNode * neighbouring_node = std::get<2>(*edge_iter);
+		FieldElement * neighbour_fe = (FieldElement *) neighbouring_node->m_data;
+
+		int k;
+		Eigen::Vector3f best_vector = best_rosy_vector_for( 
+			this_fe->m_tangent,
+			this_fe->m_normal,
+			neighbour_fe->m_tangent, 
+			neighbour_fe->m_normal,
+			k);
+
+		float theta = angle_between_vectors( this_fe->m_tangent, 
+											 best_vector);
+		smoothness += (theta*theta);
+	}
+	return smoothness;
+}
+
+
+/**
  * Smooth the field once, applying smoothing to each node
  * @return the largest error in tangent
  */
-float Field::smooth_once( ) {
+void Field::smooth_once( ) {
 #ifdef TRACE
 	std::cout << "smooth_once" << std::endl;
 #endif
@@ -267,35 +306,7 @@ float Field::smooth_once( ) {
 	}
 
 	// And then update the tangents
-	float cost = set_tangents( new_tangents );
-
-	return cost;
-}
-
-/**
- * Set all the tangents in the field to specific values.
- * @param new_tangents The new tangents
- * @return The difference between the old and new values
- */
-float Field::set_tangents( const std::vector<const Eigen::Vector3f>& new_tangents ) {
-	using namespace Eigen;
-
-	if( new_tangents.size() != m_graph->m_data_to_node_map.size() ) 
-		throw std::invalid_argument( "Must be one tangent for each node");
-
-
-	float cost = 0.0f;
-	auto tan_iter = new_tangents.begin();
-	for( auto map_iter = m_graph->m_data_to_node_map.begin(); map_iter != m_graph->m_data_to_node_map.end(); ++map_iter, ++tan_iter ) {
-		FieldElement * fe = (FieldElement *) (*map_iter).first;
-
-		const Vector3f current_tangent = fe->m_tangent;
-		const Vector3f new_tangent = (*tan_iter);
-		float a = angleBetweenVectors( current_tangent, new_tangent );
-		cost += (a*a);
-		fe->m_tangent = new_tangent;
-	}
-	return cost;
+	set_tangents( new_tangents );
 }
 
 /**
@@ -307,196 +318,60 @@ Eigen::Vector3f Field::get_smoothed_tangent_data_for_node( const GraphNode * con
 	using namespace Eigen;
 
 	FieldElement * this_fe = (FieldElement *) gn->m_data;
+	if( m_tracing_enabled ) trace_node( "get_smoothed_tangent_data_for_node", this_fe);
 
-	if( m_tracing_enabled ) {
-		std::cout << "get_smoothed_tangent_data_for_node( l=( " 
-			<< this_fe->m_location[0] << ", "   
-		 	<< this_fe->m_location[1] << ", "   
-		 	<< this_fe->m_location[2] << ") " 
+	Vector3f total{ 0.0f, 0.0f, 0.0f};
 
-			<< ",  t=( " 
-			<< this_fe->m_tangent[0] << ", "   
-			<< this_fe->m_tangent[1] << ", "   
-			<< this_fe->m_tangent[2]
-			<< " )" << std::endl;
-	}
-
-	Vector3f smoothed{ 0.0f, 0.0f, 0.0f};
-
+	// For each edge from this node
 	for( auto edge_iter = gn->m_edges.begin(); edge_iter != gn->m_edges.end(); ++edge_iter ) {
 
+		// Get the adjacenty FieldElement
 		const GraphNode * neighbouring_node = std::get<2>(*edge_iter);
 		FieldElement * neighbour_fe = (FieldElement *) neighbouring_node->m_data;
+		if( m_tracing_enabled ) trace_node( "    consider neighbour", neighbour_fe );
 
-
-		if( m_tracing_enabled ) {
-			std::cout << "    consider neighbour : l=( " 
-				<< neighbour_fe->m_location[0] << ", "   
-			 	<< neighbour_fe->m_location[1] << ", "   
-			 	<< neighbour_fe->m_location[2] << ") " 
-
-				<< ",  t=( " 
-				<< neighbour_fe->m_tangent[0] << ", "   
-				<< neighbour_fe->m_tangent[1] << ", "   
-				<< neighbour_fe->m_tangent[2]
-				<< " )" << std::endl;
-		}
-
+		// Find best matching rotation
+		int k_ij;
 		Vector3f best = best_rosy_vector_for( 
 			this_fe->m_tangent,
 			this_fe->m_normal,
-			0, 
 			neighbour_fe->m_tangent, 
-			neighbour_fe->m_normal);
+			neighbour_fe->m_normal,
+			k_ij);
 
-		smoothed = smoothed + best;
+		// Update the computed new tangent
+		total = total + best;
 
 		if( m_tracing_enabled ) {
-			std::cout << "    best fit was ( " 
-				<< best[0] << ", "   
-				<< best[1] << ", "   
-				<< best[2] << ") " << std::endl;
-
-			std::cout << "    wip tangent is now ( " 
-				<< smoothed[0] << ", "   
-				<< smoothed[1] << ", "   
-				<< smoothed[2] << ") " << std::endl;
-		}
-	}
-	smoothed = reproject_to_tangent_space( smoothed, this_fe->m_normal );
-	if( m_tracing_enabled ) {
-		std::cout << "    new tangent is ( " 
-			<< smoothed[0] << ", "   
-			<< smoothed[1] << ", "   
-			<< smoothed[2] << ") " << std::endl;
-	}
-	return smoothed;
-}
-
-
-
-/**
- * Given an arbitrary vector v, project it into the plane whose normal is given as n
- * also unitize it.
- * @param v The vector
- * @param n The normal
- * @return a unit vector in the tangent plane
- */
-Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eigen::Vector3f& n) {
-	using namespace Eigen;
-
-	Vector3f error = v.dot( n ) * n;
-	Vector3f projection = (v - error).normalized();
-	return projection;
-}
-
-
-/**
- * Return vector of elements */
-const std::vector<const FieldElement *> Field::elements( ) const {
-	std::vector<const FieldElement *> elements;
-	for( auto node_iter = m_graph->m_data_to_node_map.begin(); node_iter != m_graph->m_data_to_node_map.end(); ++node_iter ) {
-		const FieldElement * fe = (FieldElement *) (*node_iter).first;
-
-		elements.push_back( fe );
-	}
-	return elements;
-}
-
-/**
- * @param targetVector The vector we're trying to match
- * @param normal The normal about which to rotate the sourceVector
- * @param sourceVector the vector to be matched
- * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
- * 
- */
-Eigen::Vector3f best_rosy_vector_by_dot_product( const Eigen::Vector3f& targetVector, 
-									  const Eigen::Vector3f& targetNormal, 
-									  int targetK, 
-									  const Eigen::Vector3f& sourceVector, 
-									  const Eigen::Vector3f& sourceNormal ) {
-	using namespace Eigen;
-
-	Vector3f effectiveTarget = vectorByRotatingOAroundN( targetVector, targetNormal, targetK );
-	Vector3f best{ sourceVector };
-	float bestDotProduct = effectiveTarget.dot( sourceVector );
-
-	for( int k=1; k<4; ++k ) {
-		Vector3f testVector = vectorByRotatingOAroundN( sourceVector, sourceNormal, k );
-
-		float dp = effectiveTarget.dot( testVector );
-		if( dp > bestDotProduct) {
-			bestDotProduct = dp;
-			best = testVector;
-		}
-	}
-	return best;
-}
-
-/**
- * @param targetVector The vector we're trying to match
- * @param normal The normal about which to rotate the sourceVector
- * @param sourceVector the vector to be matched
- * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
- * 
- */
-Eigen::Vector3f best_rosy_vector_for( const Eigen::Vector3f& targetVector, 
-									  const Eigen::Vector3f& targetNormal, 
-									  int targetK, 
-									  const Eigen::Vector3f& sourceVector, 
-									  const Eigen::Vector3f& sourceNormal ) {
-	using namespace Eigen;
-
-	Vector3f effectiveTarget = vectorByRotatingOAroundN( targetVector, targetNormal, targetK );
-	Vector3f best{ 0.0f, 0.0f, 0.0f };
-	float bestAngle = 3 * M_PI;
-
-	for( int k=0; k<4; ++k ) {
-		Vector3f testVector = vectorByRotatingOAroundN( sourceVector, sourceNormal, k );
-
-		float theta = angleBetweenVectors( effectiveTarget, testVector );
-		if( fabsf(theta) < fabsf(bestAngle) ) {
-			bestAngle = theta;
-			best = testVector;
-		}
-	}
-	return best;
-}
-
-/**
- * @param targetVector The vector we're trying to match
- * @param normal The normal about which to rotate the sourceVector
- * @param sourceVector the vector to be matched
- * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
- * 
- */
-Eigen::Vector3f best_rosy_vector_and_kl( const Eigen::Vector3f& target_vector, const Eigen::Vector3f& target_normal, int& k_ij, 
-									  	 const Eigen::Vector3f& source_vector, const Eigen::Vector3f& source_normal, int& k_ji ) {
-	using namespace Eigen;
-
-	float best_dot_product	= -2.0f;
-	Vector3f best_vector{ 0.0f, 0.0f, 0.0f };
-
-	int k =0, l=0;
-	for( k =0; k < 4; ++k ) {
-
-		Vector3f test_target = vectorByRotatingOAroundN( target_vector, target_normal, k );
-
-		for( l =0; l < 4; ++l ) {
-			Vector3f test_source = vectorByRotatingOAroundN( source_vector, source_normal, l );
-
-			float dp = test_target.dot( test_source );
-			// Force a new solution to be better than an existing one
-			if( dp > (best_dot_product + EPSILON) ) {
-				best_dot_product = dp;
-				best_vector = test_source;
-			}
+			trace_vector( "         best fit is ", best );
+			trace_vector( "    running total is ", total );
 		}
 	}
 
-	k_ij = k;
-	k_ji = l;
-	return best_vector;
+	Vector3f new_tangent = total.normalized();
+	if( m_tracing_enabled ) trace_vector( "      new_tangent is ", new_tangent );
+	return new_tangent;
+}
+
+/**
+ * Set all the tangents in the field to specific values.
+ * @param new_tangents The new tangents
+ * @return The difference between the old and new values
+ */
+void Field::set_tangents( const std::vector<const Eigen::Vector3f>& new_tangents ) {
+	using namespace Eigen;
+
+	if( new_tangents.size() != m_graph->m_data_to_node_map.size() ) 
+		throw std::invalid_argument( "Must be one tangent for each node");
+
+	auto tan_iter = new_tangents.begin();
+	for( auto map_iter = m_graph->m_data_to_node_map.begin(); map_iter != m_graph->m_data_to_node_map.end(); ++map_iter, ++tan_iter ) {
+		FieldElement * fe = (FieldElement *) (*map_iter).first;
+
+		const Vector3f current_tangent = fe->m_tangent;
+		const Vector3f new_tangent = (*tan_iter);
+		fe->m_tangent = new_tangent; //(0.5 * fe->m_tangent + 0.5 * new_tangent).normalized();
+	}
 }
 
 /**
@@ -523,4 +398,24 @@ void Field::dump(  ) const {
 			std::cout << "      " << fe_n->m_location[0] << "," << fe_n->m_location[1] << "," << fe_n->m_location[2] << std::endl;
 		}
 	}
+}
+
+void Field::trace_node( const std::string& prefix, const FieldElement * this_fe ) const {
+	std::cout << prefix 
+		<< "( l=( " 
+		<< this_fe->m_location[0] << ", "   
+	 	<< this_fe->m_location[1] << ", "   
+	 	<< this_fe->m_location[2] << "), t=(" 
+		<< this_fe->m_tangent[0] << ", "   
+	 	<< this_fe->m_tangent[1] << ", "   
+	 	<< this_fe->m_tangent[2] << ")" 
+	 	<< std::endl;
+}
+
+void Field::trace_vector( const std::string& prefix, const Eigen::Vector3f& vector ) const {
+	std::cout << prefix  
+		<< vector[0] << ", "   
+	 	<< vector[1] << ", "   
+	 	<< vector[2] << ") " 
+	 	<< std::endl;
 }

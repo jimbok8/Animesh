@@ -16,7 +16,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 add_executable(Animesh ${SOURCES})
 
 target_link_libraries(Animesh 
-	VectorAngle
+	RoSy
 	Graph
 	Element
 	Field

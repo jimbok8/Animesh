@@ -1,13 +1,9 @@
 #pragma once 
 
-#include <unordered_map>
-
 #include <Graph/Graph.h>
 #include <Graph/GraphBuilder.h>
 #include <Graph/GridGraphBuilder.h>
 #include <Graph/NearestNeighbourGraphBuilder.h>
-
-#include <unordered_map>
 
 class Field {
 public:
@@ -48,7 +44,7 @@ public:
 	 * Smooth the field once, applying smoothing to each node
 	 * @return the largest error in tangent
 	 */
-	float smooth_once( );
+	void smooth_once( );
 
 	/**
 	 * Smooth node
@@ -59,7 +55,8 @@ public:
 
 
 	/**
-	 * Return vector of elements */
+	 * @return vector of elements 
+	 */
 	const std::vector<const FieldElement *> elements( ) const;
 
 	/**
@@ -67,53 +64,30 @@ public:
 	 * @param new_tangents The new tangents
 	 * @return The difference between the old and new values
 	 */
-	float set_tangents( const std::vector<const Eigen::Vector3f>& new_tangents );
+	void set_tangents( const std::vector<const Eigen::Vector3f>& new_tangents );
 
 	void dump( ) const;
 
 	void enable_tracing( bool enable_tracing ) { m_tracing_enabled = enable_tracing;}
 
+	/**
+	 * @return the smoothness
+	 */
+	float smoothness( ) const;
+
 private:
-	/** The Graph - helps us get neghbours */
+	/** The Graph - helps us get neighbours */
 	Graph *  	m_graph;
 
 	/** Flag to determine if we should trace field moothing */
 	bool 		m_tracing_enabled;
+
+	void trace_vector( const std::string& prefix, const Eigen::Vector3f& vector ) const;
+	void trace_node( const std::string& prefix, const FieldElement * this_fe ) const;
+
+
+	/**
+ 	 * @return the smoothness of one node
+	 */
+	float get_smoothness_for_node( const GraphNode * gn ) const;
 };
-
-/**
- * Given an arbitrary vector v, project it into the plane whose normal is given as n
- * also unitize it.
- * @param v The vector
- * @param n The normal
- * @return a unit vector in the tangent plane
- */
-Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eigen::Vector3f& n);
-
-
-/**
- * @param targetVector The vector we're trying to match
- * @param targetK The value of K for the target vector which should be locked
- * @param normal The normal about which to rotate the sourceVector
- * @param sourceVector the vector to be matched
- * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
- * 
- */
-Eigen::Vector3f best_rosy_vector_for( const Eigen::Vector3f& targetVector, 
-									  const Eigen::Vector3f& targetNormal, 
-									  int targetK, 
-									  const Eigen::Vector3f& sourceVector, 
-									  const Eigen::Vector3f& sourceNormal );
-
-/**
- * @param targetVector The vector we're trying to match
- * @param normal The normal about which to rotate the sourceVector
- * @param sourceVector the vector to be matched
- * @return the best fitting vector (i.e. best multiple of PI/2 + angle)
- * 
- */
-Eigen::Vector3f best_rosy_vector_by_dot_product( const Eigen::Vector3f& targetVector, 
-									  const Eigen::Vector3f& targetNormal, 
-									  int targetK, 
-									  const Eigen::Vector3f& sourceVector, 
-									  const Eigen::Vector3f& sourceNormal );
