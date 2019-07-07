@@ -6,7 +6,7 @@ export ANIMESH_JAR="${PROJ_DIR}""/java/animesh-tools/animeshtools/target/animesh
 export MEASURE="org.ddurbin.animesh.tools.MeasureError"
 
 if [ ! -f "surfel_table.bin" ]; then
-	"${PROJ_DIR}"/bin/mesher -d "/Users/dave/Animesh/data/CheatData/cloth"
+	"${PROJ_DIR}"/bin/mesher -d "/Users/dave/Animesh/data/CheatData/cloth" -c "cloth_corr.bin"
 fi
 java -cp "${ANIMESH_JAR}" "${MEASURE}" "${TGT_DIR}" surfel_table.bin > "${TGT_DIR}"/err_0.txt
 
