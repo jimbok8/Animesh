@@ -7,8 +7,8 @@ add_subdirectory( data_gen )
 find_package(glfw3 3.2 REQUIRED)
 
 # GLM
-set(CMAKE_PREFIX_PATH, "/usr/local/include:${CMAKE_PREFIX_PATH}")
-find_package(GLM REQUIRED)
+set(CMAKE_PREFIX_PATH, "/usr/lib/cmake/glm:${CMAKE_PREFIX_PATH}")
+find_package(glm)
 message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 
 # OpenGL

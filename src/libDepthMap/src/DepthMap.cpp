@@ -4,6 +4,8 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <cstring>
+#include <algorithm>
 
 DepthMap::DepthMap(const std::string &filename) {
     using namespace std;

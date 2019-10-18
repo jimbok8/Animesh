@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
 file(GLOB SOURCES "*.cpp")
 
 # GLM
-find_package(glm REQUIRED)
+find_package(glm )
 
 # OpenGL
 IF(APPLE)

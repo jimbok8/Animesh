@@ -3,7 +3,9 @@
 #include <Eigen/Geometry>
 #include <Eigen/Core>
 #include <vector>
+#include <set>
 #include <iostream>
+#include <cmath>
 
 const float EPSILON = 1e-4;
 
@@ -204,8 +206,8 @@ Eigen::Matrix3f rotation_between(	const Eigen::Vector3f& point1,
 	// Total transformation is vvrN2' * in_plane_rot * vvrN1
 	Matrix3f result = vvrN2.transpose() * in_plane_rot * vvrN1;
 	for ( size_t i = 0; i < 9; ++i ) {
-		assert( !isnan(result(i)));
-		assert( !isinf(result(i)));
+		assert( !std::isnan(result(i)));
+		assert( !std::isinf(result(i)));
 	}
 	return result;
 }

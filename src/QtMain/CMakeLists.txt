@@ -12,13 +12,13 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Need vtk
-find_package(VTK REQUIRED NO_MODULE)
+find_package(VTK  NO_MODULE)
 include_directories(${VTK_USE_FILE})
 include(${VTK_USE_FILE})
 
 
 # Find the QtWidgets library
-find_package(Qt5Widgets CONFIG REQUIRED)
+find_package(Qt5Widgets CONFIG )
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed

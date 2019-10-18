@@ -2,7 +2,9 @@
 #include <vector>
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
+#include <memory>
 #include <omp.h>
+
 #include "depth_map_io.h"
 #include "correspondences_compute.h"
 #include "correspondences_io.h"
