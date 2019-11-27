@@ -1,0 +1,1258 @@
+Loading depth maps from /Users/dave/Animesh/data/horse-gallop-depths
+ 
+  1 of 8 
+  2 of 8 
+  3 of 8 
+  4 of 8 
+  5 of 8 
+  6 of 8 
+  7 of 8 
+  8 of 8
+  done. 
+Constructing depth map hierarchy with 6 levels.
+1 of 6    
+2 of 6    
+3 of 6    
+4 of 6    
+5 of 6    
+6 of 6    
+Suspiciously high zero norms : 297755 out of  307200
+Suspiciously high zero norms : 297931 out of  307200
+Suspiciously high zero norms : 297981 out of  307200
+Suspiciously high zero norms : 297800 out of  307200
+Suspiciously high zero norms : 297985 out of  307200
+Suspiciously high zero norms : 297911 out of  307200
+Suspiciously high zero norms : 297905 out of  307200
+Suspiciously high zero norms : 298085 out of  307200
+Suspiciously high zero norms : 74273 out of  76800
+Suspiciously high zero norms : 74327 out of  76800
+Suspiciously high zero norms : 74328 out of  76800
+Suspiciously high zero norms : 74291 out of  76800
+Suspiciously high zero norms : 74331 out of  76800
+Suspiciously high zero norms : 74323 out of  76800
+Suspiciously high zero norms : 74315 out of  76800
+Suspiciously high zero norms : 74366 out of  76800
+Suspiciously high zero norms : 18488 out of  19200
+Suspiciously high zero norms : 18503 out of  19200
+Suspiciously high zero norms : 18506 out of  19200
+Suspiciously high zero norms : 18491 out of  19200
+Suspiciously high zero norms : 18516 out of  19200
+Suspiciously high zero norms : 18505 out of  19200
+Suspiciously high zero norms : 18494 out of  19200
+Suspiciously high zero norms : 18518 out of  19200
+Suspiciously high zero norms : 4611 out of  4800
+Level : 5
+Loading correspondences from level_05_corr.bin
+ 
+1 of 22 
+2 of 22 
+3 of 22 
+4 of 22 
+5 of 22 
+6 of 22 
+7 of 22 
+8 of 22 
+9 of 22 
+10 of 22 
+11 of 22 
+12 of 22 
+13 of 22 
+14 of 22 
+15 of 22 
+16 of 22 
+17 of 22 
+18 of 22 
+19 of 22 
+20 of 22 
+21 of 22 
+22 of 22 done.
+Generating surfels : 
+Considering possible surfel : 1 of possible 22
+   Correspondence group:    { f:0  x:7  y:8}    { f:1  x:8  y:8}    { f:0  x:8  y:8}    { f:2  x:8  y:8}    { f:3  x:8  y:8}    { f:4  x:8  y:8}    { f:5  x:8  y:8}    { f:6  x:8  y:8}    { f:7  x:8  y:8} 
+  cg: { f:0  x:7  y:8} --> Norm: {0 0 0 0}
+  cg: { f:1  x:8  y:8} --> Norm: {1 0.886931 -0.270706 -0.374262}
+  cg: { f:0  x:8  y:8} --> Norm: {1 0.985574 -0.167671 -0.0230319}
+  cg: { f:2  x:8  y:8} --> Norm: {1 0.997984 -0.0368489 0.0516712}
+  cg: { f:3  x:8  y:8} --> Norm: {1 0.947877 -0.162111 0.274316}
+  cg: { f:4  x:8  y:8} --> Norm: {1 0.994461 0.038017 0.0979861}
+  cg: { f:5  x:8  y:8} --> Norm: {1 0.962962 0.202992 0.177479}
+  cg: { f:6  x:8  y:8} --> Norm: {1 0.98818 -0.0460296 0.146226}
+  cg: { f:7  x:8  y:8} --> Norm: {2 0.820082 -0.137434 0.555498}
+	 surfel generated
+Considering possible surfel : 2 of possible 22
+   Correspondence group:    { f:0  x:9  y:8}    { f:1  x:9  y:8}    { f:2  x:9  y:8}    { f:3  x:9  y:8}    { f:4  x:9  y:8}    { f:5  x:9  y:8}    { f:6  x:9  y:8}    { f:7  x:9  y:8} 
+  cg: { f:0  x:9  y:8} --> Norm: {1 0.985574 -0.167671 -0.0230319}
+  cg: { f:1  x:9  y:8} --> Norm: {2 0.612353 -0.366589 -0.700454}
+  cg: { f:2  x:9  y:8} --> Norm: {2 0.984094 -0.176817 0.0171461}
+  cg: { f:3  x:9  y:8} --> Norm: {2 0.800971 -0.367068 0.472976}
+  cg: { f:4  x:9  y:8} --> Norm: {1 0.989723 0.102494 -0.0997133}
+  cg: { f:5  x:9  y:8} --> Norm: {1 0.992738 0.108552 -0.0518459}
+  cg: { f:6  x:9  y:8} --> Norm: {2 0.932025 -0.347875 0.101548}
+  cg: { f:7  x:9  y:8} --> Norm: {1 0.985975 0.0713525 0.150874}
+	 surfel generated
+Considering possible surfel : 3 of possible 22
+   Correspondence group:    { f:0  x:11  y:8}    { f:1  x:11  y:8}    { f:2  x:11  y:8}    { f:3  x:11  y:8}    { f:4  x:11  y:8}    { f:5  x:11  y:8}    { f:6  x:11  y:8}    { f:7  x:11  y:8} 
+  cg: { f:0  x:11  y:8} --> Norm: {1 0.719533 0.252542 -0.646912}
+  cg: { f:1  x:11  y:8} --> Norm: {1 0.919818 -0.385986 -0.0703583}
+  cg: { f:2  x:11  y:8} --> Norm: {2 0.904235 -0.377282 0.200045}
+  cg: { f:3  x:11  y:8} --> Norm: {2 0.935573 -0.327083 -0.13312}
+  cg: { f:4  x:11  y:8} --> Norm: {2 0.953839 0.219049 0.205446}
+  cg: { f:5  x:11  y:8} --> Norm: {2 0.919603 0.222885 0.323502}
+  cg: { f:6  x:11  y:8} --> Norm: {1 0.980177 -0.0513982 -0.191339}
+  cg: { f:7  x:11  y:8} --> Norm: {1 0.926328 -0.0552011 -0.372652}
+	 surfel generated
+Considering possible surfel : 4 of possible 22
+   Correspondence group:    { f:0  x:8  y:9}    { f:1  x:8  y:9}    { f:2  x:8  y:9}    { f:3  x:8  y:9}    { f:4  x:8  y:9}    { f:5  x:8  y:9}    { f:6  x:8  y:9}    { f:7  x:8  y:9} 
+  cg: { f:0  x:8  y:9} --> Norm: {1 0.986199 0.16545 0.00613585}
+  cg: { f:1  x:8  y:9} --> Norm: {1 0.971421 -0.0256059 -0.23598}
+  cg: { f:2  x:8  y:9} --> Norm: {1 0.971019 0.222877 0.0862973}
+  cg: { f:3  x:8  y:9} --> Norm: {1 0.968317 0.172361 0.180706}
+  cg: { f:4  x:8  y:9} --> Norm: {1 0.947231 0.305569 0.0968529}
+  cg: { f:5  x:8  y:9} --> Norm: {1 0.938276 0.321626 0.127263}
+  cg: { f:6  x:8  y:9} --> Norm: {1 0.976856 0.17674 0.120484}
+  cg: { f:7  x:8  y:9} --> Norm: {2 0.801002 0.151896 0.579072}
+	 surfel generated
+Considering possible surfel : 5 of possible 22
+   Correspondence group:    { f:0  x:9  y:9}    { f:1  x:9  y:9}    { f:2  x:9  y:9}    { f:3  x:9  y:9}    { f:4  x:9  y:9}    { f:5  x:9  y:9}    { f:6  x:9  y:9}    { f:7  x:9  y:9} 
+  cg: { f:0  x:9  y:9} --> Norm: {2 0.985574 -0.167671 -0.0230319}
+  cg: { f:1  x:9  y:9} --> Norm: {2 0.992115 -0.123122 0.0234097}
+  cg: { f:2  x:9  y:9} --> Norm: {2 0.99094 0.103892 0.0851124}
+  cg: { f:3  x:9  y:9} --> Norm: {2 0.9971 0.0595533 0.0473866}
+  cg: { f:4  x:9  y:9} --> Norm: {2 0.994461 0.038017 0.0979861}
+  cg: { f:5  x:9  y:9} --> Norm: {2 0.962962 0.202992 0.177479}
+  cg: { f:6  x:9  y:9} --> Norm: {2 0.949212 0.260247 0.176829}
+  cg: { f:7  x:9  y:9} --> Norm: {2 0.911914 0.363898 0.189714}
+	 surfel generated
+Considering possible surfel : 6 of possible 22
+   Correspondence group:    { f:0  x:10  y:9}    { f:1  x:10  y:9}    { f:2  x:10  y:9}    { f:3  x:10  y:9}    { f:4  x:10  y:9}    { f:5  x:10  y:9}    { f:6  x:10  y:9}    { f:7  x:10  y:9} 
+  cg: { f:0  x:10  y:9} --> Norm: {1 0.962609 0.0407573 -0.26781}
+  cg: { f:1  x:10  y:9} --> Norm: {2 0.920441 -0.294759 -0.25672}
+  cg: { f:2  x:10  y:9} --> Norm: {2 0.89464 -0.33492 -0.295715}
+  cg: { f:3  x:10  y:9} --> Norm: {2 0.903733 0.2677 -0.334072}
+  cg: { f:4  x:10  y:9} --> Norm: {2 0.95693 0.0141817 -0.289972}
+  cg: { f:5  x:10  y:9} --> Norm: {2 0.956891 -0.153047 -0.246853}
+  cg: { f:6  x:10  y:9} --> Norm: {2 0.983025 -0.0473321 -0.177262}
+  cg: { f:7  x:10  y:9} --> Norm: {2 0.96311 0.194342 -0.186145}
+	 surfel generated
+Considering possible surfel : 7 of possible 22
+   Correspondence group:    { f:0  x:11  y:9}    { f:1  x:11  y:9}    { f:2  x:11  y:9}    { f:3  x:11  y:9}    { f:4  x:11  y:9}    { f:5  x:11  y:9}    { f:6  x:11  y:9}    { f:7  x:11  y:9} 
+  cg: { f:0  x:11  y:9} --> Norm: {2 0.839643 0.244952 -0.484767}
+  cg: { f:1  x:11  y:9} --> Norm: {2 0.891755 -0.411268 -0.188765}
+  cg: { f:2  x:11  y:9} --> Norm: {2 0.932189 -0.328614 -0.151777}
+  cg: { f:3  x:11  y:9} --> Norm: {2 0.929801 -0.314514 -0.191185}
+  cg: { f:4  x:11  y:9} --> Norm: {2 0.975043 -0.0185761 -0.221238}
+  cg: { f:5  x:11  y:9} --> Norm: {2 0.969377 0.176164 -0.171098}
+  cg: { f:6  x:11  y:9} --> Norm: {2 0.961291 0.171726 -0.215476}
+  cg: { f:7  x:11  y:9} --> Norm: {2 0.899046 -0.0966428 -0.427056}
+	 surfel generated
+Considering possible surfel : 8 of possible 22
+   Correspondence group:    { f:0  x:12  y:9}    { f:1  x:12  y:9}    { f:2  x:12  y:9}    { f:3  x:12  y:9}    { f:4  x:12  y:9}    { f:5  x:12  y:9}    { f:6  x:12  y:9}    { f:7  x:12  y:9} 
+  cg: { f:0  x:12  y:9} --> Norm: {1 0.719533 0.252542 -0.646912}
+  cg: { f:1  x:12  y:9} --> Norm: {1 0.901517 -0.402635 0.158597}
+  cg: { f:2  x:12  y:9} --> Norm: {1 0.935539 -0.288899 0.203235}
+  cg: { f:3  x:12  y:9} --> Norm: {1 0.98206 -0.168059 0.0855193}
+  cg: { f:4  x:12  y:9} --> Norm: {1 0.994609 0.103372 -0.0081429}
+  cg: { f:5  x:12  y:9} --> Norm: {1 0.975372 0.206049 0.0786937}
+  cg: { f:6  x:12  y:9} --> Norm: {1 0.961291 0.171726 -0.215476}
+  cg: { f:7  x:12  y:9} --> Norm: {1 0.899046 -0.0966428 -0.427056}
+	 surfel generated
+Considering possible surfel : 9 of possible 22
+   Correspondence group:    { f:0  x:7  y:10}    { f:1  x:7  y:10}    { f:2  x:7  y:10}    { f:3  x:7  y:10}    { f:4  x:7  y:10}    { f:5  x:7  y:10}    { f:6  x:7  y:10}    { f:7  x:7  y:10} 
+  cg: { f:0  x:7  y:10} --> Norm: {1 0.876547 0.48007 0.0346175}
+  cg: { f:1  x:7  y:10} --> Norm: {1 0.903301 0.423608 0.067851}
+  cg: { f:2  x:7  y:10} --> Norm: {1 0.928788 0.364928 0.064652}
+  cg: { f:3  x:7  y:10} --> Norm: {1 0.930066 0.361898 0.0632993}
+  cg: { f:4  x:7  y:10} --> Norm: {1 0.947617 0.286527 0.141155}
+  cg: { f:5  x:7  y:10} --> Norm: {1 0.971852 0.180806 0.151043}
+  cg: { f:6  x:7  y:10} --> Norm: {1 0.964515 0.208548 0.161922}
+  cg: { f:7  x:7  y:10} --> Norm: {1 0.905943 0.21894 0.362397}
+	 surfel generated
+Considering possible surfel : 10 of possible 22
+   Correspondence group:    { f:0  x:8  y:10}    { f:1  x:8  y:10}    { f:2  x:8  y:10}    { f:3  x:8  y:10}    { f:4  x:8  y:10}    { f:5  x:8  y:10}    { f:6  x:8  y:10}    { f:7  x:8  y:10} 
+  cg: { f:0  x:8  y:10} --> Norm: {2 0.876547 0.48007 0.0346175}
+  cg: { f:1  x:8  y:10} --> Norm: {2 0.903301 0.423608 0.067851}
+  cg: { f:2  x:8  y:10} --> Norm: {2 0.928788 0.364928 0.064652}
+  cg: { f:3  x:8  y:10} --> Norm: {2 0.930066 0.361898 0.0632993}
+  cg: { f:4  x:8  y:10} --> Norm: {2 0.947617 0.286527 0.141155}
+  cg: { f:5  x:8  y:10} --> Norm: {2 0.971852 0.180806 0.151043}
+  cg: { f:6  x:8  y:10} --> Norm: {2 0.964515 0.208548 0.161922}
+  cg: { f:7  x:8  y:10} --> Norm: {2 0.954304 0.27231 0.123089}
+	 surfel generated
+Considering possible surfel : 11 of possible 22
+   Correspondence group:    { f:0  x:9  y:10}    { f:1  x:9  y:10}    { f:2  x:9  y:10}    { f:3  x:9  y:10}    { f:4  x:9  y:10}    { f:5  x:9  y:10}    { f:6  x:9  y:10}    { f:7  x:9  y:10} 
+  cg: { f:0  x:9  y:10} --> Norm: {1 0.986199 0.16545 0.00613585}
+  cg: { f:1  x:9  y:10} --> Norm: {1 0.998276 0.00203049 -0.0586586}
+  cg: { f:2  x:9  y:10} --> Norm: {2 0.81168 0.560812 0.163297}
+  cg: { f:3  x:9  y:10} --> Norm: {2 0.813733 0.576073 0.0773162}
+  cg: { f:4  x:9  y:10} --> Norm: {2 0.822393 0.567252 0.0435217}
+  cg: { f:5  x:9  y:10} --> Norm: {2 0.825578 0.56242 0.0458836}
+  cg: { f:6  x:9  y:10} --> Norm: {2 0.837952 0.545563 0.0140437}
+  cg: { f:7  x:9  y:10} --> Norm: {2 0.834365 0.533602 0.138216}
+	 surfel generated
+Considering possible surfel : 12 of possible 22
+   Correspondence group:    { f:0  x:10  y:10}    { f:1  x:10  y:10}    { f:2  x:10  y:10}    { f:3  x:10  y:10}    { f:4  x:10  y:10}    { f:5  x:10  y:10}    { f:6  x:10  y:10}    { f:7  x:10  y:10} 
+  cg: { f:0  x:10  y:10} --> Norm: {1 0.962609 0.0407573 -0.26781}
+  cg: { f:1  x:10  y:10} --> Norm: {1 0.949127 -0.280628 -0.142853}
+  cg: { f:2  x:10  y:10} --> Norm: {1 0.998499 0.000322087 -0.0547698}
+  cg: { f:3  x:10  y:10} --> Norm: {1 0.981438 0.158569 -0.10787}
+  cg: { f:4  x:10  y:10} --> Norm: {1 0.982749 0.157518 -0.0969168}
+  cg: { f:5  x:10  y:10} --> Norm: {1 0.976924 0.207368 -0.051173}
+  cg: { f:6  x:10  y:10} --> Norm: {1 0.968971 0.24155 -0.0524194}
+  cg: { f:7  x:10  y:10} --> Norm: {1 0.961221 0.265103 -0.0759911}
+	 surfel generated
+Considering possible surfel : 13 of possible 22
+   Correspondence group:    { f:0  x:11  y:10}    { f:1  x:11  y:10}    { f:2  x:11  y:10}    { f:3  x:11  y:10}    { f:4  x:11  y:10}    { f:5  x:11  y:10}    { f:6  x:11  y:10}    { f:7  x:11  y:10} 
+  cg: { f:0  x:11  y:10} --> Norm: {1 0.839643 0.244952 -0.484767}
+  cg: { f:1  x:11  y:10} --> Norm: {1 0.908259 -0.353855 -0.223274}
+  cg: { f:2  x:11  y:10} --> Norm: {1 0.915956 -0.33269 -0.224369}
+  cg: { f:3  x:11  y:10} --> Norm: {1 0.961042 -0.0245377 -0.275312}
+  cg: { f:4  x:11  y:10} --> Norm: {1 0.966727 -0.00219893 -0.255801}
+  cg: { f:5  x:11  y:10} --> Norm: {1 0.977194 0.0117276 -0.212026}
+  cg: { f:6  x:11  y:10} --> Norm: {1 0.978281 0.0625885 -0.197606}
+  cg: { f:7  x:11  y:10} --> Norm: {1 0.94865 0.0497715 -0.312387}
+	 surfel generated
+Considering possible surfel : 14 of possible 22
+   Correspondence group:    { f:0  x:12  y:10}    { f:1  x:12  y:10}    { f:2  x:12  y:10}    { f:3  x:12  y:10}    { f:4  x:12  y:10}    { f:5  x:12  y:10}    { f:6  x:12  y:10}    { f:7  x:12  y:10} 
+  cg: { f:0  x:12  y:10} --> Norm: {1 0.839643 0.244952 -0.484767}
+  cg: { f:1  x:12  y:10} --> Norm: {1 0.891755 -0.411268 -0.188765}
+  cg: { f:2  x:12  y:10} --> Norm: {1 0.932189 -0.328614 -0.151777}
+  cg: { f:3  x:12  y:10} --> Norm: {1 0.929801 -0.314514 -0.191185}
+  cg: { f:4  x:12  y:10} --> Norm: {1 0.975043 -0.0185761 -0.221238}
+  cg: { f:5  x:12  y:10} --> Norm: {1 0.969377 0.176164 -0.171098}
+  cg: { f:6  x:12  y:10} --> Norm: {1 0.961291 0.171726 -0.215476}
+  cg: { f:7  x:12  y:10} --> Norm: {1 0.899046 -0.0966428 -0.427056}
+	 surfel generated
+Considering possible surfel : 15 of possible 22
+   Correspondence group:    { f:0  x:13  y:10}    { f:1  x:13  y:10}    { f:2  x:13  y:10}    { f:3  x:13  y:10}    { f:4  x:13  y:10}    { f:5  x:13  y:10}    { f:6  x:13  y:10}    { f:7  x:13  y:10} 
+  cg: { f:0  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:1  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:2  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:3  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:4  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:5  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:6  x:13  y:10} --> Norm: {0 0 0 0}
+  cg: { f:7  x:13  y:10} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  8 pifs 
+Considering possible surfel : 16 of possible 22
+   Correspondence group:    { f:0  x:14  y:10}    { f:1  x:14  y:10}    { f:0  x:15  y:10}    { f:2  x:14  y:10}    { f:3  x:14  y:10}    { f:4  x:14  y:10}    { f:5  x:14  y:10}    { f:6  x:14  y:10}    { f:7  x:14  y:10} 
+  cg: { f:0  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:1  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:0  x:15  y:10} --> Norm: {0 0 0 0}
+  cg: { f:2  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:3  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:4  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:5  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:6  x:14  y:10} --> Norm: {0 0 0 0}
+  cg: { f:7  x:14  y:10} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  9 pifs 
+Considering possible surfel : 17 of possible 22
+   Correspondence group:    { f:0  x:7  y:11}    { f:1  x:7  y:11}    { f:2  x:7  y:11}    { f:3  x:7  y:11}    { f:4  x:7  y:11}    { f:5  x:7  y:11}    { f:6  x:7  y:11}    { f:7  x:7  y:11} 
+  cg: { f:0  x:7  y:11} --> Norm: {1 0.876547 0.48007 0.0346175}
+  cg: { f:1  x:7  y:11} --> Norm: {1 0.903301 0.423608 0.067851}
+  cg: { f:2  x:7  y:11} --> Norm: {1 0.928788 0.364928 0.064652}
+  cg: { f:3  x:7  y:11} --> Norm: {1 0.930066 0.361898 0.0632993}
+  cg: { f:4  x:7  y:11} --> Norm: {1 0.947617 0.286527 0.141155}
+  cg: { f:5  x:7  y:11} --> Norm: {1 0.971852 0.180806 0.151043}
+  cg: { f:6  x:7  y:11} --> Norm: {1 0.964515 0.208548 0.161922}
+  cg: { f:7  x:7  y:11} --> Norm: {1 0.954304 0.27231 0.123089}
+	 surfel generated
+Considering possible surfel : 18 of possible 22
+   Correspondence group:    { f:0  x:8  y:11}    { f:1  x:8  y:11}    { f:2  x:8  y:11}    { f:3  x:8  y:11}    { f:4  x:8  y:11}    { f:5  x:8  y:11}    { f:6  x:8  y:11}    { f:7  x:8  y:11} 
+  cg: { f:0  x:8  y:11} --> Norm: {1 0.876547 0.48007 0.0346175}
+  cg: { f:1  x:8  y:11} --> Norm: {1 0.903301 0.423608 0.067851}
+  cg: { f:2  x:8  y:11} --> Norm: {1 0.877037 0.466488 0.114866}
+  cg: { f:3  x:8  y:11} --> Norm: {1 0.878469 0.472519 0.0708375}
+  cg: { f:4  x:8  y:11} --> Norm: {1 0.896742 0.432551 0.0935629}
+  cg: { f:5  x:8  y:11} --> Norm: {1 0.919414 0.380172 0.100731}
+  cg: { f:6  x:8  y:11} --> Norm: {1 0.918797 0.384403 0.0896976}
+  cg: { f:7  x:8  y:11} --> Norm: {1 0.903747 0.407197 0.132028}
+	 surfel generated
+Considering possible surfel : 19 of possible 22
+   Correspondence group:    { f:1  x:10  y:8}    { f:2  x:10  y:8}    { f:3  x:10  y:8}    { f:4  x:10  y:8}    { f:5  x:10  y:8}    { f:6  x:10  y:8}    { f:7  x:10  y:8} 
+  cg: { f:1  x:10  y:8} --> Norm: {2 0.860346 -0.406802 -0.307111}
+  cg: { f:2  x:10  y:8} --> Norm: {2 0.785069 -0.359575 -0.504354}
+  cg: { f:3  x:10  y:8} --> Norm: {2 0.838223 0.235587 -0.491813}
+  cg: { f:4  x:10  y:8} --> Norm: {2 0.962998 0.249612 -0.101635}
+  cg: { f:5  x:10  y:8} --> Norm: {2 0.960822 0.265045 -0.0810695}
+  cg: { f:6  x:10  y:8} --> Norm: {2 0.945763 -0.275943 -0.171431}
+  cg: { f:7  x:10  y:8} --> Norm: {2 0.8414 -0.258807 -0.47441}
+	 surfel generated
+Considering possible surfel : 20 of possible 22
+   Correspondence group:    { f:2  x:11  y:7}    { f:3  x:11  y:7}    { f:4  x:11  y:7}    { f:5  x:11  y:7}    { f:6  x:11  y:7}    { f:0  x:13  y:7}    { f:1  x:13  y:7}    { f:2  x:13  y:7}    { f:3  x:13  y:7}    { f:0  x:12  y:7}    { f:1  x:12  y:7}    { f:2  x:12  y:7}    { f:3  x:12  y:7}    { f:4  x:12  y:7}    { f:0  x:10  y:7}    { f:1  x:10  y:7}    { f:2  x:10  y:7}    { f:3  x:10  y:7}    { f:0  x:9  y:7}    { f:1  x:9  y:7}    { f:2  x:9  y:7}    { f:0  x:7  y:7}    { f:1  x:7  y:7}    { f:2  x:8  y:7}    { f:1  x:8  y:7}    { f:3  x:9  y:7}    { f:4  x:10  y:7}    { f:5  x:10  y:7}    { f:6  x:10  y:7}    { f:7  x:10  y:7} 
+  cg: { f:2  x:11  y:7} --> Norm: {1 0.943602 -0.319913 0.0852701}
+  cg: { f:3  x:11  y:7} --> Norm: {1 0.99902 0.0356955 -0.0261694}
+  cg: { f:4  x:11  y:7} --> Norm: {1 0.970046 0.237173 0.0525354}
+  cg: { f:5  x:11  y:7} --> Norm: {1 0.960495 0.249228 0.123831}
+  cg: { f:6  x:11  y:7} --> Norm: {1 0.945763 -0.275943 -0.171431}
+  cg: { f:0  x:13  y:7} --> Norm: {1 0.570083 0.249835 -0.78268}
+  cg: { f:1  x:13  y:7} --> Norm: {1 0.802348 -0.345351 0.486796}
+  cg: { f:2  x:13  y:7} --> Norm: {1 0.837783 -0.119912 0.532673}
+  cg: { f:3  x:13  y:7} --> Norm: {1 0.80974 0.183806 0.557258}
+  cg: { f:0  x:12  y:7} --> Norm: {1 0.570083 0.249835 -0.78268}
+  cg: { f:1  x:12  y:7} --> Norm: {1 0.802348 -0.345351 0.486796}
+  cg: { f:2  x:12  y:7} --> Norm: {1 0.891445 -0.25443 0.374955}
+  cg: { f:3  x:12  y:7} --> Norm: {1 0.968642 -0.0795179 0.235395}
+  cg: { f:4  x:12  y:7} --> Norm: {1 0.953839 0.219049 0.205446}
+  cg: { f:0  x:10  y:7} --> Norm: {0 0 0 0}
+  cg: { f:1  x:10  y:7} --> Norm: {1 0.757258 -0.397676 -0.518087}
+  cg: { f:2  x:10  y:7} --> Norm: {1 0.941412 -0.321742 -0.101121}
+  cg: { f:3  x:10  y:7} --> Norm: {1 0.98285 -0.175045 -0.0580061}
+  cg: { f:0  x:9  y:7} --> Norm: {0 0 0 0}
+  cg: { f:1  x:9  y:7} --> Norm: {1 0.757258 -0.397676 -0.518087}
+  cg: { f:2  x:9  y:7} --> Norm: {1 0.925385 -0.280567 -0.254841}
+  cg: { f:0  x:7  y:7} --> Norm: {0 0 0 0}
+  cg: { f:1  x:7  y:7} --> Norm: {0 0 0 0}
+  cg: { f:2  x:8  y:7} --> Norm: {1 0.984094 -0.176817 0.0171461}
+  cg: { f:1  x:8  y:7} --> Norm: {1 0.612353 -0.366589 -0.700454}
+  cg: { f:3  x:9  y:7} --> Norm: {1 0.996733 -0.0799486 -0.0114546}
+  cg: { f:4  x:10  y:7} --> Norm: {1 0.970046 0.237173 0.0525354}
+  cg: { f:5  x:10  y:7} --> Norm: {1 0.960495 0.249228 0.123831}
+  cg: { f:6  x:10  y:7} --> Norm: {1 0.948412 -0.315071 -0.0352957}
+  cg: { f:7  x:10  y:7} --> Norm: {1 0.8414 -0.258807 -0.47441}
+	 surfel generated
+Considering possible surfel : 21 of possible 22
+   Correspondence group:    { f:2  x:9  y:11}    { f:3  x:9  y:11}    { f:4  x:9  y:11}    { f:5  x:9  y:11}    { f:6  x:9  y:11}    { f:7  x:9  y:11} 
+  cg: { f:2  x:9  y:11} --> Norm: {1 0.877037 0.466488 0.114866}
+  cg: { f:3  x:9  y:11} --> Norm: {1 0.878469 0.472519 0.0708375}
+  cg: { f:4  x:9  y:11} --> Norm: {1 0.896742 0.432551 0.0935629}
+  cg: { f:5  x:9  y:11} --> Norm: {1 0.919414 0.380172 0.100731}
+  cg: { f:6  x:9  y:11} --> Norm: {1 0.918797 0.384403 0.0896976}
+  cg: { f:7  x:9  y:11} --> Norm: {1 0.903747 0.407197 0.132028}
+	 surfel generated
+Considering possible surfel : 22 of possible 22
+   Correspondence group:    { f:4  x:14  y:9}    { f:5  x:14  y:9}    { f:0  x:13  y:8}    { f:1  x:13  y:8}    { f:2  x:13  y:8}    { f:3  x:13  y:8}    { f:0  x:12  y:8}    { f:1  x:12  y:8}    { f:2  x:12  y:8}    { f:3  x:12  y:8}    { f:4  x:12  y:8}    { f:5  x:12  y:8}    { f:6  x:9  y:7}    { f:7  x:8  y:7} 
+  cg: { f:4  x:14  y:9} --> Norm: {0 0 0 0}
+  cg: { f:5  x:14  y:9} --> Norm: {0 0 0 0}
+  cg: { f:0  x:13  y:8} --> Norm: {1 0.570083 0.249835 -0.78268}
+  cg: { f:1  x:13  y:8} --> Norm: {1 0.802348 -0.345351 0.486796}
+  cg: { f:2  x:13  y:8} --> Norm: {1 0.837783 -0.119912 0.532673}
+  cg: { f:3  x:13  y:8} --> Norm: {1 0.80974 0.183806 0.557258}
+  cg: { f:0  x:12  y:8} --> Norm: {2 0.570083 0.249835 -0.78268}
+  cg: { f:1  x:12  y:8} --> Norm: {2 0.802348 -0.345351 0.486796}
+  cg: { f:2  x:12  y:8} --> Norm: {2 0.837783 -0.119912 0.532673}
+  cg: { f:3  x:12  y:8} --> Norm: {2 0.80974 0.183806 0.557258}
+  cg: { f:4  x:12  y:8} --> Norm: {1 0.994609 0.103372 -0.0081429}
+  cg: { f:5  x:12  y:8} --> Norm: {1 0.975372 0.206049 0.0786937}
+  cg: { f:6  x:9  y:7} --> Norm: {1 0.948412 -0.315071 -0.0352957}
+  cg: { f:7  x:8  y:7} --> Norm: {1 0.820082 -0.137434 0.555498}
+	 surfel generated
+Populating neighbour : 
+Populating neighbour : 1 of 20
+Populating neighbour : 2 of 20
+Populating neighbour : 3 of 20
+Populating neighbour : 4 of 20
+Populating neighbour : 5 of 20
+Populating neighbour : 6 of 20
+Populating neighbour : 7 of 20
+Populating neighbour : 8 of 20
+Populating neighbour : 9 of 20
+Populating neighbour : 10 of 20
+Populating neighbour : 11 of 20
+Populating neighbour : 12 of 20
+Populating neighbour : 13 of 20
+Populating neighbour : 14 of 20
+Populating neighbour : 15 of 20
+Populating neighbour : 16 of 20
+Populating neighbour : 17 of 20
+Populating neighbour : 18 of 20
+Populating neighbour : 19 of 20
+All tangents randomized
+
+ generated 20 surfels
+ Initialising tangents
+Saving... done.
+Saving... done.
+Level : 4
+Loading correspondences from level_04_corr.bin
+ 
+1 of 62 
+2 of 62 
+3 of 62 
+4 of 62 
+5 of 62 
+6 of 62 
+7 of 62 
+8 of 62 
+9 of 62 
+10 of 62 
+11 of 62 
+12 of 62 
+13 of 62 
+14 of 62 
+15 of 62 
+16 of 62 
+17 of 62 
+18 of 62 
+19 of 62 
+20 of 62 
+21 of 62 
+22 of 62 
+23 of 62 
+24 of 62 
+25 of 62 
+26 of 62 
+27 of 62 
+28 of 62 
+29 of 62 
+30 of 62 
+31 of 62 
+32 of 62 
+33 of 62 
+34 of 62 
+35 of 62 
+36 of 62 
+37 of 62 
+38 of 62 
+39 of 62 
+40 of 62 
+41 of 62 
+42 of 62 
+43 of 62 
+44 of 62 
+45 of 62 
+46 of 62 
+47 of 62 
+48 of 62 
+49 of 62 
+50 of 62 
+51 of 62 
+52 of 62 
+53 of 62 
+54 of 62 
+55 of 62 
+56 of 62 
+57 of 62 
+58 of 62 
+59 of 62 
+60 of 62 
+61 of 62 
+62 of 62 done.
+Generating surfels : 
+Considering possible surfel : 1 of possible 62
+   Correspondence group:    { f:0  x:14  y:16}    { f:1  x:16  y:16}    { f:0  x:15  y:16}    { f:0  x:14  y:15}    { f:1  x:15  y:15}    { f:2  x:17  y:15}    { f:1  x:16  y:15}    { f:1  x:17  y:15}    { f:3  x:18  y:15}    { f:2  x:18  y:15}    { f:4  x:18  y:16}    { f:3  x:18  y:16}    { f:5  x:18  y:16}    { f:6  x:18  y:16}    { f:7  x:18  y:16} 
+  cg: { f:0  x:14  y:16} --> Norm: {0 0 0 0}
+  cg: { f:1  x:16  y:16} --> Norm: {0 0 0 0}
+  cg: { f:0  x:15  y:16} --> Norm: {1 0.992186 -0.109644 -0.0595331}
+  cg: { f:0  x:14  y:15} --> Norm: {0 0 0 0}
+  cg: { f:1  x:15  y:15} --> Norm: {0 0 0 0}
+  cg: { f:2  x:17  y:15} --> Norm: {0 0 0 0}
+  cg: { f:1  x:16  y:15} --> Norm: {0 0 0 0}
+  cg: { f:1  x:17  y:15} --> Norm: {0 0 0 0}
+  cg: { f:3  x:18  y:15} --> Norm: {1 0.801548 -0.354982 0.481153}
+  cg: { f:2  x:18  y:15} --> Norm: {1 0.774754 -0.0112819 -0.632162}
+  cg: { f:4  x:18  y:16} --> Norm: {1 0.818548 -0.327152 0.472177}
+  cg: { f:3  x:18  y:16} --> Norm: {2 0.916731 -0.199117 0.346348}
+  cg: { f:5  x:18  y:16} --> Norm: {1 0.934359 -0.244477 0.259237}
+  cg: { f:6  x:18  y:16} --> Norm: {1 0.858759 -0.352536 0.371822}
+  cg: { f:7  x:18  y:16} --> Norm: {1 0.906554 0.107753 0.408104}
+	 surfel generated
+Considering possible surfel : 2 of possible 62
+   Correspondence group:    { f:0  x:17  y:17}    { f:1  x:18  y:17}    { f:0  x:15  y:17}    { f:1  x:17  y:17}    { f:0  x:16  y:17}    { f:2  x:18  y:17}    { f:0  x:16  y:16}    { f:1  x:17  y:16}    { f:2  x:18  y:16}    { f:3  x:19  y:17}    { f:4  x:19  y:17}    { f:5  x:19  y:17}    { f:6  x:19  y:17}    { f:5  x:18  y:17}    { f:6  x:18  y:17}    { f:7  x:18  y:17} 
+  cg: { f:0  x:17  y:17} --> Norm: {1 0.961389 -0.254624 -0.104388}
+  cg: { f:1  x:18  y:17} --> Norm: {1 0.837414 -0.537006 -0.10179}
+  cg: { f:0  x:15  y:17} --> Norm: {1 0.992186 -0.109644 -0.0595331}
+  cg: { f:1  x:17  y:17} --> Norm: {1 0.893409 -0.44317 -0.0736241}
+  cg: { f:0  x:16  y:17} --> Norm: {2 0.992186 -0.109644 -0.0595331}
+  cg: { f:2  x:18  y:17} --> Norm: {2 0.989665 -0.108128 0.0941909}
+  cg: { f:0  x:16  y:16} --> Norm: {1 0.992186 -0.109644 -0.0595331}
+  cg: { f:1  x:17  y:16} --> Norm: {0 0 0 0}
+  cg: { f:2  x:18  y:16} --> Norm: {1 0.954529 -0.064599 -0.291035}
+  cg: { f:3  x:19  y:17} --> Norm: {2 0.775362 -0.323504 0.542364}
+  cg: { f:4  x:19  y:17} --> Norm: {2 0.87646 -0.295817 0.379881}
+  cg: { f:5  x:19  y:17} --> Norm: {2 0.747409 0.0693922 -0.660731}
+  cg: { f:6  x:19  y:17} --> Norm: {1 0.953249 -0.279104 0.115834}
+  cg: { f:5  x:18  y:17} --> Norm: {2 0.66493 -0.455982 0.591564}
+  cg: { f:6  x:18  y:17} --> Norm: {2 0.879375 -0.296284 0.372714}
+  cg: { f:7  x:18  y:17} --> Norm: {1 0.93068 -0.0335246 0.364294}
+	 surfel generated
+Considering possible surfel : 3 of possible 62
+   Correspondence group:    { f:0  x:23  y:17}    { f:1  x:24  y:17}    { f:2  x:24  y:17}    { f:1  x:23  y:17}    { f:2  x:23  y:17}    { f:3  x:23  y:17}    { f:4  x:23  y:17}    { f:5  x:23  y:17}    { f:6  x:23  y:17}    { f:7  x:23  y:17} 
+  cg: { f:0  x:23  y:17} --> Norm: {1 0.934575 -0.0838476 -0.345743}
+  cg: { f:1  x:24  y:17} --> Norm: {2 0.616134 -0.561999 0.551848}
+  cg: { f:2  x:24  y:17} --> Norm: {2 0.60884 -0.50496 0.611825}
+  cg: { f:1  x:23  y:17} --> Norm: {1 0.743406 -0.572737 0.345427}
+  cg: { f:2  x:23  y:17} --> Norm: {1 0.736415 -0.458407 0.497549}
+  cg: { f:3  x:23  y:17} --> Norm: {1 0.764762 -0.414989 0.492872}
+  cg: { f:4  x:23  y:17} --> Norm: {2 0.76492 -0.00793572 0.644077}
+  cg: { f:5  x:23  y:17} --> Norm: {2 0.898089 -0.00769811 0.439746}
+  cg: { f:6  x:23  y:17} --> Norm: {1 0.877358 -0.130105 0.46186}
+  cg: { f:7  x:23  y:17} --> Norm: {1 0.919908 -0.355107 -0.166336}
+	 surfel generated
+Considering possible surfel : 4 of possible 62
+   Correspondence group:    { f:0  x:16  y:18}    { f:1  x:17  y:18}    { f:2  x:17  y:18}    { f:3  x:17  y:18}    { f:4  x:17  y:18}    { f:5  x:17  y:18}    { f:6  x:17  y:18}    { f:7  x:17  y:18} 
+  cg: { f:0  x:16  y:18} --> Norm: {1 0.992846 0.021892 0.117379}
+  cg: { f:1  x:17  y:18} --> Norm: {1 0.985058 -0.0448068 0.166293}
+  cg: { f:2  x:17  y:18} --> Norm: {1 0.973374 -0.0593166 0.221415}
+  cg: { f:3  x:17  y:18} --> Norm: {1 0.883847 -0.266816 0.384218}
+  cg: { f:4  x:17  y:18} --> Norm: {1 0.863055 -0.287407 0.41537}
+  cg: { f:5  x:17  y:18} --> Norm: {2 0.626076 -0.463895 0.626763}
+  cg: { f:6  x:17  y:18} --> Norm: {2 0.706428 -0.274185 0.65252}
+  cg: { f:7  x:17  y:18} --> Norm: {2 0.772698 -0.0274094 0.634182}
+	 surfel generated
+Considering possible surfel : 5 of possible 62
+   Correspondence group:    { f:0  x:17  y:18}    { f:1  x:18  y:18}    { f:2  x:18  y:18}    { f:3  x:18  y:18}    { f:4  x:18  y:18}    { f:5  x:18  y:18}    { f:6  x:18  y:18}    { f:7  x:18  y:18} 
+  cg: { f:0  x:17  y:18} --> Norm: {2 0.997886 -0.0268277 -0.0591928}
+  cg: { f:1  x:18  y:18} --> Norm: {2 0.893409 -0.44317 -0.0736241}
+  cg: { f:2  x:18  y:18} --> Norm: {2 0.964189 -0.162187 0.209846}
+  cg: { f:3  x:18  y:18} --> Norm: {2 0.821734 -0.513317 0.247504}
+  cg: { f:4  x:18  y:18} --> Norm: {2 0.811493 -0.401803 0.424303}
+  cg: { f:5  x:18  y:18} --> Norm: {2 0.909398 -0.130223 0.395016}
+  cg: { f:6  x:18  y:18} --> Norm: {2 0.971791 -0.131382 0.195859}
+  cg: { f:7  x:18  y:18} --> Norm: {2 0.984338 -0.176291 0.000316848}
+	 surfel generated
+Considering possible surfel : 6 of possible 62
+   Correspondence group:    { f:0  x:18  y:18}    { f:1  x:19  y:18}    { f:2  x:19  y:18}    { f:3  x:19  y:18}    { f:4  x:19  y:18}    { f:5  x:19  y:18}    { f:6  x:19  y:18}    { f:7  x:19  y:18} 
+  cg: { f:0  x:18  y:18} --> Norm: {2 0.780955 -0.597435 -0.182153}
+  cg: { f:1  x:19  y:18} --> Norm: {2 0.770756 -0.624004 -0.12866}
+  cg: { f:2  x:19  y:18} --> Norm: {2 0.742965 -0.620774 -0.250286}
+  cg: { f:3  x:19  y:18} --> Norm: {2 0.9579 -0.0582319 -0.281134}
+  cg: { f:4  x:19  y:18} --> Norm: {2 0.971169 -0.108794 -0.212119}
+  cg: { f:5  x:19  y:18} --> Norm: {2 0.945283 -0.151053 -0.289177}
+  cg: { f:6  x:19  y:18} --> Norm: {2 0.973295 -0.15708 -0.167403}
+  cg: { f:7  x:19  y:18} --> Norm: {1 0.993382 -0.107921 0.0393134}
+	 surfel generated
+Considering possible surfel : 7 of possible 62
+   Correspondence group:    { f:0  x:19  y:18}    { f:1  x:20  y:18}    { f:2  x:20  y:18}    { f:3  x:20  y:18}    { f:4  x:20  y:18}    { f:5  x:20  y:18}    { f:6  x:20  y:18}    { f:7  x:20  y:18} 
+  cg: { f:0  x:19  y:18} --> Norm: {2 0.769551 -0.634214 -0.0745958}
+  cg: { f:1  x:20  y:18} --> Norm: {1 0.990828 -0.134024 -0.0172257}
+  cg: { f:2  x:20  y:18} --> Norm: {1 0.968055 -0.241626 -0.0669856}
+  cg: { f:3  x:20  y:18} --> Norm: {2 0.961601 -0.111009 -0.250998}
+  cg: { f:4  x:20  y:18} --> Norm: {2 0.932186 -0.160811 -0.324299}
+  cg: { f:5  x:20  y:18} --> Norm: {2 0.708089 -0.610867 -0.354192}
+  cg: { f:6  x:20  y:18} --> Norm: {1 0.941797 -0.32802 -0.0736364}
+  cg: { f:7  x:20  y:18} --> Norm: {1 0.990825 -0.130862 0.0337809}
+	 surfel generated
+Considering possible surfel : 8 of possible 62
+   Correspondence group:    { f:0  x:20  y:18}    { f:1  x:21  y:18}    { f:2  x:21  y:18}    { f:3  x:21  y:18}    { f:4  x:21  y:18}    { f:5  x:21  y:18}    { f:6  x:21  y:18}    { f:7  x:21  y:18} 
+  cg: { f:0  x:20  y:18} --> Norm: {1 0.99199 -0.126229 -0.0047514}
+  cg: { f:1  x:21  y:18} --> Norm: {1 0.996473 -0.0836415 0.00679989}
+  cg: { f:2  x:21  y:18} --> Norm: {1 0.970098 -0.242672 -0.00447629}
+  cg: { f:3  x:21  y:18} --> Norm: {1 0.938174 -0.346125 -0.0051222}
+  cg: { f:4  x:21  y:18} --> Norm: {2 0.764916 -0.590907 -0.256381}
+  cg: { f:5  x:21  y:18} --> Norm: {2 0.788316 -0.592597 -0.16549}
+  cg: { f:6  x:21  y:18} --> Norm: {2 0.790968 -0.601399 -0.112647}
+  cg: { f:7  x:21  y:18} --> Norm: {2 0.979526 -0.130454 0.153333}
+	 surfel generated
+Considering possible surfel : 9 of possible 62
+   Correspondence group:    { f:0  x:21  y:18}    { f:1  x:22  y:18}    { f:2  x:22  y:18}    { f:3  x:22  y:18}    { f:4  x:22  y:18}    { f:5  x:22  y:18}    { f:6  x:22  y:18}    { f:7  x:22  y:18} 
+  cg: { f:0  x:21  y:18} --> Norm: {1 0.999689 -0.023704 0.00770756}
+  cg: { f:1  x:22  y:18} --> Norm: {1 0.956625 -0.27842 0.0857417}
+  cg: { f:2  x:22  y:18} --> Norm: {1 0.924455 -0.362444 0.118394}
+  cg: { f:3  x:22  y:18} --> Norm: {2 0.750884 -0.604817 0.265271}
+  cg: { f:4  x:22  y:18} --> Norm: {2 0.740681 -0.563113 0.366463}
+  cg: { f:5  x:22  y:18} --> Norm: {2 0.741532 -0.390685 0.545432}
+  cg: { f:6  x:22  y:18} --> Norm: {2 0.778735 -0.351306 0.519765}
+  cg: { f:7  x:22  y:18} --> Norm: {2 0.943231 -0.330483 -0.0331234}
+	 surfel generated
+Considering possible surfel : 10 of possible 62
+   Correspondence group:    { f:0  x:22  y:18}    { f:1  x:23  y:18}    { f:2  x:23  y:18}    { f:3  x:23  y:18}    { f:4  x:23  y:18}    { f:5  x:23  y:18}    { f:6  x:23  y:18}    { f:7  x:23  y:18} 
+  cg: { f:0  x:22  y:18} --> Norm: {1 0.997899 -0.0452438 0.0463657}
+  cg: { f:1  x:23  y:18} --> Norm: {2 0.669811 -0.635721 0.383682}
+  cg: { f:2  x:23  y:18} --> Norm: {2 0.641483 -0.598685 0.479662}
+  cg: { f:3  x:23  y:18} --> Norm: {2 0.651802 -0.567667 0.5029}
+  cg: { f:4  x:23  y:18} --> Norm: {2 0.834186 -0.359422 0.41827}
+  cg: { f:5  x:23  y:18} --> Norm: {2 0.923744 -0.187663 0.333885}
+  cg: { f:6  x:23  y:18} --> Norm: {2 0.958127 -0.209939 0.194726}
+  cg: { f:7  x:23  y:18} --> Norm: {2 0.898043 -0.195885 -0.393889}
+	 surfel generated
+Considering possible surfel : 11 of possible 62
+   Correspondence group:    { f:0  x:24  y:18}    { f:1  x:25  y:18}    { f:0  x:25  y:18}    { f:2  x:25  y:18}    { f:0  x:23  y:18}    { f:1  x:24  y:18}    { f:2  x:24  y:18}    { f:3  x:24  y:18}    { f:4  x:24  y:18}    { f:5  x:24  y:18}    { f:6  x:24  y:18}    { f:7  x:24  y:18} 
+  cg: { f:0  x:24  y:18} --> Norm: {2 0.732545 -0.056264 -0.678389}
+  cg: { f:1  x:25  y:18} --> Norm: {1 0.939392 -0.314569 0.13634}
+  cg: { f:0  x:25  y:18} --> Norm: {1 0.826074 0.103548 -0.553967}
+  cg: { f:2  x:25  y:18} --> Norm: {1 0.929419 -0.328217 0.168684}
+  cg: { f:0  x:23  y:18} --> Norm: {2 0.958596 -0.140222 0.247854}
+  cg: { f:1  x:24  y:18} --> Norm: {2 0.879513 -0.470599 0.0706621}
+  cg: { f:2  x:24  y:18} --> Norm: {2 0.840814 -0.531344 0.103471}
+  cg: { f:3  x:24  y:18} --> Norm: {1 0.964096 -0.153323 0.216822}
+  cg: { f:4  x:24  y:18} --> Norm: {1 0.977087 -0.120325 0.175564}
+  cg: { f:5  x:24  y:18} --> Norm: {1 0.993971 -0.0700461 0.0843461}
+  cg: { f:6  x:24  y:18} --> Norm: {1 0.989822 -0.0998521 -0.101399}
+  cg: { f:7  x:24  y:18} --> Norm: {1 0.924961 -0.220359 -0.30966}
+	 surfel generated
+Considering possible surfel : 12 of possible 62
+   Correspondence group:    { f:0  x:16  y:19}    { f:1  x:16  y:19}    { f:2  x:16  y:19}    { f:3  x:16  y:19}    { f:4  x:16  y:19}    { f:5  x:16  y:19}    { f:6  x:16  y:19}    { f:7  x:16  y:19} 
+  cg: { f:0  x:16  y:19} --> Norm: {1 0.968435 0.0785156 0.236576}
+  cg: { f:1  x:16  y:19} --> Norm: {1 0.943845 0.10609 0.312892}
+  cg: { f:2  x:16  y:19} --> Norm: {1 0.937232 0.0239616 0.347882}
+  cg: { f:3  x:16  y:19} --> Norm: {1 0.933808 0.0243833 0.356943}
+  cg: { f:4  x:16  y:19} --> Norm: {1 0.921562 -0.0453698 0.385571}
+  cg: { f:5  x:16  y:19} --> Norm: {1 0.871643 -0.161692 0.462704}
+  cg: { f:6  x:16  y:19} --> Norm: {1 0.880458 -0.0840653 0.466612}
+  cg: { f:7  x:16  y:19} --> Norm: {1 0.881373 0.00243704 0.472415}
+	 surfel generated
+Considering possible surfel : 13 of possible 62
+   Correspondence group:    { f:0  x:17  y:19}    { f:1  x:18  y:19}    { f:2  x:18  y:19}    { f:3  x:18  y:19}    { f:4  x:18  y:19}    { f:5  x:18  y:19}    { f:6  x:18  y:19}    { f:7  x:18  y:19} 
+  cg: { f:0  x:17  y:19} --> Norm: {2 0.867069 0.199471 0.456511}
+  cg: { f:1  x:18  y:19} --> Norm: {2 0.980091 0.171436 0.100153}
+  cg: { f:2  x:18  y:19} --> Norm: {2 0.983419 0.148427 0.104194}
+  cg: { f:3  x:18  y:19} --> Norm: {2 0.990579 0.0858667 0.106677}
+  cg: { f:4  x:18  y:19} --> Norm: {2 0.993221 -0.0034567 0.116187}
+  cg: { f:5  x:18  y:19} --> Norm: {2 0.992578 0.0482166 0.111639}
+  cg: { f:6  x:18  y:19} --> Norm: {2 0.993757 -0.0150224 0.110551}
+  cg: { f:7  x:18  y:19} --> Norm: {2 0.993463 -0.0283652 0.11057}
+	 surfel generated
+Considering possible surfel : 14 of possible 62
+   Correspondence group:    { f:0  x:18  y:19}    { f:1  x:19  y:19}    { f:2  x:19  y:19}    { f:3  x:19  y:19}    { f:4  x:19  y:19}    { f:5  x:19  y:19}    { f:6  x:19  y:19}    { f:7  x:19  y:19} 
+  cg: { f:0  x:18  y:19} --> Norm: {2 0.985387 0.10652 0.13291}
+  cg: { f:1  x:19  y:19} --> Norm: {2 0.993007 0.0980835 0.0657073}
+  cg: { f:2  x:19  y:19} --> Norm: {2 0.998499 -0.0111642 0.0536171}
+  cg: { f:3  x:19  y:19} --> Norm: {2 0.998213 0.0451852 0.0391124}
+  cg: { f:4  x:19  y:19} --> Norm: {2 0.9974 -0.0713089 0.0104068}
+  cg: { f:5  x:19  y:19} --> Norm: {2 0.989503 -0.143959 0.0126626}
+  cg: { f:6  x:19  y:19} --> Norm: {2 0.977105 -0.211336 0.0245706}
+  cg: { f:7  x:19  y:19} --> Norm: {2 0.99231 -0.115575 0.0443197}
+	 surfel generated
+Considering possible surfel : 15 of possible 62
+   Correspondence group:    { f:0  x:19  y:19}    { f:1  x:20  y:19}    { f:2  x:20  y:19}    { f:3  x:20  y:19}    { f:4  x:20  y:19}    { f:5  x:20  y:19}    { f:6  x:20  y:19}    { f:7  x:20  y:19} 
+  cg: { f:0  x:19  y:19} --> Norm: {2 0.996911 0.0505348 0.0601222}
+  cg: { f:1  x:20  y:19} --> Norm: {2 0.994644 0.0870612 0.0557194}
+  cg: { f:2  x:20  y:19} --> Norm: {2 0.99481 -0.100495 0.0159543}
+  cg: { f:3  x:20  y:19} --> Norm: {2 0.986247 -0.165132 -0.00695668}
+  cg: { f:4  x:20  y:19} --> Norm: {2 0.977376 -0.207267 -0.042142}
+  cg: { f:5  x:20  y:19} --> Norm: {2 0.975988 -0.210393 -0.0564094}
+  cg: { f:6  x:20  y:19} --> Norm: {2 0.988161 -0.150049 -0.0319776}
+  cg: { f:7  x:20  y:19} --> Norm: {2 0.993884 -0.110417 0.00166949}
+	 surfel generated
+Considering possible surfel : 16 of possible 62
+   Correspondence group:    { f:0  x:20  y:19}    { f:1  x:21  y:19}    { f:2  x:21  y:19}    { f:3  x:21  y:19}    { f:4  x:21  y:19}    { f:5  x:21  y:19}    { f:6  x:21  y:19}    { f:7  x:21  y:19} 
+  cg: { f:0  x:20  y:19} --> Norm: {2 0.995332 0.0810041 0.0524746}
+  cg: { f:1  x:21  y:19} --> Norm: {2 0.995929 -0.0689704 -0.0580362}
+  cg: { f:2  x:21  y:19} --> Norm: {2 0.977906 -0.194626 -0.0762921}
+  cg: { f:3  x:21  y:19} --> Norm: {2 0.960733 -0.258929 -0.0997383}
+  cg: { f:4  x:21  y:19} --> Norm: {2 0.914799 -0.389453 -0.107093}
+  cg: { f:5  x:21  y:19} --> Norm: {2 0.848831 -0.521227 -0.0883623}
+  cg: { f:6  x:21  y:19} --> Norm: {2 0.872612 -0.483023 -0.0723713}
+  cg: { f:7  x:21  y:19} --> Norm: {2 0.984134 -0.165226 -0.0646569}
+	 surfel generated
+Considering possible surfel : 17 of possible 62
+   Correspondence group:    { f:0  x:21  y:19}    { f:1  x:22  y:19}    { f:2  x:22  y:19}    { f:3  x:22  y:19}    { f:4  x:22  y:19}    { f:5  x:22  y:19}    { f:6  x:22  y:19}    { f:7  x:22  y:19} 
+  cg: { f:0  x:21  y:19} --> Norm: {2 0.998136 0.0242295 -0.0560101}
+  cg: { f:1  x:22  y:19} --> Norm: {2 0.963693 -0.266065 0.0224767}
+  cg: { f:2  x:22  y:19} --> Norm: {2 0.904184 -0.424542 0.047063}
+  cg: { f:3  x:22  y:19} --> Norm: {2 0.849293 -0.523549 0.0678056}
+  cg: { f:4  x:22  y:19} --> Norm: {2 0.881695 -0.459662 0.106414}
+  cg: { f:5  x:22  y:19} --> Norm: {2 0.913349 -0.390433 0.115566}
+  cg: { f:6  x:22  y:19} --> Norm: {2 0.948219 -0.304416 0.0906233}
+  cg: { f:7  x:22  y:19} --> Norm: {2 0.996047 -0.0738123 0.0494196}
+	 surfel generated
+Considering possible surfel : 18 of possible 62
+   Correspondence group:    { f:0  x:22  y:19}    { f:1  x:23  y:19}    { f:2  x:23  y:19}    { f:3  x:23  y:19}    { f:4  x:23  y:19}    { f:5  x:23  y:19}    { f:6  x:23  y:19}    { f:7  x:23  y:19} 
+  cg: { f:0  x:22  y:19} --> Norm: {2 0.984063 -0.175835 0.0264922}
+  cg: { f:1  x:23  y:19} --> Norm: {2 0.996158 -0.0844507 -0.0231625}
+  cg: { f:2  x:23  y:19} --> Norm: {2 0.987336 -0.158644 -0.000795377}
+  cg: { f:3  x:23  y:19} --> Norm: {2 0.998451 -0.0517067 -0.0205533}
+  cg: { f:4  x:23  y:19} --> Norm: {2 0.995857 -0.0862715 -0.0287557}
+  cg: { f:5  x:23  y:19} --> Norm: {2 0.994986 -0.0833208 -0.0553298}
+  cg: { f:6  x:23  y:19} --> Norm: {2 0.992746 -0.0835412 -0.0864672}
+  cg: { f:7  x:23  y:19} --> Norm: {2 0.964209 -0.241062 -0.11041}
+	 surfel generated
+Considering possible surfel : 19 of possible 62
+   Correspondence group:    { f:0  x:23  y:19}    { f:1  x:24  y:19}    { f:2  x:24  y:19}    { f:3  x:24  y:19}    { f:4  x:24  y:19}    { f:5  x:24  y:19}    { f:6  x:24  y:19}    { f:7  x:24  y:19} 
+  cg: { f:0  x:23  y:19} --> Norm: {2 0.992904 0.113477 -0.0355637}
+  cg: { f:1  x:24  y:19} --> Norm: {2 0.938158 0.217603 -0.269275}
+  cg: { f:2  x:24  y:19} --> Norm: {2 0.940051 0.192399 -0.281578}
+  cg: { f:3  x:24  y:19} --> Norm: {2 0.926964 0.0947781 -0.362982}
+  cg: { f:4  x:24  y:19} --> Norm: {2 0.914985 0.0213923 -0.40292}
+  cg: { f:5  x:24  y:19} --> Norm: {2 0.915695 0.0156487 -0.401569}
+  cg: { f:6  x:24  y:19} --> Norm: {2 0.915668 0.00430723 -0.401913}
+  cg: { f:7  x:24  y:19} --> Norm: {2 0.883542 -0.2172 -0.414943}
+	 surfel generated
+Considering possible surfel : 20 of possible 62
+   Correspondence group:    { f:0  x:24  y:19}    { f:1  x:25  y:19}    { f:0  x:25  y:19}    { f:2  x:25  y:19}    { f:3  x:25  y:19}    { f:4  x:25  y:19}    { f:5  x:25  y:19}    { f:6  x:25  y:19}    { f:7  x:25  y:19} 
+  cg: { f:0  x:24  y:19} --> Norm: {2 0.909175 0.104573 -0.40307}
+  cg: { f:1  x:25  y:19} --> Norm: {1 0.987188 -0.0100601 -0.159246}
+  cg: { f:0  x:25  y:19} --> Norm: {1 0.902653 0.0510056 -0.427337}
+  cg: { f:2  x:25  y:19} --> Norm: {1 0.9845 -0.0424525 -0.170166}
+  cg: { f:3  x:25  y:19} --> Norm: {1 0.92539 0.128758 -0.356476}
+  cg: { f:4  x:25  y:19} --> Norm: {1 0.926644 0.0700192 -0.369361}
+  cg: { f:5  x:25  y:19} --> Norm: {1 0.922595 0.0726622 -0.378865}
+  cg: { f:6  x:25  y:19} --> Norm: {1 0.923771 0.070834 -0.376338}
+  cg: { f:7  x:25  y:19} --> Norm: {1 0.920581 -0.0385642 -0.388644}
+	 surfel generated
+Considering possible surfel : 21 of possible 62
+   Correspondence group:    { f:0  x:14  y:20}    { f:1  x:15  y:20}    { f:2  x:15  y:20}    { f:1  x:14  y:20}    { f:2  x:14  y:20}    { f:3  x:15  y:20}    { f:4  x:15  y:20}    { f:5  x:15  y:20}    { f:6  x:15  y:20}    { f:7  x:15  y:20} 
+  cg: { f:0  x:14  y:20} --> Norm: {1 0.990158 -0.137409 0.0265819}
+  cg: { f:1  x:15  y:20} --> Norm: {1 0.985105 -0.0900553 0.146484}
+  cg: { f:2  x:15  y:20} --> Norm: {1 0.982461 -0.0675376 0.173805}
+  cg: { f:1  x:14  y:20} --> Norm: {0 0 0 0}
+  cg: { f:2  x:14  y:20} --> Norm: {0 0 0 0}
+  cg: { f:3  x:15  y:20} --> Norm: {1 0.981075 -0.0707348 0.180246}
+  cg: { f:4  x:15  y:20} --> Norm: {1 0.974344 -0.0345495 0.222398}
+  cg: { f:5  x:15  y:20} --> Norm: {1 0.987181 -0.0641424 0.146146}
+  cg: { f:6  x:15  y:20} --> Norm: {1 0.985929 -0.0603138 0.155907}
+  cg: { f:7  x:15  y:20} --> Norm: {1 0.987039 -0.0549764 0.150768}
+	 surfel generated
+Considering possible surfel : 22 of possible 62
+   Correspondence group:    { f:0  x:15  y:20}    { f:1  x:16  y:20}    { f:2  x:16  y:20}    { f:3  x:16  y:20}    { f:4  x:16  y:20}    { f:5  x:16  y:20}    { f:6  x:16  y:20}    { f:7  x:16  y:20} 
+  cg: { f:0  x:15  y:20} --> Norm: {1 0.989362 -0.0929585 0.111901}
+  cg: { f:1  x:16  y:20} --> Norm: {2 0.973717 -0.0454216 0.223188}
+  cg: { f:2  x:16  y:20} --> Norm: {2 0.966671 -0.0284716 0.254433}
+  cg: { f:3  x:16  y:20} --> Norm: {2 0.964293 -0.0290361 0.263242}
+  cg: { f:4  x:16  y:20} --> Norm: {2 0.943697 0.00043875 0.330811}
+  cg: { f:5  x:16  y:20} --> Norm: {2 0.94258 0.0044423 0.333952}
+  cg: { f:6  x:16  y:20} --> Norm: {2 0.935603 0.0207727 0.352442}
+  cg: { f:7  x:16  y:20} --> Norm: {2 0.940351 0.0218561 0.339503}
+	 surfel generated
+Considering possible surfel : 23 of possible 62
+   Correspondence group:    { f:0  x:16  y:20}    { f:1  x:17  y:20}    { f:2  x:17  y:20}    { f:3  x:17  y:20}    { f:4  x:17  y:20}    { f:5  x:17  y:20}    { f:6  x:17  y:20}    { f:7  x:17  y:20} 
+  cg: { f:0  x:16  y:20} --> Norm: {2 0.970365 -0.0594193 0.234225}
+  cg: { f:1  x:17  y:20} --> Norm: {2 0.940019 0.213956 0.265682}
+  cg: { f:2  x:17  y:20} --> Norm: {2 0.925657 0.210156 0.314633}
+  cg: { f:3  x:17  y:20} --> Norm: {2 0.922879 0.203555 0.326896}
+  cg: { f:4  x:17  y:20} --> Norm: {2 0.921743 0.182441 0.342206}
+  cg: { f:5  x:17  y:20} --> Norm: {2 0.92002 0.178719 0.348746}
+  cg: { f:6  x:17  y:20} --> Norm: {2 0.91669 0.184669 0.354367}
+  cg: { f:7  x:17  y:20} --> Norm: {2 0.92013 0.192721 0.34091}
+	 surfel generated
+Considering possible surfel : 24 of possible 62
+   Correspondence group:    { f:0  x:17  y:20}    { f:1  x:18  y:20}    { f:2  x:18  y:20}    { f:3  x:18  y:20}    { f:4  x:18  y:20}    { f:5  x:18  y:20}    { f:6  x:18  y:20}    { f:7  x:18  y:20} 
+  cg: { f:0  x:17  y:20} --> Norm: {2 0.93741 0.192649 0.290084}
+  cg: { f:1  x:18  y:20} --> Norm: {2 0.934019 0.356954 0.0138985}
+  cg: { f:2  x:18  y:20} --> Norm: {2 0.936547 0.346148 0.0553326}
+  cg: { f:3  x:18  y:20} --> Norm: {2 0.935816 0.346485 0.0647817}
+  cg: { f:4  x:18  y:20} --> Norm: {2 0.938758 0.33099 0.0958043}
+  cg: { f:5  x:18  y:20} --> Norm: {2 0.941243 0.326536 0.0862327}
+  cg: { f:6  x:18  y:20} --> Norm: {2 0.942057 0.326517 0.0769061}
+  cg: { f:7  x:18  y:20} --> Norm: {2 0.939945 0.336932 0.0545954}
+	 surfel generated
+Considering possible surfel : 25 of possible 62
+   Correspondence group:    { f:0  x:18  y:20}    { f:1  x:19  y:20}    { f:2  x:19  y:20}    { f:3  x:19  y:20}    { f:4  x:19  y:20}    { f:5  x:19  y:20}    { f:6  x:19  y:20}    { f:7  x:19  y:20} 
+  cg: { f:0  x:18  y:20} --> Norm: {2 0.93545 0.352246 0.0292707}
+  cg: { f:1  x:19  y:20} --> Norm: {1 0.981957 0.179576 0.0592629}
+  cg: { f:2  x:19  y:20} --> Norm: {2 0.923875 0.382228 0.0189095}
+  cg: { f:3  x:19  y:20} --> Norm: {2 0.925931 0.375593 0.0397853}
+  cg: { f:4  x:19  y:20} --> Norm: {2 0.943834 0.326453 0.0510565}
+  cg: { f:5  x:19  y:20} --> Norm: {2 0.945161 0.323995 0.0412019}
+  cg: { f:6  x:19  y:20} --> Norm: {2 0.943863 0.330221 0.00879923}
+  cg: { f:7  x:19  y:20} --> Norm: {2 0.92696 0.372694 -0.0429436}
+	 surfel generated
+Considering possible surfel : 26 of possible 62
+   Correspondence group:    { f:0  x:19  y:20}    { f:1  x:20  y:20}    { f:0  x:19  y:21}    { f:2  x:20  y:20}    { f:3  x:20  y:20}    { f:4  x:20  y:20}    { f:5  x:20  y:20}    { f:6  x:20  y:20}    { f:7  x:20  y:20} 
+  cg: { f:0  x:19  y:20} --> Norm: {2 0.923991 0.379386 -0.0480253}
+  cg: { f:1  x:20  y:20} --> Norm: {1 0.999018 0.0388996 0.0212255}
+  cg: { f:0  x:19  y:21} --> Norm: {1 0.930517 0.366129 -0.00938533}
+  cg: { f:2  x:20  y:20} --> Norm: {1 0.999805 0.0194932 0.00312866}
+  cg: { f:3  x:20  y:20} --> Norm: {1 0.997799 0.0639797 0.0174167}
+  cg: { f:4  x:20  y:20} --> Norm: {2 0.936588 0.336741 0.097002}
+  cg: { f:5  x:20  y:20} --> Norm: {2 0.938307 0.330715 0.101035}
+  cg: { f:6  x:20  y:20} --> Norm: {2 0.925712 0.370489 0.0761236}
+  cg: { f:7  x:20  y:20} --> Norm: {1 0.999864 -0.00475234 -0.0158066}
+	 surfel generated
+Considering possible surfel : 27 of possible 62
+   Correspondence group:    { f:0  x:20  y:20}    { f:1  x:21  y:20}    { f:2  x:21  y:20}    { f:3  x:21  y:20}    { f:4  x:21  y:20}    { f:5  x:21  y:20}    { f:6  x:21  y:20}    { f:7  x:21  y:20} 
+  cg: { f:0  x:20  y:20} --> Norm: {1 0.990781 0.135455 0.00216699}
+  cg: { f:1  x:21  y:20} --> Norm: {1 0.996473 -0.0836415 0.00679989}
+  cg: { f:2  x:21  y:20} --> Norm: {1 0.992813 -0.119136 0.0113423}
+  cg: { f:3  x:21  y:20} --> Norm: {2 0.943477 0.311999 0.111837}
+  cg: { f:4  x:21  y:20} --> Norm: {2 0.968923 0.240211 0.0590493}
+  cg: { f:5  x:21  y:20} --> Norm: {2 0.973327 0.221355 0.0603067}
+  cg: { f:6  x:21  y:20} --> Norm: {2 0.961264 0.265611 0.0736323}
+  cg: { f:7  x:21  y:20} --> Norm: {1 0.993157 -0.116697 -0.00453083}
+	 surfel generated
+Considering possible surfel : 28 of possible 62
+   Correspondence group:    { f:0  x:21  y:20}    { f:1  x:22  y:20}    { f:2  x:22  y:20}    { f:3  x:22  y:20}    { f:4  x:22  y:20}    { f:5  x:22  y:20}    { f:6  x:22  y:20}    { f:7  x:22  y:20} 
+  cg: { f:0  x:21  y:20} --> Norm: {1 0.999689 -0.023704 0.00770756}
+  cg: { f:1  x:22  y:20} --> Norm: {1 0.989887 -0.140485 -0.0196659}
+  cg: { f:2  x:22  y:20} --> Norm: {2 0.964257 0.258731 0.0571578}
+  cg: { f:3  x:22  y:20} --> Norm: {2 0.978506 0.201312 0.0447108}
+  cg: { f:4  x:22  y:20} --> Norm: {2 0.988038 0.151848 0.0269011}
+  cg: { f:5  x:22  y:20} --> Norm: {2 0.986144 0.164204 0.0236043}
+  cg: { f:6  x:22  y:20} --> Norm: {2 0.980322 0.193792 0.0375821}
+  cg: { f:7  x:22  y:20} --> Norm: {1 0.986091 -0.160788 -0.0420798}
+	 surfel generated
+Considering possible surfel : 29 of possible 62
+   Correspondence group:    { f:0  x:22  y:20}    { f:1  x:23  y:20}    { f:2  x:23  y:20}    { f:3  x:23  y:20}    { f:4  x:23  y:20}    { f:5  x:23  y:20}    { f:6  x:23  y:20}    { f:7  x:23  y:20} 
+  cg: { f:0  x:22  y:20} --> Norm: {1 0.999679 -0.0128116 -0.0218684}
+  cg: { f:1  x:23  y:20} --> Norm: {1 0.994653 -0.045618 -0.0926556}
+  cg: { f:2  x:23  y:20} --> Norm: {2 0.940064 0.284874 -0.187421}
+  cg: { f:3  x:23  y:20} --> Norm: {2 0.940387 0.277702 -0.196353}
+  cg: { f:4  x:23  y:20} --> Norm: {2 0.945678 0.258123 -0.197651}
+  cg: { f:5  x:23  y:20} --> Norm: {2 0.94701 0.252082 -0.199065}
+  cg: { f:6  x:23  y:20} --> Norm: {2 0.942564 0.267191 -0.200456}
+  cg: { f:7  x:23  y:20} --> Norm: {1 0.969907 -0.18147 -0.162322}
+	 surfel generated
+Considering possible surfel : 30 of possible 62
+   Correspondence group:    { f:0  x:23  y:20}    { f:1  x:24  y:20}    { f:2  x:24  y:20}    { f:3  x:24  y:20}    { f:4  x:24  y:20}    { f:5  x:24  y:20}    { f:6  x:24  y:20}    { f:7  x:24  y:20} 
+  cg: { f:0  x:23  y:20} --> Norm: {1 0.989854 0.0144784 -0.141351}
+  cg: { f:1  x:24  y:20} --> Norm: {1 0.975622 0.121409 -0.182816}
+  cg: { f:2  x:24  y:20} --> Norm: {1 0.97113 0.138234 -0.194415}
+  cg: { f:3  x:24  y:20} --> Norm: {1 0.96383 0.12297 -0.236455}
+  cg: { f:4  x:24  y:20} --> Norm: {1 0.966117 0.0794092 -0.245587}
+  cg: { f:5  x:24  y:20} --> Norm: {1 0.96304 0.0798722 -0.257244}
+  cg: { f:6  x:24  y:20} --> Norm: {1 0.960992 0.0826546 -0.263938}
+  cg: { f:7  x:24  y:20} --> Norm: {1 0.948124 -0.108303 -0.298883}
+	 surfel generated
+Considering possible surfel : 31 of possible 62
+   Correspondence group:    { f:0  x:24  y:20}    { f:1  x:25  y:20}    { f:2  x:25  y:20}    { f:3  x:25  y:20}    { f:4  x:25  y:20}    { f:5  x:25  y:20}    { f:6  x:25  y:20}    { f:7  x:25  y:20} 
+  cg: { f:0  x:24  y:20} --> Norm: {1 0.97343 0.107331 -0.202271}
+  cg: { f:1  x:25  y:20} --> Norm: {2 0.942652 0.224867 -0.246662}
+  cg: { f:2  x:25  y:20} --> Norm: {2 0.930737 0.222019 -0.29058}
+  cg: { f:3  x:25  y:20} --> Norm: {2 0.922706 0.162583 -0.349542}
+  cg: { f:4  x:25  y:20} --> Norm: {2 0.934943 0.118392 -0.334463}
+  cg: { f:5  x:25  y:20} --> Norm: {2 0.925977 0.129399 -0.354715}
+  cg: { f:6  x:25  y:20} --> Norm: {2 0.927121 0.136996 -0.348826}
+  cg: { f:7  x:25  y:20} --> Norm: {2 0.926343 0.141381 -0.349141}
+	 surfel generated
+Considering possible surfel : 32 of possible 62
+   Correspondence group:    { f:0  x:25  y:20}    { f:1  x:26  y:20}    { f:2  x:26  y:20}    { f:3  x:26  y:20}    { f:4  x:26  y:20}    { f:5  x:26  y:20}    { f:6  x:26  y:20}    { f:7  x:26  y:20} 
+  cg: { f:0  x:25  y:20} --> Norm: {2 0.981939 0.0999448 -0.160643}
+  cg: { f:1  x:26  y:20} --> Norm: {1 0.942652 0.224867 -0.246662}
+  cg: { f:2  x:26  y:20} --> Norm: {1 0.930737 0.222019 -0.29058}
+  cg: { f:3  x:26  y:20} --> Norm: {1 0.922707 0.162583 -0.349542}
+  cg: { f:4  x:26  y:20} --> Norm: {1 0.934943 0.118392 -0.334463}
+  cg: { f:5  x:26  y:20} --> Norm: {1 0.925977 0.129399 -0.354715}
+  cg: { f:6  x:26  y:20} --> Norm: {1 0.927121 0.136996 -0.348826}
+  cg: { f:7  x:26  y:20} --> Norm: {1 0.926343 0.141381 -0.349141}
+	 surfel generated
+Considering possible surfel : 33 of possible 62
+   Correspondence group:    { f:0  x:26  y:20}    { f:1  x:27  y:20}    { f:2  x:27  y:20}    { f:3  x:27  y:20}    { f:4  x:27  y:20}    { f:5  x:27  y:20}    { f:6  x:27  y:20}    { f:7  x:27  y:20} 
+  cg: { f:0  x:26  y:20} --> Norm: {1 0.981939 0.0999448 -0.160643}
+  cg: { f:1  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:2  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:3  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:4  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:5  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:6  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:7  x:27  y:20} --> Norm: {0 0 0 0}
+	 surfel generated
+Considering possible surfel : 34 of possible 62
+   Correspondence group:    { f:0  x:14  y:21}    { f:1  x:15  y:21}    { f:2  x:15  y:21}    { f:3  x:15  y:21}    { f:4  x:15  y:21}    { f:5  x:15  y:21}    { f:6  x:15  y:21}    { f:7  x:15  y:21} 
+  cg: { f:0  x:14  y:21} --> Norm: {1 0.990158 -0.137409 0.0265819}
+  cg: { f:1  x:15  y:21} --> Norm: {1 0.985105 -0.0900553 0.146484}
+  cg: { f:2  x:15  y:21} --> Norm: {1 0.982461 -0.0675376 0.173805}
+  cg: { f:3  x:15  y:21} --> Norm: {1 0.981075 -0.0707348 0.180246}
+  cg: { f:4  x:15  y:21} --> Norm: {1 0.974344 -0.0345495 0.222398}
+  cg: { f:5  x:15  y:21} --> Norm: {2 0.992513 -0.121389 -0.0134932}
+  cg: { f:6  x:15  y:21} --> Norm: {2 0.991408 -0.130507 -0.00882751}
+  cg: { f:7  x:15  y:21} --> Norm: {2 0.993268 -0.115818 0.00238535}
+	 surfel generated
+Considering possible surfel : 35 of possible 62
+   Correspondence group:    { f:0  x:15  y:21}    { f:1  x:16  y:21}    { f:2  x:16  y:21}    { f:3  x:16  y:21}    { f:4  x:16  y:21}    { f:5  x:16  y:21}    { f:6  x:16  y:21}    { f:7  x:16  y:21} 
+  cg: { f:0  x:15  y:21} --> Norm: {2 0.990158 -0.137409 0.0265819}
+  cg: { f:1  x:16  y:21} --> Norm: {2 0.988608 -0.133968 0.0686075}
+  cg: { f:2  x:16  y:21} --> Norm: {2 0.99012 -0.106045 0.0917384}
+  cg: { f:3  x:16  y:21} --> Norm: {2 0.989117 -0.111803 0.0956437}
+  cg: { f:4  x:16  y:21} --> Norm: {2 0.991431 -0.0690569 0.11089}
+  cg: { f:5  x:16  y:21} --> Norm: {2 0.990929 -0.0731721 0.112721}
+  cg: { f:6  x:16  y:21} --> Norm: {2 0.990659 -0.0687525 0.117762}
+  cg: { f:7  x:16  y:21} --> Norm: {2 0.992076 -0.0689941 0.105003}
+	 surfel generated
+Considering possible surfel : 36 of possible 62
+   Correspondence group:    { f:0  x:16  y:21}    { f:1  x:17  y:21}    { f:2  x:17  y:21}    { f:3  x:17  y:21}    { f:4  x:17  y:21}    { f:5  x:17  y:21}    { f:6  x:17  y:21}    { f:7  x:17  y:21} 
+  cg: { f:0  x:16  y:21} --> Norm: {2 0.994029 -0.080776 0.0733643}
+  cg: { f:1  x:17  y:21} --> Norm: {2 0.988493 0.128347 -0.0800601}
+  cg: { f:2  x:17  y:21} --> Norm: {2 0.987458 0.155521 -0.027208}
+  cg: { f:3  x:17  y:21} --> Norm: {2 0.987794 0.154524 -0.0196032}
+  cg: { f:4  x:17  y:21} --> Norm: {2 0.981429 0.18602 0.0468487}
+  cg: { f:5  x:17  y:21} --> Norm: {2 0.979186 0.194968 0.0564084}
+  cg: { f:6  x:17  y:21} --> Norm: {2 0.977599 0.199748 0.0663386}
+  cg: { f:7  x:17  y:21} --> Norm: {2 0.982986 0.17995 0.0368197}
+	 surfel generated
+Considering possible surfel : 37 of possible 62
+   Correspondence group:    { f:0  x:17  y:21}    { f:1  x:18  y:21}    { f:0  x:18  y:21}    { f:2  x:18  y:21}    { f:3  x:18  y:21}    { f:4  x:18  y:21}    { f:5  x:18  y:21}    { f:6  x:18  y:21}    { f:7  x:18  y:21} 
+  cg: { f:0  x:17  y:21} --> Norm: {2 0.991169 0.120069 -0.056284}
+  cg: { f:1  x:18  y:21} --> Norm: {1 0.969217 0.236759 0.0675549}
+  cg: { f:0  x:18  y:21} --> Norm: {1 0.962593 0.265385 0.0546464}
+  cg: { f:2  x:18  y:21} --> Norm: {2 0.961846 0.231311 -0.146108}
+  cg: { f:3  x:18  y:21} --> Norm: {2 0.960418 0.239581 -0.142121}
+  cg: { f:4  x:18  y:21} --> Norm: {2 0.954495 0.286799 -0.0817654}
+  cg: { f:5  x:18  y:21} --> Norm: {2 0.952905 0.290883 -0.0857806}
+  cg: { f:6  x:18  y:21} --> Norm: {2 0.951669 0.294491 -0.0871888}
+  cg: { f:7  x:18  y:21} --> Norm: {2 0.950613 0.273448 -0.146836}
+	 surfel generated
+Considering possible surfel : 38 of possible 62
+   Correspondence group:    { f:0  x:25  y:21}    { f:1  x:26  y:21}    { f:2  x:26  y:21}    { f:3  x:26  y:21}    { f:4  x:26  y:21}    { f:5  x:26  y:21}    { f:6  x:26  y:21}    { f:7  x:26  y:21} 
+  cg: { f:0  x:25  y:21} --> Norm: {1 0.981939 0.0999448 -0.160643}
+  cg: { f:1  x:26  y:21} --> Norm: {1 0.942652 0.224867 -0.246662}
+  cg: { f:2  x:26  y:21} --> Norm: {1 0.930737 0.222019 -0.29058}
+  cg: { f:3  x:26  y:21} --> Norm: {1 0.922707 0.162583 -0.349542}
+  cg: { f:4  x:26  y:21} --> Norm: {1 0.934943 0.118392 -0.334463}
+  cg: { f:5  x:26  y:21} --> Norm: {1 0.925977 0.129399 -0.354715}
+  cg: { f:6  x:26  y:21} --> Norm: {1 0.927121 0.136996 -0.348826}
+  cg: { f:7  x:26  y:21} --> Norm: {1 0.926343 0.141381 -0.349141}
+	 surfel generated
+Considering possible surfel : 39 of possible 62
+   Correspondence group:    { f:0  x:27  y:21}    { f:1  x:28  y:21}    { f:2  x:28  y:21}    { f:0  x:26  y:21}    { f:1  x:27  y:21}    { f:2  x:27  y:21}    { f:3  x:27  y:21}    { f:4  x:27  y:21}    { f:5  x:27  y:21}    { f:6  x:27  y:21}    { f:7  x:27  y:21} 
+  cg: { f:0  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:1  x:28  y:21} --> Norm: {0 0 0 0}
+  cg: { f:2  x:28  y:21} --> Norm: {0 0 0 0}
+  cg: { f:0  x:26  y:21} --> Norm: {1 0.981939 0.0999448 -0.160643}
+  cg: { f:1  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:2  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:3  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:4  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:5  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:6  x:27  y:21} --> Norm: {0 0 0 0}
+  cg: { f:7  x:27  y:21} --> Norm: {0 0 0 0}
+	 surfel generated
+Considering possible surfel : 40 of possible 62
+   Correspondence group:    { f:0  x:28  y:21}    { f:1  x:29  y:21}    { f:0  x:29  y:21}    { f:0  x:30  y:21}    { f:2  x:29  y:21}    { f:1  x:29  y:20}    { f:2  x:29  y:20}    { f:3  x:29  y:20}    { f:0  x:27  y:20}    { f:1  x:28  y:20}    { f:2  x:28  y:20}    { f:3  x:28  y:20}    { f:4  x:28  y:20}    { f:5  x:28  y:20}    { f:6  x:28  y:20}    { f:7  x:28  y:20} 
+  cg: { f:0  x:28  y:21} --> Norm: {0 0 0 0}
+  cg: { f:1  x:29  y:21} --> Norm: {0 0 0 0}
+  cg: { f:0  x:29  y:21} --> Norm: {0 0 0 0}
+  cg: { f:0  x:30  y:21} --> Norm: {0 0 0 0}
+  cg: { f:2  x:29  y:21} --> Norm: {0 0 0 0}
+  cg: { f:1  x:29  y:20} --> Norm: {0 0 0 0}
+  cg: { f:2  x:29  y:20} --> Norm: {0 0 0 0}
+  cg: { f:3  x:29  y:20} --> Norm: {0 0 0 0}
+  cg: { f:0  x:27  y:20} --> Norm: {0 0 0 0}
+  cg: { f:1  x:28  y:20} --> Norm: {0 0 0 0}
+  cg: { f:2  x:28  y:20} --> Norm: {0 0 0 0}
+  cg: { f:3  x:28  y:20} --> Norm: {0 0 0 0}
+  cg: { f:4  x:28  y:20} --> Norm: {0 0 0 0}
+  cg: { f:5  x:28  y:20} --> Norm: {0 0 0 0}
+  cg: { f:6  x:28  y:20} --> Norm: {0 0 0 0}
+  cg: { f:7  x:28  y:20} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  16 pifs 
+Considering possible surfel : 41 of possible 62
+   Correspondence group:    { f:0  x:15  y:22}    { f:1  x:16  y:22}    { f:2  x:16  y:22}    { f:3  x:16  y:22}    { f:4  x:16  y:22}    { f:5  x:16  y:22}    { f:6  x:16  y:22}    { f:7  x:16  y:22} 
+  cg: { f:0  x:15  y:22} --> Norm: {1 0.992765 -0.109166 0.0500069}
+  cg: { f:1  x:16  y:22} --> Norm: {1 0.999979 -0.00284323 -0.0057925}
+  cg: { f:2  x:16  y:22} --> Norm: {1 0.999156 0.0249973 0.0326034}
+  cg: { f:3  x:16  y:22} --> Norm: {1 0.999028 0.0215888 0.0384269}
+  cg: { f:4  x:16  y:22} --> Norm: {1 0.995083 0.0589944 0.079561}
+  cg: { f:5  x:16  y:22} --> Norm: {1 0.998623 0.000137167 0.0524607}
+  cg: { f:6  x:16  y:22} --> Norm: {1 0.998251 0.000164479 0.0591169}
+  cg: { f:7  x:16  y:22} --> Norm: {1 0.998821 -0.00163612 0.0485249}
+	 surfel generated
+Considering possible surfel : 42 of possible 62
+   Correspondence group:    { f:0  x:16  y:22}    { f:1  x:17  y:22}    { f:0  x:17  y:22}    { f:2  x:17  y:22}    { f:3  x:17  y:22}    { f:4  x:17  y:22}    { f:5  x:17  y:22}    { f:6  x:17  y:22}    { f:7  x:17  y:22} 
+  cg: { f:0  x:16  y:22} --> Norm: {1 0.999349 -0.0329547 0.0146651}
+  cg: { f:1  x:17  y:22} --> Norm: {1 0.999979 -0.00284323 -0.0057925}
+  cg: { f:0  x:17  y:22} --> Norm: {1 0.999767 0.0197882 0.00860183}
+  cg: { f:2  x:17  y:22} --> Norm: {1 0.995089 0.0950555 -0.0276168}
+  cg: { f:3  x:17  y:22} --> Norm: {1 0.995164 0.0956434 -0.0223881}
+  cg: { f:4  x:17  y:22} --> Norm: {1 0.990294 0.136589 0.0257008}
+  cg: { f:5  x:17  y:22} --> Norm: {1 0.989786 0.139741 0.0282233}
+  cg: { f:6  x:17  y:22} --> Norm: {1 0.989016 0.144118 0.0328252}
+  cg: { f:7  x:17  y:22} --> Norm: {1 0.991477 0.13027 -0.00169911}
+	 surfel generated
+Considering possible surfel : 43 of possible 62
+   Correspondence group:    { f:1  x:17  y:19}    { f:2  x:17  y:19}    { f:3  x:17  y:19}    { f:4  x:17  y:19}    { f:5  x:17  y:19}    { f:6  x:17  y:19}    { f:7  x:17  y:19} 
+  cg: { f:1  x:17  y:19} --> Norm: {2 0.886328 0.146199 0.439372}
+  cg: { f:2  x:17  y:19} --> Norm: {2 0.880835 -0.110785 0.460279}
+  cg: { f:3  x:17  y:19} --> Norm: {2 0.878338 -0.102307 0.466964}
+  cg: { f:4  x:17  y:19} --> Norm: {2 0.832282 -0.315693 0.45568}
+  cg: { f:5  x:17  y:19} --> Norm: {2 0.827541 -0.334432 0.450923}
+  cg: { f:6  x:17  y:19} --> Norm: {2 0.855217 -0.257216 0.449937}
+  cg: { f:7  x:17  y:19} --> Norm: {2 0.892927 -0.0616553 0.44596}
+	 surfel generated
+Considering possible surfel : 44 of possible 62
+   Correspondence group:    { f:1  x:25  y:21}    { f:2  x:25  y:21}    { f:3  x:25  y:21}    { f:4  x:25  y:21}    { f:5  x:25  y:21}    { f:6  x:25  y:21}    { f:7  x:25  y:21} 
+  cg: { f:1  x:25  y:21} --> Norm: {1 0.942652 0.224867 -0.246662}
+  cg: { f:2  x:25  y:21} --> Norm: {1 0.930737 0.222019 -0.29058}
+  cg: { f:3  x:25  y:21} --> Norm: {1 0.922707 0.162583 -0.349542}
+  cg: { f:4  x:25  y:21} --> Norm: {1 0.934943 0.118392 -0.334463}
+  cg: { f:5  x:25  y:21} --> Norm: {1 0.925977 0.129399 -0.354715}
+  cg: { f:6  x:25  y:21} --> Norm: {1 0.927121 0.136996 -0.348826}
+  cg: { f:7  x:25  y:21} --> Norm: {1 0.926343 0.141381 -0.349141}
+	 surfel generated
+Considering possible surfel : 45 of possible 62
+   Correspondence group:    { f:1  x:15  y:22}    { f:2  x:15  y:22}    { f:3  x:15  y:22}    { f:4  x:15  y:22}    { f:5  x:15  y:22}    { f:6  x:15  y:22}    { f:7  x:15  y:22} 
+  cg: { f:1  x:15  y:22} --> Norm: {1 0.988608 -0.133968 0.0686075}
+  cg: { f:2  x:15  y:22} --> Norm: {1 0.99012 -0.106045 0.0917384}
+  cg: { f:3  x:15  y:22} --> Norm: {1 0.989117 -0.111803 0.0956437}
+  cg: { f:4  x:15  y:22} --> Norm: {1 0.991431 -0.0690569 0.11089}
+  cg: { f:5  x:15  y:22} --> Norm: {1 0.993992 -0.0975035 0.0497274}
+  cg: { f:6  x:15  y:22} --> Norm: {1 0.9935 -0.099878 0.0546027}
+  cg: { f:7  x:15  y:22} --> Norm: {1 0.994254 -0.0925534 0.0537798}
+	 surfel generated
+Considering possible surfel : 46 of possible 62
+   Correspondence group:    { f:2  x:23  y:21}    { f:3  x:23  y:21}    { f:4  x:23  y:21}    { f:5  x:23  y:21}    { f:6  x:23  y:21}    { f:2  x:22  y:21}    { f:3  x:22  y:21}    { f:4  x:22  y:21}    { f:5  x:22  y:21}    { f:6  x:22  y:21}    { f:3  x:21  y:21}    { f:4  x:21  y:21}    { f:5  x:21  y:21}    { f:6  x:21  y:21}    { f:4  x:21  y:17}    { f:5  x:21  y:17}    { f:6  x:21  y:17}    { f:5  x:22  y:15}    { f:6  x:22  y:15}    { f:7  x:15  y:15} 
+  cg: { f:2  x:23  y:21} --> Norm: {1 0.959515 0.273902 -0.0656346}
+  cg: { f:3  x:23  y:21} --> Norm: {1 0.967387 0.241489 -0.0764485}
+  cg: { f:4  x:23  y:21} --> Norm: {1 0.974626 0.206633 -0.0860609}
+  cg: { f:5  x:23  y:21} --> Norm: {1 0.973765 0.209691 -0.0883827}
+  cg: { f:6  x:23  y:21} --> Norm: {1 0.969164 0.232342 -0.0820907}
+  cg: { f:2  x:22  y:21} --> Norm: {1 0.959515 0.273902 -0.0656346}
+  cg: { f:3  x:22  y:21} --> Norm: {1 0.963786 0.266341 -0.0134028}
+  cg: { f:4  x:22  y:21} --> Norm: {1 0.975132 0.218426 -0.0375254}
+  cg: { f:5  x:22  y:21} --> Norm: {1 0.97604 0.214129 -0.0386704}
+  cg: { f:6  x:22  y:21} --> Norm: {1 0.969265 0.244183 -0.029991}
+  cg: { f:3  x:21  y:21} --> Norm: {1 0.963159 0.257235 0.0784503}
+  cg: { f:4  x:21  y:21} --> Norm: {1 0.967897 0.243785 0.0611979}
+  cg: { f:5  x:21  y:21} --> Norm: {1 0.968925 0.239499 0.06184}
+  cg: { f:6  x:21  y:21} --> Norm: {1 0.958688 0.277476 0.0626369}
+  cg: { f:4  x:21  y:17} --> Norm: {2 0.759667 -0.181579 -0.624448}
+  cg: { f:5  x:21  y:17} --> Norm: {2 0.940813 0.137582 0.309745}
+  cg: { f:6  x:21  y:17} --> Norm: {1 0.879237 -0.28665 0.380492}
+  cg: { f:5  x:22  y:15} --> Norm: {1 0.823083 0.417463 0.385045}
+  cg: { f:6  x:22  y:15} --> Norm: {0 0 0 0}
+  cg: { f:7  x:15  y:15} --> Norm: {1 0.747432 -0.192007 0.635986}
+	 surfel generated
+Considering possible surfel : 47 of possible 62
+   Correspondence group:    { f:2  x:18  y:22}    { f:3  x:18  y:22}    { f:4  x:18  y:22}    { f:5  x:18  y:22}    { f:6  x:18  y:22}    { f:7  x:18  y:22} 
+  cg: { f:2  x:18  y:22} --> Norm: {1 0.977164 0.193914 -0.0868816}
+  cg: { f:3  x:18  y:22} --> Norm: {1 0.976918 0.197621 -0.0810956}
+  cg: { f:4  x:18  y:22} --> Norm: {1 0.971297 0.237224 -0.0175185}
+  cg: { f:5  x:18  y:22} --> Norm: {1 0.969702 0.243845 -0.0147417}
+  cg: { f:6  x:18  y:22} --> Norm: {1 0.968665 0.248152 -0.0104686}
+  cg: { f:7  x:18  y:22} --> Norm: {1 0.972102 0.227942 -0.0553101}
+	 surfel generated
+Considering possible surfel : 48 of possible 62
+   Correspondence group:    { f:3  x:17  y:16}    { f:4  x:17  y:16}    { f:5  x:17  y:16}    { f:6  x:17  y:16}    { f:4  x:16  y:16}    { f:5  x:16  y:16}    { f:6  x:16  y:16}    { f:7  x:16  y:16} 
+  cg: { f:3  x:17  y:16} --> Norm: {1 0.795116 -0.345598 0.498351}
+  cg: { f:4  x:17  y:16} --> Norm: {1 0.785002 -0.3415 0.516865}
+  cg: { f:5  x:17  y:16} --> Norm: {1 0.704434 -0.318291 0.6344}
+  cg: { f:6  x:17  y:16} --> Norm: {1 0.813636 -0.262979 0.518495}
+  cg: { f:4  x:16  y:16} --> Norm: {1 0.88625 -0.218562 0.408402}
+  cg: { f:5  x:16  y:16} --> Norm: {1 0.728191 -0.173484 0.663054}
+  cg: { f:6  x:16  y:16} --> Norm: {1 0.726188 -0.222657 0.650442}
+  cg: { f:7  x:16  y:16} --> Norm: {2 0.747432 -0.192007 0.635986}
+	 surfel generated
+Considering possible surfel : 49 of possible 62
+   Correspondence group:    { f:3  x:20  y:16}    { f:4  x:20  y:16}    { f:5  x:20  y:16}    { f:6  x:20  y:16}    { f:7  x:20  y:16} 
+  cg: { f:3  x:20  y:16} --> Norm: {2 0.961996 -0.043281 0.26961}
+  cg: { f:4  x:20  y:16} --> Norm: {2 0.976152 -0.0198412 -0.216178}
+  cg: { f:5  x:20  y:16} --> Norm: {2 0.8161 0.481291 -0.319904}
+  cg: { f:6  x:20  y:16} --> Norm: {1 0.866982 -0.496081 0.0473965}
+  cg: { f:7  x:20  y:16} --> Norm: {1 0.74302 -0.310182 -0.593051}
+	 surfel generated
+Considering possible surfel : 50 of possible 62
+   Correspondence group:    { f:3  x:22  y:17}    { f:4  x:22  y:17}    { f:5  x:22  y:17}    { f:6  x:22  y:17}    { f:7  x:22  y:17} 
+  cg: { f:3  x:22  y:17} --> Norm: {1 0.707352 -0.591265 0.387376}
+  cg: { f:4  x:22  y:17} --> Norm: {1 0.907477 -0.399908 0.128683}
+  cg: { f:5  x:22  y:17} --> Norm: {2 0.747003 0.247744 0.616936}
+  cg: { f:6  x:22  y:17} --> Norm: {2 0.772333 0.189153 0.606402}
+  cg: { f:7  x:22  y:17} --> Norm: {2 0.855303 -0.514575 -0.0605769}
+	 surfel generated
+Considering possible surfel : 51 of possible 62
+   Correspondence group:    { f:4  x:16  y:17}    { f:5  x:16  y:17}    { f:6  x:16  y:17}    { f:7  x:16  y:17} 
+  cg: { f:4  x:16  y:17} --> Norm: {1 0.88625 -0.218562 0.408402}
+  cg: { f:5  x:16  y:17} --> Norm: {1 0.685415 -0.322587 0.652796}
+  cg: { f:6  x:16  y:17} --> Norm: {1 0.716581 -0.248516 0.65173}
+  cg: { f:7  x:16  y:17} --> Norm: {2 0.747016 0.00729603 0.664766}
+	 surfel generated
+Considering possible surfel : 52 of possible 62
+   Correspondence group:    { f:4  x:28  y:19}    { f:5  x:28  y:19}    { f:0  x:24  y:17}    { f:1  x:25  y:17}    { f:0  x:25  y:17}    { f:2  x:25  y:17}    { f:3  x:25  y:17}    { f:3  x:24  y:17}    { f:4  x:24  y:17}    { f:5  x:24  y:17}    { f:2  x:17  y:17}    { f:3  x:17  y:17}    { f:4  x:17  y:17}    { f:5  x:17  y:17}    { f:4  x:23  y:16}    { f:5  x:23  y:16}    { f:4  x:23  y:15}    { f:5  x:23  y:15}    { f:3  x:21  y:15}    { f:4  x:21  y:15}    { f:5  x:21  y:15}    { f:3  x:20  y:17}    { f:4  x:20  y:17}    { f:0  x:18  y:17}    { f:1  x:19  y:17}    { f:0  x:19  y:17}    { f:2  x:19  y:17}    { f:3  x:18  y:17}    { f:4  x:18  y:17}    { f:0  x:24  y:16}    { f:1  x:25  y:16}    { f:0  x:26  y:17}    { f:2  x:25  y:16}    { f:3  x:25  y:16}    { f:1  x:24  y:16}    { f:2  x:24  y:16}    { f:3  x:24  y:16}    { f:4  x:24  y:16}    { f:0  x:19  y:16}    { f:1  x:20  y:16}    { f:2  x:20  y:16}    { f:1  x:19  y:16}    { f:2  x:19  y:16}    { f:3  x:19  y:16}    { f:0  x:20  y:15}    { f:1  x:21  y:15}    { f:0  x:19  y:15}    { f:1  x:20  y:15}    { f:2  x:20  y:15}    { f:1  x:19  y:15}    { f:2  x:19  y:15}    { f:3  x:19  y:15}    { f:4  x:19  y:16}    { f:2  x:25  y:15}    { f:3  x:25  y:15}    { f:0  x:27  y:15}    { f:1  x:25  y:15}    { f:0  x:26  y:16}    { f:1  x:24  y:15}    { f:2  x:24  y:15}    { f:3  x:24  y:15}    { f:4  x:24  y:15}    { f:0  x:25  y:16}    { f:1  x:26  y:16}    { f:0  x:27  y:16}    { f:2  x:26  y:16}    { f:3  x:26  y:16}    { f:2  x:27  y:16}    { f:0  x:25  y:15}    { f:1  x:26  y:15}    { f:2  x:26  y:15}    { f:3  x:26  y:15}    { f:2  x:27  y:15}    { f:3  x:20  y:15}    { f:4  x:20  y:15}    { f:5  x:20  y:15}    { f:6  x:19  y:15}    { f:5  x:20  y:17}    { f:7  x:20  y:15}    { f:6  x:20  y:15} 
+  cg: { f:4  x:28  y:19} --> Norm: {0 0 0 0}
+  cg: { f:5  x:28  y:19} --> Norm: {0 0 0 0}
+  cg: { f:0  x:24  y:17} --> Norm: {2 0.858062 -0.0322216 -0.512535}
+  cg: { f:1  x:25  y:17} --> Norm: {1 0.744355 -0.498539 0.444291}
+  cg: { f:0  x:25  y:17} --> Norm: {2 0.725206 0.388164 -0.568687}
+  cg: { f:2  x:25  y:17} --> Norm: {1 0.768137 -0.312692 0.558739}
+  cg: { f:3  x:25  y:17} --> Norm: {1 0.927413 0.0190667 0.373553}
+  cg: { f:3  x:24  y:17} --> Norm: {2 0.773184 -0.0082268 0.634128}
+  cg: { f:4  x:24  y:17} --> Norm: {1 0.818102 -0.18794 0.543496}
+  cg: { f:5  x:24  y:17} --> Norm: {1 0.915997 -0.0982256 0.388974}
+  cg: { f:2  x:17  y:17} --> Norm: {1 0.979003 -0.135445 0.152341}
+  cg: { f:3  x:17  y:17} --> Norm: {1 0.812578 -0.406843 0.417367}
+  cg: { f:4  x:17  y:17} --> Norm: {2 0.88625 -0.218562 0.408402}
+  cg: { f:5  x:17  y:17} --> Norm: {2 0.728191 -0.173484 0.663054}
+  cg: { f:4  x:23  y:16} --> Norm: {1 0.76492 -0.00793572 0.644077}
+  cg: { f:5  x:23  y:16} --> Norm: {1 0.843316 0.204421 0.497021}
+  cg: { f:4  x:23  y:15} --> Norm: {0 0 0 0}
+  cg: { f:5  x:23  y:15} --> Norm: {1 0.838581 0.362 0.407108}
+  cg: { f:3  x:21  y:15} --> Norm: {1 0.961996 -0.043281 0.26961}
+  cg: { f:4  x:21  y:15} --> Norm: {1 0.976152 -0.0198412 -0.216178}
+  cg: { f:5  x:21  y:15} --> Norm: {1 0.870691 0.465463 0.158876}
+  cg: { f:3  x:20  y:17} --> Norm: {1 0.954348 -0.228031 0.192928}
+  cg: { f:4  x:20  y:17} --> Norm: {2 0.75421 0.0635627 -0.65355}
+  cg: { f:0  x:18  y:17} --> Norm: {1 0.89114 -0.440073 -0.110481}
+  cg: { f:1  x:19  y:17} --> Norm: {1 0.837414 -0.537006 -0.10179}
+  cg: { f:0  x:19  y:17} --> Norm: {1 0.776521 -0.616832 -0.128584}
+  cg: { f:2  x:19  y:17} --> Norm: {1 0.955495 -0.248363 -0.159198}
+  cg: { f:3  x:18  y:17} --> Norm: {2 0.626309 -0.471567 0.620775}
+  cg: { f:4  x:18  y:17} --> Norm: {2 0.654607 -0.451758 0.606138}
+  cg: { f:0  x:24  y:16} --> Norm: {1 0.796812 0.220784 -0.562445}
+  cg: { f:1  x:25  y:16} --> Norm: {2 0.642616 -0.399525 0.653777}
+  cg: { f:0  x:26  y:17} --> Norm: {1 0.745213 0.341649 -0.572655}
+  cg: { f:2  x:25  y:16} --> Norm: {2 0.726541 -0.0301476 0.686461}
+  cg: { f:3  x:25  y:16} --> Norm: {2 0.99592 0.0445978 0.0784502}
+  cg: { f:1  x:24  y:16} --> Norm: {1 0.632345 -0.483031 0.605657}
+  cg: { f:2  x:24  y:16} --> Norm: {2 0.708979 -0.108041 0.696904}
+  cg: { f:3  x:24  y:16} --> Norm: {1 0.927413 0.0190667 0.373553}
+  cg: { f:4  x:24  y:16} --> Norm: {1 0.76492 -0.00793572 0.644077}
+  cg: { f:0  x:19  y:16} --> Norm: {0 0 0 0}
+  cg: { f:1  x:20  y:16} --> Norm: {0 0 0 0}
+  cg: { f:2  x:20  y:16} --> Norm: {1 0.774754 -0.0112819 -0.632162}
+  cg: { f:1  x:19  y:16} --> Norm: {0 0 0 0}
+  cg: { f:2  x:19  y:16} --> Norm: {2 0.774754 -0.0112819 -0.632162}
+  cg: { f:3  x:19  y:16} --> Norm: {2 0.641693 -0.491064 0.589141}
+  cg: { f:0  x:20  y:15} --> Norm: {0 0 0 0}
+  cg: { f:1  x:21  y:15} --> Norm: {0 0 0 0}
+  cg: { f:0  x:19  y:15} --> Norm: {0 0 0 0}
+  cg: { f:1  x:20  y:15} --> Norm: {0 0 0 0}
+  cg: { f:2  x:20  y:15} --> Norm: {1 0.774754 -0.0112819 -0.632162}
+  cg: { f:1  x:19  y:15} --> Norm: {0 0 0 0}
+  cg: { f:2  x:19  y:15} --> Norm: {1 0.774754 -0.0112819 -0.632162}
+  cg: { f:3  x:19  y:15} --> Norm: {1 0.872606 -0.253935 0.417223}
+  cg: { f:4  x:19  y:16} --> Norm: {1 0.976903 -0.210827 0.0348331}
+  cg: { f:2  x:25  y:15} --> Norm: {1 0.718343 -0.0691502 0.692244}
+  cg: { f:3  x:25  y:15} --> Norm: {1 0.99592 0.0445978 0.0784502}
+  cg: { f:0  x:27  y:15} --> Norm: {0 0 0 0}
+  cg: { f:1  x:25  y:15} --> Norm: {1 0.642616 -0.399525 0.653777}
+  cg: { f:0  x:26  y:16} --> Norm: {1 0.745213 0.341649 -0.572655}
+  cg: { f:1  x:24  y:15} --> Norm: {1 0.642616 -0.399525 0.653777}
+  cg: { f:2  x:24  y:15} --> Norm: {1 0.718343 -0.0691502 0.692244}
+  cg: { f:3  x:24  y:15} --> Norm: {1 0.99592 0.0445978 0.0784502}
+  cg: { f:4  x:24  y:15} --> Norm: {0 0 0 0}
+  cg: { f:0  x:25  y:16} --> Norm: {2 0.763297 0.294254 -0.575145}
+  cg: { f:1  x:26  y:16} --> Norm: {1 0.642616 -0.399525 0.653777}
+  cg: { f:0  x:27  y:16} --> Norm: {0 0 0 0}
+  cg: { f:2  x:26  y:16} --> Norm: {1 0.726541 -0.0301476 0.686461}
+  cg: { f:3  x:26  y:16} --> Norm: {1 0.99592 0.0445978 0.0784502}
+  cg: { f:2  x:27  y:16} --> Norm: {0 0 0 0}
+  cg: { f:0  x:25  y:15} --> Norm: {1 0.763297 0.294254 -0.575145}
+  cg: { f:1  x:26  y:15} --> Norm: {1 0.642616 -0.399525 0.653777}
+  cg: { f:2  x:26  y:15} --> Norm: {1 0.726541 -0.0301476 0.686461}
+  cg: { f:3  x:26  y:15} --> Norm: {1 0.99592 0.0445978 0.0784502}
+  cg: { f:2  x:27  y:15} --> Norm: {0 0 0 0}
+  cg: { f:3  x:20  y:15} --> Norm: {1 0.84583 -0.281828 0.452929}
+  cg: { f:4  x:20  y:15} --> Norm: {1 0.976152 -0.0198412 -0.216178}
+  cg: { f:5  x:20  y:15} --> Norm: {1 0.861871 0.506644 0.022131}
+  cg: { f:6  x:19  y:15} --> Norm: {1 0.866982 -0.496081 0.0473965}
+  cg: { f:5  x:20  y:17} --> Norm: {2 0.773604 -0.126305 -0.620954}
+  cg: { f:7  x:20  y:15} --> Norm: {1 0.74302 -0.310182 -0.593051}
+  cg: { f:6  x:20  y:15} --> Norm: {1 0.866982 -0.496081 0.0473965}
+	 surfel generated
+Considering possible surfel : 53 of possible 62
+   Correspondence group:    { f:4  x:20  y:21}    { f:5  x:20  y:21}    { f:6  x:20  y:21}    { f:2  x:19  y:21}    { f:3  x:19  y:21}    { f:4  x:19  y:21}    { f:5  x:19  y:21}    { f:6  x:19  y:21}    { f:7  x:19  y:21} 
+  cg: { f:4  x:20  y:21} --> Norm: {1 0.950955 0.301507 0.0691213}
+  cg: { f:5  x:20  y:21} --> Norm: {1 0.953867 0.292513 0.067628}
+  cg: { f:6  x:20  y:21} --> Norm: {1 0.945055 0.322599 0.0529324}
+  cg: { f:2  x:19  y:21} --> Norm: {1 0.946486 0.321844 -0.0241014}
+  cg: { f:3  x:19  y:21} --> Norm: {1 0.946481 0.322515 -0.0125947}
+  cg: { f:4  x:19  y:21} --> Norm: {1 0.946148 0.321172 0.0406416}
+  cg: { f:5  x:19  y:21} --> Norm: {1 0.9471 0.31894 0.035774}
+  cg: { f:6  x:19  y:21} --> Norm: {1 0.943336 0.331311 0.0187098}
+  cg: { f:7  x:19  y:21} --> Norm: {1 0.94321 0.3291 -0.0452553}
+	 surfel generated
+Considering possible surfel : 54 of possible 62
+   Correspondence group:    { f:4  x:28  y:21}    { f:5  x:28  y:21}    { f:6  x:28  y:21}    { f:7  x:28  y:21} 
+  cg: { f:4  x:28  y:21} --> Norm: {0 0 0 0}
+  cg: { f:5  x:28  y:21} --> Norm: {0 0 0 0}
+  cg: { f:6  x:28  y:21} --> Norm: {0 0 0 0}
+  cg: { f:7  x:28  y:21} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  4 pifs 
+Considering possible surfel : 55 of possible 62
+   Correspondence group:    { f:4  x:15  y:23}    { f:5  x:15  y:23}    { f:6  x:15  y:23}    { f:7  x:15  y:23} 
+  cg: { f:4  x:15  y:23} --> Norm: {0 0 0 0}
+  cg: { f:5  x:15  y:23} --> Norm: {0 0 0 0}
+  cg: { f:6  x:15  y:23} --> Norm: {0 0 0 0}
+  cg: { f:7  x:15  y:23} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  4 pifs 
+Considering possible surfel : 56 of possible 62
+   Correspondence group:    { f:5  x:19  y:16}    { f:6  x:19  y:16}    { f:7  x:19  y:16} 
+  cg: { f:5  x:19  y:16} --> Norm: {1 0.947747 -0.00997748 -0.318866}
+  cg: { f:6  x:19  y:16} --> Norm: {2 0.866982 -0.496081 0.0473965}
+  cg: { f:7  x:19  y:16} --> Norm: {0 0 0 0}
+	 surfel generated
+Considering possible surfel : 57 of possible 62
+   Correspondence group:    { f:5  x:22  y:16}    { f:6  x:22  y:16}    { f:2  x:23  y:16}    { f:3  x:22  y:16}    { f:2  x:21  y:16}    { f:3  x:21  y:16}    { f:2  x:23  y:15}    { f:3  x:22  y:15}    { f:4  x:21  y:16}    { f:5  x:21  y:16}    { f:6  x:21  y:16}    { f:7  x:21  y:16} 
+  cg: { f:5  x:22  y:16} --> Norm: {2 0.838581 0.362 0.407108}
+  cg: { f:6  x:22  y:16} --> Norm: {1 0.772333 0.189153 0.606402}
+  cg: { f:2  x:23  y:16} --> Norm: {1 0.673798 -0.313426 0.66915}
+  cg: { f:3  x:22  y:16} --> Norm: {0 0 0 0}
+  cg: { f:2  x:21  y:16} --> Norm: {0 0 0 0}
+  cg: { f:3  x:21  y:16} --> Norm: {1 0.961996 -0.043281 0.26961}
+  cg: { f:2  x:23  y:15} --> Norm: {1 0.708979 -0.108041 0.696904}
+  cg: { f:3  x:22  y:15} --> Norm: {0 0 0 0}
+  cg: { f:4  x:21  y:16} --> Norm: {1 0.856504 -0.0474193 -0.513957}
+  cg: { f:5  x:21  y:16} --> Norm: {2 0.804453 0.471339 0.361517}
+  cg: { f:6  x:21  y:16} --> Norm: {1 0.772333 0.189153 0.606402}
+  cg: { f:7  x:21  y:16} --> Norm: {2 0.74302 -0.310182 -0.593051}
+	 surfel generated
+Considering possible surfel : 58 of possible 62
+   Correspondence group:    { f:5  x:16  y:18}    { f:6  x:16  y:18}    { f:7  x:16  y:18} 
+  cg: { f:5  x:16  y:18} --> Norm: {1 0.738224 -0.328816 0.588987}
+  cg: { f:6  x:16  y:18} --> Norm: {1 0.767944 -0.25311 0.588386}
+  cg: { f:7  x:16  y:18} --> Norm: {2 0.815994 -0.113507 0.566807}
+	 surfel generated
+Considering possible surfel : 59 of possible 62
+   Correspondence group:    { f:5  x:14  y:21}    { f:6  x:14  y:21}    { f:7  x:14  y:21} 
+  cg: { f:5  x:14  y:21} --> Norm: {1 0.992513 -0.121389 -0.0134932}
+  cg: { f:6  x:14  y:21} --> Norm: {1 0.991408 -0.130507 -0.00882751}
+  cg: { f:7  x:14  y:21} --> Norm: {1 0.993268 -0.115818 0.00238535}
+	 surfel generated
+Considering possible surfel : 60 of possible 62
+   Correspondence group:    { f:6  x:17  y:17}    { f:7  x:17  y:17} 
+  cg: { f:6  x:17  y:17} --> Norm: {2 0.726188 -0.222657 0.650442}
+  cg: { f:7  x:17  y:17} --> Norm: {2 0.906554 0.107753 0.408104}
+	 surfel generated
+Considering possible surfel : 61 of possible 62
+   Correspondence group:    { f:6  x:29  y:20}    { f:7  x:29  y:20} 
+  cg: { f:6  x:29  y:20} --> Norm: {0 0 0 0}
+  cg: { f:7  x:29  y:20} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  2 pifs 
+Considering possible surfel : 62 of possible 62
+   Correspondence group:    { f:6  x:29  y:21}    { f:7  x:29  y:21} 
+  cg: { f:6  x:29  y:21} --> Norm: {0 0 0 0}
+  cg: { f:7  x:29  y:21} --> Norm: {0 0 0 0}
+	 rejected - no normals defined for any of  2 pifs 
+Populating neighbour : 
+Populating neighbour : 1 of 57
+Populating neighbour : 2 of 57
+Populating neighbour : 3 of 57
+Populating neighbour : 4 of 57
+Populating neighbour : 5 of 57
+Populating neighbour : 6 of 57
+Populating neighbour : 7 of 57
+Populating neighbour : 8 of 57
+Populating neighbour : 9 of 57
+Populating neighbour : 10 of 57
+Populating neighbour : 11 of 57
+Populating neighbour : 12 of 57
+Populating neighbour : 13 of 57
+Populating neighbour : 14 of 57
+Populating neighbour : 15 of 57
+Populating neighbour : 16 of 57
+Populating neighbour : 17 of 57
+Populating neighbour : 18 of 57
+Populating neighbour : 19 of 57
+Populating neighbour : 20 of 57
+Populating neighbour : 21 of 57
+Populating neighbour : 22 of 57
+Populating neighbour : 23 of 57
+Populating neighbour : 24 of 57
+Populating neighbour : 25 of 57
+Populating neighbour : 26 of 57
+Populating neighbour : 27 of 57
+Populating neighbour : 28 of 57
+Populating neighbour : 29 of 57
+Populating neighbour : 30 of 57
+Populating neighbour : 31 of 57
+Populating neighbour : 32 of 57
+Populating neighbour : 33 of 57
+Populating neighbour : 34 of 57
+Populating neighbour : 35 of 57
+Populating neighbour : 36 of 57
+Populating neighbour : 37 of 57
+Populating neighbour : 38 of 57
+Populating neighbour : 39 of 57
+Populating neighbour : 40 of 57
+Populating neighbour : 41 of 57
+Populating neighbour : 42 of 57
+Populating neighbour : 43 of 57
+Populating neighbour : 44 of 57
+Populating neighbour : 45 of 57
+Populating neighbour : 46 of 57
+Populating neighbour : 47 of 57
+Populating neighbour : 48 of 57
+Populating neighbour : 49 of 57
+Populating neighbour : 50 of 57
+Populating neighbour : 51 of 57
+Populating neighbour : 52 of 57
+Populating neighbour : 53 of 57
+Populating neighbour : 54 of 57
+Populating neighbour : 55 of 57
+Populating neighbour : 56 of 57
+All tangents randomized
+
+ generated 57 surfels
+ Initialising tangents
+Initialising surfels from pervious level
+Warning. Could not find entry for PIF (15, 16, 0) in initialiser table.
+Warning. Could not find entry for PIF (15, 17, 0) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 1) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 2) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 3) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 4) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 5) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 6) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 7) in initialiser table.
+Warning. Could not find entry for PIF (26, 20, 0) in initialiser table.
+
+libc++abi.dylib: terminating with uncaught exception of type std::runtime_error: Pixel in layer does not have any corresponding pixels in the next layer.
+Abort trap: 6
