@@ -1,0 +1,7 @@
+Check for use of computing correspondence groups as paths
+Each point in a frame refers forward to a single point. We track this to tghe end of the build but we explicitly do not merge clusters.
+
+We should
+1. Measure the relative difference in surfels for each frame
+2. Check the value of each path as a surfel. Is it good?
+
