@@ -11,7 +11,7 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
         ${EIGEN3_INCLUDE_DIR}
-        PRIVATE src)
+        PRIVATE include/properties)
 
 
 # This makes the project importable from the build directory

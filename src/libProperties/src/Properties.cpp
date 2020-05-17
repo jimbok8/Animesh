@@ -2,7 +2,7 @@
 // Created by Dave Durbin on 2019-08-11.
 //
 
-#include "../include/Properties/Properties.h"
+#include "Properties.h"
 
 #include <fstream>
 #include <sstream>
