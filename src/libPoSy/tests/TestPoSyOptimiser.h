@@ -6,8 +6,12 @@
 #define ANIMESH_TESTPOSYOPTIMISER_H
 
 
-class TestPoSyOptimiser {
+#include <gtest/gtest.h>
 
+class TestPoSyOptimiser : public ::testing::Test {
+public:
+    void SetUp( );
+    void TearDown();
 };
 
 

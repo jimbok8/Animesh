@@ -1,5 +1,7 @@
 add_library(PoSy STATIC
-		src/PoSy.cpp include/PoSy/PoSy.h)
+		src/PoSy.cpp include/PoSy/PoSy.h
+		src/PoSyOptimiser.cpp include/PoSy/PoSyOptimiser.h
+		src/AbstractOptimiser.cpp include/PoSy/AbstractOptimiser.h)
 
 
 # Define headers for this library. PUBLIC headers are used for
@@ -11,19 +13,19 @@ target_include_directories(PoSy
 		$<INSTALL_INTERFACE:include>
 		${EIGEN3_INCLUDE_DIR}
 	PRIVATE
-		src)
+		include/PoSy)
 
-#target_link_libraries( PoSy
-#	Geom)
+target_link_libraries( PoSy
+	Properties)
 
 # This makes the project importable from the build directory
 export( TARGETS PoSy
 	FILE PoSyLibraryConfig.cmake)
 
-file( GLOB TEST_SOURCES "tests/*.cpp" )
-add_executable(
-		testPoSy
-		${TEST_SOURCES})
+add_executable(testPoSy
+		tests/main.cpp
+		tests/TestPoSy.cpp tests/TestPoSy.h
+		tests/TestPoSyOptimiser.cpp tests/TestPoSyOptimiser.h)
 
 target_link_libraries(testPoSy
 		PoSy
