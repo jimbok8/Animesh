@@ -24,8 +24,8 @@ protected:
     bool is_converged() override;
     void optimisation_began() override;
     void optimisation_ended() override;
-    void optimise_surfel(unsigned int surfel_idx) override;
-    std::vector<size_t> select_surfels_to_optimise() override;
+    void optimise_surfel(std::shared_ptr<Surfel>) override;
+    std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() override;
 
 private:
     animesh::Graph<Surfel,int> m_surfel_graph;

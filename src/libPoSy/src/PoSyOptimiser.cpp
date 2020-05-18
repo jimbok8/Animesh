@@ -31,11 +31,11 @@ void PoSyOptimiser::optimisation_ended() {
 
 }
 
-void PoSyOptimiser::optimise_surfel(unsigned int surfel_idx) {
+void PoSyOptimiser::optimise_surfel(std::shared_ptr<Surfel> surfel_ptr) {
 
 }
 
-std::vector<size_t> PoSyOptimiser::select_surfels_to_optimise() {
-    return std::vector<size_t>{};
+std::vector<std::shared_ptr<Surfel>> PoSyOptimiser::select_surfels_to_optimise() {
+    return std::vector<std::shared_ptr<Surfel>>{};
 }
 

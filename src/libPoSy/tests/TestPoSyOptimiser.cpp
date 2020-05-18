@@ -22,7 +22,7 @@ TEST_F(TestPoSyOptimiser, FailsAssertionOptimisingWhenUnready) {
 TEST_F(TestPoSyOptimiser, IsReadyOnceDataIsSet) {
     Properties p{};
     PoSyOptimiser optimiser{p};
-    animesh::Graph<Surfel,int> g;
+    animesh::Graph<std::shared_ptr<Surfel>,int> g;
     optimiser.set_data(g);
 
     optimiser.optimise_do_one_step();

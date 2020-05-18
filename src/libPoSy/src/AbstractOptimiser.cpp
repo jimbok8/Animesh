@@ -51,8 +51,8 @@ AbstractOptimiser::optimise_do_one_step() {
 
     if (m_state == OPTIMISING) {
         auto sto = select_surfels_to_optimise();
-        for (auto surfel_idx : sto) {
-            optimise_surfel(surfel_idx);
+        for (const auto& surfel_ptr : sto) {
+            optimise_surfel(surfel_ptr);
         }
         ++m_optimisation_cycles;
         check_cancellation();
@@ -94,7 +94,7 @@ AbstractOptimiser::check_convergence() {
  * Set the optimisation data
  */
 void
-AbstractOptimiser::set_data(animesh::Graph<Surfel, int> &surfel_graph) {
+AbstractOptimiser::set_data(animesh::Graph<std::shared_ptr<Surfel>, int> &surfel_graph) {
     m_surfel_graph = surfel_graph;
     m_state = INITIALISED;
 }

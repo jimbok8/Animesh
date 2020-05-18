@@ -33,10 +33,10 @@ public:
     /**
      * Set the optimisation data
      */
-    void set_data(animesh::Graph<Surfel, int> &surfel_graph);
+    void set_data(animesh::Graph<std::shared_ptr<Surfel>, int> &surfel_graph);
 
 protected:
-    animesh::Graph<Surfel, int> m_surfel_graph;
+    animesh::Graph<std::shared_ptr<Surfel>, int> m_surfel_graph;
 
 private:
     Properties m_properties;
@@ -53,8 +53,8 @@ private:
     virtual bool is_converged() = 0;
     virtual void optimisation_began() = 0;
     virtual void optimisation_ended() = 0;
-    virtual void optimise_surfel(unsigned int surfel_idx) = 0;
-    virtual std::vector<size_t> select_surfels_to_optimise() = 0;
+    virtual void optimise_surfel(std::shared_ptr<Surfel> surfel_ptr) = 0;
+    virtual std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() = 0;
 };
 
 #endif //ANIMESH_ABSTRACTOPTIMISER_H
