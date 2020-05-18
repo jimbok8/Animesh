@@ -5,7 +5,10 @@
 #include "PoSyOptimiser.h"
 
 #include <utility>
+#include <vector>
 
+
+// ========
 /**
  * Construct a PoSyOptimiser.
  * @param properties Parameters for the optimiser.
@@ -13,20 +16,26 @@
 PoSyOptimiser::PoSyOptimiser(Properties properties) : AbstractOptimiser(std::move(properties)) {
 }
 
-/**
- * Set the optimisation data
- */
-void
-PoSyOptimiser::set_data( animesh::Graph<Surfel,int>& surfel_graph ) {
-    m_surfel_graph = surfel_graph;
-    m_state = INITIALISED;
-}
+PoSyOptimiser::~PoSyOptimiser() = default;
 
 
-/**
- * Perform a single step of optimisation. Return true if converged or halted.
- */
-bool PoSyOptimiser::optimise_do_one_step() {
-    assert(m_state != UNINITIALISED);
-    return false;
+bool PoSyOptimiser::is_converged() {
+    return true;
 }
+
+void PoSyOptimiser::optimisation_began() {
+
+}
+
+void PoSyOptimiser::optimisation_ended() {
+
+}
+
+void PoSyOptimiser::optimise_surfel(unsigned int surfel_idx) {
+
+}
+
+std::vector<size_t> PoSyOptimiser::select_surfels_to_optimise() {
+    return std::vector<size_t>{};
+}
+

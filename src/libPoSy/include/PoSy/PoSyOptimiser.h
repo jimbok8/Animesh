@@ -11,23 +11,21 @@
 #include "../../../mesher/types.h"
 
 
-class PoSyOptimiser : AbstractOptimiser {
+class PoSyOptimiser : public AbstractOptimiser {
 public:
     /**
      * Construct a PoSyOptimiser.
      * @param properties Parameters for the optimiser.
      */
     explicit PoSyOptimiser(Properties properties);
+    ~PoSyOptimiser() override;
 
-    /**
-     * Set the optimisation data
-     */
-     void set_data( animesh::Graph<Surfel,int>& surfel_graph );
-
-    /**
-     * Perform a single step of optimisation. Return true if converged or halted.
-     */
-    bool optimise_do_one_step();
+protected:
+    bool is_converged() override;
+    void optimisation_began() override;
+    void optimisation_ended() override;
+    void optimise_surfel(unsigned int surfel_idx) override;
+    std::vector<size_t> select_surfels_to_optimise() override;
 
 private:
     animesh::Graph<Surfel,int> m_surfel_graph;
