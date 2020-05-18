@@ -6,7 +6,9 @@
 #define ANIMESH_POSYOPTIMISER_H
 
 #include <Properties/Properties.h>
+#include <Graph/Graph.h>
 #include "AbstractOptimiser.h"
+#include "../../../mesher/types.h"
 
 
 class PoSyOptimiser : AbstractOptimiser {
@@ -18,11 +20,17 @@ public:
     explicit PoSyOptimiser(Properties properties);
 
     /**
+     * Set the optimisation data
+     */
+     void set_data( animesh::Graph<Surfel,int>& surfel_graph );
+
+    /**
      * Perform a single step of optimisation. Return true if converged or halted.
      */
     bool optimise_do_one_step();
 
 private:
+    animesh::Graph<Surfel,int> m_surfel_graph;
 };
 
 

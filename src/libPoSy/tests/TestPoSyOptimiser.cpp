@@ -18,3 +18,12 @@ TEST_F(TestPoSyOptimiser, FailsAssertionOptimisingWhenUnready) {
 
     ASSERT_DEATH(optimiser.optimise_do_one_step(), "(m_state != UNINITIALISED)");
 }
+
+TEST_F(TestPoSyOptimiser, IsReadyOnceDataIsSet) {
+    Properties p{};
+    PoSyOptimiser optimiser{p};
+    animesh::Graph<Surfel,int> g;
+    optimiser.set_data(g);
+
+    optimiser.optimise_do_one_step();
+}
