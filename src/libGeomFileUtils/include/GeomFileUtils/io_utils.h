@@ -2,8 +2,7 @@
 // Created by Dave Durbin on 2019-07-06.
 //
 
-#ifndef ANIMESH_IO_UTILS_H
-#define ANIMESH_IO_UTILS_H
+#pragma once
 
 #include <fstream>
 #include <Eigen/Core>
@@ -30,7 +29,7 @@ write_size_t( std::ofstream& file, size_t value );
  * Write a vector
  */
 void
-write_vector_3f( std::ofstream& file, Eigen::Vector3f vector );
+write_vector_3f( std::ofstream& file, const Eigen::Vector3f& vector );
 
 unsigned int
 read_unsigned_int( std::ifstream& file );
@@ -47,8 +46,7 @@ read_vector_3f( std::ifstream& file );
 
 
 void
-write_string(std::ofstream& file, std::string value );
+write_string(std::ofstream& file, const std::string& value );
 
 std::string
 read_string( std::ifstream& file );
-#endif //ANIMESH_IO_UTILS_H

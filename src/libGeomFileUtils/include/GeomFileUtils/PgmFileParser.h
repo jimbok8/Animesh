@@ -1,10 +1,10 @@
 /**
- * Loads Frames from data
+ * Loads PGM files
  */
 #pragma once
+
 #include <vector>
 #include <string>
-#include <FileUtils/FileUtils.h>
 
 struct PgmData {
 	std::size_t 		width;

@@ -1,10 +1,11 @@
 
-#include <FileUtils/ObjFileParser.h>
+#include "ObjFileParser.h"
+
 #include <FileUtils/FileUtils.h>
-#include <Geom/geom.h>
+
+#include <Geom/Geom.h>
 #include <iostream>
 #include <map>
-
 
 using animesh::ObjFileParser;
 using animesh::PointNormal;
@@ -77,7 +78,7 @@ handle_face_line(
 		int vn_idx = stoi(terms[2]) - 1;
 		face_vertex_idx.push_back(v_idx);
 		face_normal_idx.push_back(vn_idx);
-		verts.push_back(make_pair(v_idx, vn_idx));
+		verts.emplace_back(v_idx, vn_idx);
 		idx++;
 	}
 	faces.push_back(verts);
@@ -130,7 +131,7 @@ compute_vertex_normals( size_t num_vertices,
 	assert( face_vertex_indices.size() == face_normal_indices.size());
 
 	for( size_t i=0; i < num_vertices; ++i ) {
-		vertex_normals.push_back( Vector3f::Zero() );
+		vertex_normals.emplace_back(Vector3f::Zero() );
 	}
 
 	for( size_t i = 0; i < face_vertex_indices.size(); ++i ) {
@@ -196,12 +197,10 @@ compute_point_normals_from_faces(
     vector<PointNormal::Ptr> point_normals;
 
     // For each face, compute centre and normal and edge maps
-    for( size_t face_idx = 0; face_idx < faces.size(); ++face_idx ) {
-      auto face_vertex_normals = faces[face_idx];
+    for(const auto& face_vertex_normals : faces) {
       Vector3f face_centre = Vector3f::Zero();
       Vector3f face_normal = Vector3f::Zero();
-      for( size_t face_vertex_idx = 0; face_vertex_idx < face_vertex_normals.size(); ++face_vertex_idx) {
-        auto face_vertex_normal = face_vertex_normals[face_vertex_idx];
+      for(auto face_vertex_normal : face_vertex_normals) {
         face_centre = face_centre + given_vertices[face_vertex_normal.first];
         face_normal = face_normal + given_normals[face_vertex_normal.second];
       }
@@ -238,7 +237,7 @@ compute_adjacency_from_faces( const std::vector<std::vector<std::pair<std::size_
 
   // For each edge, all faces that share it are adjacent.
   multimap<size_t, size_t> adjacency;
-  for( auto edge_face : edge_to_faces) {
+  for( const auto& edge_face : edge_to_faces) {
     vector<size_t> adjacent_faces = edge_face.second;
     // Shared edge or boundary edge
     assert( adjacent_faces.size() == 2 || adjacent_faces.size() == 1);
@@ -302,7 +301,7 @@ ObjFileParser::parse_file_raw( const std::string& file_name ) {
 	vector<vector<pair<size_t,size_t>>>	faces;
   read_data( file_name, given_vertices, given_normals, face_vertex_indices, face_normal_indices, faces );
   vector<vector<size_t>> face_points;
-  for( auto face_data : faces ) {
+  for( const auto& face_data : faces ) {
     vector<size_t> face_point_data;
     for( auto face_point_normal : face_data ) {
       face_point_data.push_back( face_point_normal.first);
@@ -335,7 +334,7 @@ ObjFileParser::parse_file_raw_with_normals( const std::string& file_name ) {
   vector<pair<vector<size_t>, Vector3f>> output_face_data;
 
   // Each entry in faces is a vector of vertex index an vertex normal index
-  for( auto face_vertices : faces ) {
+  for( const auto& face_vertices : faces ) {
 
     // OUtput storage for this face
     vector<size_t> face_vertex_data;
@@ -349,7 +348,7 @@ ObjFileParser::parse_file_raw_with_normals( const std::string& file_name ) {
     }
     face_normal /= face_vertices.size();
 
-    output_face_data.push_back( make_pair(face_vertex_data, face_normal) );
+    output_face_data.emplace_back(face_vertex_data, face_normal );
   }
   return make_pair( given_vertices, output_face_data );
   

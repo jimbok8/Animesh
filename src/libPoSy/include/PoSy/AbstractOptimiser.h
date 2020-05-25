@@ -7,7 +7,7 @@
 
 #include <Properties/Properties.h>
 #include <Graph/Graph.h>
-#include "../../../mesher/types.h"
+#include <Surfel/Surfel.h>
 
 class AbstractOptimiser {
 public:

@@ -23,6 +23,12 @@ set(CMAKE_CXX_STANDARD 11)
 # Enable Test 
 enable_testing( )
 
+# Need PCL
+find_package(PCL 1.8 REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
 # Add libraries
 add_subdirectory( QtMain )
 add_subdirectory( libArgs )
@@ -31,10 +37,12 @@ add_subdirectory( libDepthMap )
 add_subdirectory( libField )
 add_subdirectory( libFileUtils )
 add_subdirectory( libGeom )
+add_subdirectory( libGeomFileUtils )
 add_subdirectory( libGraph )
 add_subdirectory( libPoSy )
 add_subdirectory( libProperties )
 add_subdirectory( libRoSy )
+add_subdirectory( libSurfel )
 add_subdirectory( mesher )
 add_subdirectory( tools )
 

@@ -17,11 +17,8 @@ target_include_directories(PoSy
 
 target_link_libraries(PoSy
         Properties
-        Graph)
-
-# This makes the project importable from the build directory
-export(TARGETS PoSy
-        FILE PoSyLibraryConfig.cmake)
+        Graph
+		Surfel)
 
 add_executable(testPoSy
         tests/main.cpp
@@ -30,6 +27,7 @@ add_executable(testPoSy
 
 target_link_libraries(testPoSy
         PoSy
+		Surfel
         gtest
         gmock)
 

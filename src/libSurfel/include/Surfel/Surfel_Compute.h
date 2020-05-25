@@ -1,12 +1,14 @@
-#pragma once 
+#pragma once
 
-#include <vector>
 #include <Eigen/Core>
-#include <fstream>
-#include "types.h"
-#include "mesher_args.h"
 #include <DepthMap/DepthMap.h>
 #include <Properties/Properties.h>
+#include "PixelInFrame.h"
+#include "Surfel.h"
+
+#include <vector>
+#include <fstream>
+#include <memory>
 
 
 /**
@@ -30,7 +32,7 @@ are_neighbours(const PixelInFrame &pif1, const PixelInFrame &pif2, bool use_eigh
  * @param surfel2 The second surfel to consider.
  */
 bool
-are_neighbours(const Surfel &surfel1, const Surfel &surfel2, bool eight_connected);
+are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2, bool eight_connected);
 
 /**
  * For a particular surfel, populate the list of neighbouring surfels.
@@ -45,28 +47,29 @@ are_neighbours(const Surfel &surfel1, const Surfel &surfel2, bool eight_connecte
  * @param neighbours
  */
 void
-populate_neighbours(std::vector<Surfel> &surfels, bool eight_connected);
+populate_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected);
 
 /**
  * Sort all framedata for each surfel in ascending order of frame id.
  * We do this once to facilitate finding common frames.
  */
-void 
-sort_frame_data(std::vector<Surfel>& surfels);
+void
+sort_frame_data(std::vector<Surfel> &surfels);
 
 /**
  * Initialise all tangents to random values
  */
-void 
-randomize_tangents(std::vector<Surfel>& surfels);
+void
+randomize_tangents(std::vector<Surfel> &surfels);
 
-std::vector<Surfel>
+std::vector<std::shared_ptr<Surfel>>
 generate_surfels(const std::vector<DepthMap> &depth_maps,
                  const std::vector<std::vector<PixelInFrame>> &correspondences,
-                 const Properties& properties);
+                 const Properties &properties);
+
 /**
  * Actually build a Surfel from the source data.
  */
-Surfel
+std::shared_ptr<Surfel>
 generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
                 const std::vector<DepthMap> &depth_maps);

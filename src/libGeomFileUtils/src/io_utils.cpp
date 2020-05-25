@@ -3,6 +3,8 @@
 //
 
 #include "io_utils.h"
+#include <fstream>
+#include <Eigen/Core>
 
 /**
  * Write an unisgned int
@@ -32,7 +34,7 @@ write_size_t( std::ofstream& file, size_t value ) {
  * Write a vector
  */
 void
-write_vector_3f( std::ofstream& file, Eigen::Vector3f vector ) {
+write_vector_3f( std::ofstream& file, const Eigen::Vector3f& vector ) {
     write_float(file, vector.x());
     write_float(file, vector.y());
     write_float(file, vector.z());
@@ -56,7 +58,7 @@ read_string( std::ifstream& file ) {
 }
 
 void
-write_string(std::ofstream& file, std::string value ) {
+write_string(std::ofstream& file, const std::string& value ) {
     size_t size=value.size();
     file.write((char *) & size,sizeof(size));
     file.write(value.c_str(),size);

@@ -2,9 +2,11 @@
  * Loads Frames from data
  */
 
-#include <fstream>
+#include "PgmFileParser.h"
+#include <FileUtils/FileUtils.h>
+
 #include <string>
-#include <FileUtils/PgmFileParser.h>
+#include <vector>
 
 /**
  * Read the provided file and return a PgmData object.
@@ -37,7 +39,7 @@ PgmData read_pgm( const std::string& file_name ) {
 		using namespace std;
 
 		vector<string> tokens = tokenise(text_line);
-		for( auto token : tokens ) {
+		for( const auto& token : tokens ) {
     		switch( state ) {
 				case EXPECTING_VERSION:
 					if( token == "P2" ) {

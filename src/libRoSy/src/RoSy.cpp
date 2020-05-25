@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Eigen/Geometry>
 #include <RoSy/RoSy.h>
+#include <Geom/Geom.h>
 
 const float EPSILON = 1e-4;
 
@@ -31,6 +32,19 @@ std::pair<Eigen::Vector3f, Eigen::Vector3f>
 best_rosy_vector_pair(const Eigen::Vector3f &target_vector, const Eigen::Vector3f &target_normal, int &target_k,
                       const Eigen::Vector3f &source_vector, const Eigen::Vector3f &source_normal, int &source_k) {
     using namespace Eigen;
+
+    if (!is_unit_vector(source_normal)) {
+        throw std::invalid_argument("Normal must be unit vector");
+    }
+    if (!is_unit_vector(target_normal)) {
+        throw std::invalid_argument("Normal must be unit vector");
+    }
+    if (is_zero_vector(source_vector)) {
+        throw std::invalid_argument("Vector may not be zero length");
+    }
+    if (is_zero_vector(target_vector)) {
+        throw std::invalid_argument("Vector may not be zero length");
+    }
 
     // We'll compare 0 and 90 degree rotations of each vector
     const Vector3f target_candidates[2] = {target_vector, target_normal.cross(target_vector)};

@@ -1,5 +1,5 @@
 #include "TestGeom.h"
-#include <Geom/geom.h>
+#include <Geom/Geom.h>
 #include <Eigen/Geometry>
 #include <iostream>
 

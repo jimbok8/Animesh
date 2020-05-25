@@ -6,7 +6,8 @@
 #include <regex>
 #include <iostream>
 #include <fstream>
-#include <FileUtils/PgmFileParser.h>
+#include <GeomFileUtils/PgmFileParser.h>
+#include <FileUtils/FileUtils.h>
 #include <DepthMap/DepthMap.h>
 #include <DepthMap/Normals.h>
 

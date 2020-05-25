@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Geom/geom.h>
+#include <Geom/Geom.h>
 
 #include <Eigen/Core>
 

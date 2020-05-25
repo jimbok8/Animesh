@@ -1,4 +1,4 @@
-#include <Geom/geom.h>
+#include <Geom/Geom.h>
 #include <Geom/Checks.h>
 #include <Eigen/Geometry>
 #include <Eigen/Core>
@@ -12,6 +12,21 @@ const float EPSILON = 1e-4;
 
 using animesh::PointNormal;
 
+bool
+is_unit_vector(const Eigen::Vector3f& vector) {
+    return fabs(1.0f - (vector[0] * vector[0] + vector[1] * vector[1] +vector[2] * vector[2])) < EPSILON;
+}
+
+bool
+is_zero_vector(const Eigen::Vector3f& vector) {
+    return (vector[0] * vector[0] + vector[1] * vector[1] +vector[2] * vector[2]) < EPSILON;
+}
+
+bool
+are_parallel(const Eigen::Vector3f& v1,const Eigen::Vector3f& v2 ) {
+    return (v1.normalized() - v2.normalized()).norm() < EPSILON;
+}
+
 PointNormal::PointNormal( const Eigen::Vector3f& point, const Eigen::Vector3f& normal) {
 	checkNotZeroVector("Normal", normal);
 	m_point = point;
@@ -23,8 +38,16 @@ PointNormal::PointNormal( const Eigen::Vector3f& point, const Eigen::Vector3f& n
  */
 float degrees_angle_between_vectors(const Eigen::Vector3f& v1, const Eigen::Vector3f& v2 ) {
 	using namespace Eigen;
+    if( is_zero_vector(v1) || is_zero_vector(v2)) {
+        throw std::invalid_argument("Vector may not be zero length");
+    }
+    if( are_parallel(v1, v2) ) {
+        return 0.0f;
+    }
 
-	return std::acos(std::min(1.0f, v1.dot(v2))) * 180 / M_PI;
+    auto dp = v1.dot(v2);
+    auto mod_len = v1.norm()*v2.norm();
+	return std::acos(std::min(1.0f, dp/mod_len)) * 180 / M_PI;
 }
 
 

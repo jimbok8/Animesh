@@ -7,11 +7,13 @@
 #include <regex>
 #include <random>
 #include <iostream>
-#include "surfel_compute.h"
 #include <DepthMap/DepthMap.h>
-#include <Geom/geom.h>
+#include <Geom/Geom.h>
+#include <Properties/Properties.h>
+#include "Surfel_Compute.h"
+#include "PixelInFrame.h"
+#include "Surfel.h"
 #include "spdlog/spdlog.h"
-#include "types.h"
 
 /**
  * Construct Surfels from correspondences.
@@ -46,11 +48,11 @@ random_zero_to_one() {
  * Tangents will be set to a radius of the unit circle in the xy plane
  */
 void
-randomize_tangents(std::vector<Surfel> &surfels) {
+randomize_tangents(std::vector<std::shared_ptr<Surfel>> &surfels) {
     for (auto &surfel : surfels) {
         float xc = random_zero_to_one();
         float yc = sqrt(1.0f - (xc * xc));
-        surfel.tangent = Eigen::Vector3f{xc, 0.0f, yc};
+        surfel->tangent = Eigen::Vector3f{xc, 0.0f, yc};
     }
 }
 
@@ -87,12 +89,12 @@ are_neighbours(const PixelInFrame &pif1, const PixelInFrame &pif2, bool use_eigh
  * @param surfel2 The second surfel to consider.
  */
 bool
-are_neighbours(const Surfel &surfel1, const Surfel &surfel2, bool eight_connected) {
+are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2, bool eight_connected) {
     using namespace std;
 
-    auto it1 = surfel1.frame_data.begin();
-    auto it2 = surfel2.frame_data.begin();
-    while ((it1 != surfel1.frame_data.end()) && (it2 != surfel2.frame_data.end())) {
+    auto it1 = surfel1->frame_data.begin();
+    auto it2 = surfel2->frame_data.begin();
+    while ((it1 != surfel1->frame_data.end()) && (it2 != surfel2->frame_data.end())) {
         const PixelInFrame& pif1 = it1->pixel_in_frame;
         const PixelInFrame& pif2 = it2->pixel_in_frame;
         if (pif1.frame == pif2.frame) {
@@ -124,24 +126,28 @@ are_neighbours(const Surfel &surfel1, const Surfel &surfel2, bool eight_connecte
  * @param neighbours 
  */
 void
-populate_neighbours(std::vector<Surfel> &surfels, bool eight_connected) {
+populate_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected) {
     using namespace std;
     using namespace spdlog;
 
     assert(!surfels.empty());
 
     for (unsigned int i = 0; i < surfels.size() - 1; ++i) {
-        Surfel& surfel = surfels.at(i);
+        auto & surfel = surfels.at(i);
         debug ("Populating neighbours of surfel : {:d}", i);
         for (unsigned int j = i + 1; j < surfels.size(); ++j) {
             if (are_neighbours(surfel, surfels.at(j), eight_connected)) {
-                surfel.neighbouring_surfels.push_back(surfels.at(j).id);
-                surfels.at(j).neighbouring_surfels.push_back(surfel.id);
+                surfel->neighbouring_surfels.push_back(surfels.at(j));
+                surfels.at(j)->neighbouring_surfels.push_back(surfel);
             }
         }
     }
-    for( auto & s : surfels) {
-        sort(s.neighbouring_surfels.begin(), s.neighbouring_surfels.end());
+    for (auto &s : surfels) {
+        sort(s->neighbouring_surfels.begin(),
+             s->neighbouring_surfels.end(),
+             [](const std::shared_ptr<Surfel> &s1, const std::shared_ptr<Surfel> &s2) {
+                 return s1->id < s2->id;
+             });
     }
 }
 
@@ -165,6 +171,7 @@ populate_frame_data(const std::vector<PixelInFrame> &pifs_in_correspondence_grou
 
         frame_data.emplace_back(pif, depth, vector_to_vector_rotation(y_axis, target_normal), target_normal);
     }
+    std::sort( frame_data.begin(), frame_data.end());
     return frame_data;
 }
 
@@ -224,18 +231,18 @@ generate_uuid() {
 /**
  * Actually build a Surfel from the source data.
  */
-Surfel
+std::shared_ptr<Surfel>
 generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
                 const std::vector<DepthMap> &depth_maps) {
     using namespace std;
 
     assert( !corresponding_pifs.empty());
 
-    return Surfel{
+    return make_shared<Surfel>(
         generate_uuid(),
         populate_frame_data(corresponding_pifs, depth_maps),
-        vector<string>{},
-        Eigen::Vector3f::Zero()};
+        vector<shared_ptr<Surfel>>{},
+        Eigen::Vector3f::Zero());
 }
 
 
@@ -248,7 +255,7 @@ generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
 /**
  * Given depth maps and correspondences, compute a vector of surfels
  */
-std::vector<Surfel>
+std::vector<std::shared_ptr<Surfel>>
 generate_surfels(const std::vector<DepthMap> &depth_maps,
                  const std::vector<std::vector<PixelInFrame>> &correspondences,
                  const Properties& properties) {
@@ -258,7 +265,7 @@ generate_surfels(const std::vector<DepthMap> &depth_maps,
 
     bool eight_connected = properties.getBooleanProperty("eight-connected");
 
-    vector<Surfel> surfels;
+    vector<shared_ptr<Surfel>> surfels;
 
     int count = 0;
     int target = correspondences.size();
@@ -275,22 +282,24 @@ generate_surfels(const std::vector<DepthMap> &depth_maps,
             continue;
         }
 
-        Surfel surfel = generate_surfel(pifs_with_normals, depth_maps);
+        auto surfel = generate_surfel(pifs_with_normals, depth_maps);
         surfels.push_back(surfel);
     }
-    for( auto& s : surfels) {
-        sort(s.frame_data.begin(), s.frame_data.end());
-        sort(s.neighbouring_surfels.begin(), s.neighbouring_surfels.end());
-        Surfel::surfel_by_id.emplace(s.id, s);
-        s.last_correction = 0.0f;
-        s.error = 45.0f * 45.0f;
-    }
+
+    // Initialise tangents to random, legal values.
+    randomize_tangents(surfels);
 
     // Build inter-surfel neighbour list
     populate_neighbours(surfels, eight_connected);
 
-    // Initialise tangents to random, legal values.
-    randomize_tangents(surfels);
+    // Sort neighbours and frames
+    for( auto& s : surfels) {
+        Surfel::surfel_by_id.emplace(s->id, s);
+        s->last_correction = 0.0f;
+        s->error = 45.0f * 45.0f;
+    }
+
+
     cout << endl << " generated " << surfels.size() << " surfels" << endl;
     return surfels;
 }

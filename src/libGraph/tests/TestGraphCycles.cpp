@@ -1,6 +1,7 @@
 #include "TestGraphCycles.h"
-#include "Graph/Graph.h"
-#include "FileUtils/ObjFileParser.h"
+
+#include <Graph/Graph.h>
+#include <GeomFileUtils/ObjFileParser.h>
 #include <unordered_set>
 #include <vector>
 

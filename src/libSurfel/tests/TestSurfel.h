@@ -2,9 +2,9 @@
 
 #include <Eigen/Core>
 #include <vector>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
-class TestProperties : public ::testing::Test {
+class TestSurfel : public ::testing::Test {
 public:
 	Eigen::Vector3f vec_1_0_0{ 1.0f, 0.0f, 0.0f };
 	Eigen::Vector3f vec_0_1_0{ 0.0f, 1.0f, 0.0f };

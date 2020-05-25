@@ -2,8 +2,15 @@
 #include "optimise.h"
 #include "hierarchical_mesher_utilities.h"
 #include <Properties/Properties.h>
+#include <Camera/Camera.h>
+#include <DepthMap/DepthMap.h>
 #include "spdlog/spdlog.h"
 #include "spdlog/cfg/env.h"
+#include <string>
+#include <vector>
+#include <chrono>
+#include <iostream>
+
 
 /**
  * Entry point

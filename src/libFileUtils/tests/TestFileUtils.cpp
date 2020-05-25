@@ -7,7 +7,7 @@ void TestFileUtils::SetUp( ){
 void TestFileUtils::TearDown( ) {}
 
 TEST_F(TestFileUtils, FileNameExtensionWithFileAndExtension) {
-  using namespace std;
+    using namespace std;
     pair<string,string> actual = get_file_name_and_extension( "file.ext");
   EXPECT_EQ( "file", actual.first);
   EXPECT_EQ( "ext", actual.second);

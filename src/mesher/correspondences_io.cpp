@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-
+#include <Surfel/PixelInFrame.h>
 #include "correspondences_io.h"
-#include "io_utils.h"
+#include <GeomFileUtils/io_utils.h>
 
 void
 load_correspondences_from_file(const std::string &file_name,

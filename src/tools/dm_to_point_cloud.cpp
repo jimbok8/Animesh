@@ -14,6 +14,9 @@
 #include <DepthMap/DepthMap.h>
 #include <Properties/Properties.h>
 #include <Camera/Camera.h>
+#include <Surfel/Pixel.h>
+#include <Surfel/PixelInFrame.h>
+
 #include "../mesher/types.h"
 #include "../mesher/correspondences_io.h"
 #include "../mesher/utilities.h"

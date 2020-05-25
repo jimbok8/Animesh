@@ -2,10 +2,10 @@
 // Created by Dave Durbin on 11/3/20.
 //
 
+#include "Normals.h"
+#include "DepthMap.h"
 #include <vector>
 #include <Camera/Camera.h>
-#include <DepthMap/Normals.h>
-#include <DepthMap/DepthMap.h>
 
 #include <Eigen/SVD>
 

@@ -1,9 +1,16 @@
 #pragma once
 
-#include "surfel_compute.h"
-
+#include <Surfel/Surfel.h>
+#include <Surfel/Surfel_Compute.h>
+#include <Properties/Properties.h>
+#include <DepthMap/DepthMap.h>
+#include <Camera/Camera.h>
+#include "types.h"
+#include <Eigen/Core>
 #include <map>
 #include <vector>
+#include <string>
+#include <memory>
 
 class Optimiser {
 public:
@@ -12,7 +19,7 @@ public:
      */
     bool optimise_do_one_step();
 
-    Optimiser(Properties properties);
+    explicit Optimiser(Properties properties);
 
     Eigen::Vector2i get_dimensions() const {
         return Eigen::Vector2i{m_depth_map_hierarchy.at(m_current_level_index).at(0).width(),
@@ -31,31 +38,25 @@ public:
     /**
      * Return a const reference to the surfels being transformed so externals can play with it
      */
-    const std::vector<Surfel> &get_surfel_data() { return m_current_level_surfels; }
+    const std::vector<std::shared_ptr<Surfel>> &get_surfel_data() { return m_current_level_surfels; }
 
     bool
     surfel_is_in_frame(const std::string &surfel_id, size_t index);
 
-    unsigned int
-    index_for_surfel_in_frame(const std::string& surfel_id, unsigned int frame_idx );
-
-    const Surfel
-    surfel_at_index_in_frame(unsigned int surfel_idx, unsigned int frame_idx );
-
     /**
      * Return a (possibly empty) vector of neghbours of a surfel in a frame
      */
-    std::vector<std::string>
+    std::vector<std::shared_ptr<Surfel>>
     get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned int frame_idx);
 
-    unsigned int get_current_level() {
+    unsigned int get_current_level() const {
         return m_current_level_index;
     }
 
     /**
      * Return mean error
      */
-     inline float get_mean_error() {
+     inline float get_mean_error() const {
          return m_last_optimising_error;
      }
 
@@ -65,10 +66,10 @@ private:
     std::vector<Camera> m_cameras;
 
     /** Surfels in the current level */
-    std::vector<Surfel> m_current_level_surfels;
+    std::vector<std::shared_ptr<Surfel>> m_current_level_surfels;
 
     /** Surfels in the previous level of smoothing if there's more than one. */
-    std::vector<Surfel> m_previous_level_surfels;
+    std::vector<std::shared_ptr<Surfel>> m_previous_level_surfels;
 
     /** Properties to use for the optimiser */
     const Properties m_properties;
@@ -107,7 +108,7 @@ private:
      * Key is surfel, frame
      * Value is a vector of const surfel&
      */
-    std::multimap<SurfelInFrame, std::string> m_neighbours_by_surfel_frame;
+    std::multimap<SurfelInFrame, std::shared_ptr<Surfel>> m_neighbours_by_surfel_frame;
 
     /**
      * Map from frame to the surfels in it. Populated once per level.
@@ -198,10 +199,10 @@ private:
                   const NormalTangent &second);
 
     float
-    compute_surfel_error_for_frame(const std::string &surfel_id, size_t frame_id);
+    compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel, size_t frame_id);
 
     float
-    compute_surfel_error(Surfel &surfel);
+    compute_surfel_error(std::shared_ptr<Surfel> &surfel);
 
     float
     compute_mean_error_per_surfel();

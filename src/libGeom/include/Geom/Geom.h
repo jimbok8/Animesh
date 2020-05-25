@@ -115,3 +115,14 @@ float distance_from_point_to_line(const Eigen::Vector3f &point, const Eigen::Vec
  */
 std::tuple<unsigned int, unsigned int, float> closest_points(const std::vector<Eigen::Vector3f>& points);
 
+/**
+ * @return true if the given vector is close to zero length.
+ */
+bool
+is_zero_vector(const Eigen::Vector3f& vector);
+
+/**
+ * @return true if the given vector is close to unit length.
+ */
+bool
+is_unit_vector(const Eigen::Vector3f& vector);

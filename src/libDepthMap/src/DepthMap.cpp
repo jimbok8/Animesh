@@ -1,8 +1,8 @@
-#include <DepthMap/DepthMap.h>
-#include <DepthMap/Normals.h>
-#include <DepthMap/PclNormals.h>
-#include <DepthMap/CrossProductNormals.h>
-#include <DepthMap/PlaneFittingNormals.h>
+#include "DepthMap.h"
+#include "Normals.h"
+#include "PclNormals.h"
+#include "CrossProductNormals.h"
+#include "PlaneFittingNormals.h"
 #include <FileUtils/FileUtils.h>
 #include <Camera/Camera.h>
 
