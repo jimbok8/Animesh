@@ -12,6 +12,7 @@ class Properties {
 public:
     Properties()= default;
     explicit Properties(const std::string& file_name );
+    explicit Properties(const std::map<std::string, std::string>& values);
 
     const std::string& getProperty(const std::string& key) const;
     int getIntProperty(const std::string& key) const;

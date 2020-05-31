@@ -61,6 +61,12 @@ Properties::Properties(const std::string &file_name) {
     }
 }
 
+Properties::Properties(const std::map<std::string, std::string>& values) {
+    property_map = values;
+}
+
+
+
 const std::string &Properties::getProperty(const std::string &key) const {
     using namespace std;
 
