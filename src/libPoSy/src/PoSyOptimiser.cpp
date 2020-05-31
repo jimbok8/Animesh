@@ -3,7 +3,7 @@
 //
 
 #include "PoSyOptimiser.h"
-
+#include "PoSy.h"
 #include <utility>
 #include <vector>
 
@@ -14,6 +14,7 @@
  * @param properties Parameters for the optimiser.
  */
 PoSyOptimiser::PoSyOptimiser(Properties properties) : AbstractOptimiser(std::move(properties)) {
+    m_rho = properties.getFloatProperty("rho");
 }
 
 PoSyOptimiser::~PoSyOptimiser() = default;
@@ -47,7 +48,34 @@ void PoSyOptimiser::optimisation_ended() {
   next neighbour
 
  */
-void PoSyOptimiser::optimise_surfel(std::shared_ptr<Surfel> surfel_ptr) {
+void PoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr) {
+    using namespace std;
+
+    float weight = 0.0f;
+
+    auto new_position = surfel_ptr->position;
+    for (const auto &neighbour : surfel_ptr->neighbouring_surfels) {
+        float edge_weight = 1.0f;
+
+        const Eigen::Vector3f surfel_normal;
+        const Eigen::Vector3f surfel_tangent;
+        const Eigen::Vector3f neighbour_normal;
+        const Eigen::Vector3f neighbour_tangent;
+
+        new_position = average_posy_vectors(
+                new_position,
+                surfel_tangent,
+                surfel_normal,
+                edge_weight,
+                neighbour->position,
+                neighbour_tangent,
+                neighbour_normal,
+                m_rho,
+                weight
+        );
+        weight += edge_weight;
+    }
+    surfel_ptr->position = new_position;
 }
 
 std::vector<std::shared_ptr<Surfel>> PoSyOptimiser::select_surfels_to_optimise() {

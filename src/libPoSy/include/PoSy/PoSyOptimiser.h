@@ -24,11 +24,12 @@ protected:
     bool is_converged() override;
     void optimisation_began() override;
     void optimisation_ended() override;
-    void optimise_surfel(std::shared_ptr<Surfel>) override;
+    void optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr) override;
     std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() override;
 
 private:
     animesh::Graph<Surfel,int> m_surfel_graph;
+    float m_rho;
 };
 
 

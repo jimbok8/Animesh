@@ -1,4 +1,6 @@
+
 #include <PoSy/PoSy.h>
+#include <Geom/Geom.h>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <vector>
@@ -76,15 +78,17 @@ Eigen::Vector3f
 average_posy_vectors(const Eigen::Vector3f &p1,
                      const Eigen::Vector3f &o1,
                      const Eigen::Vector3f &n1,
+                     float weight1,
                      const Eigen::Vector3f &p2,
                      const Eigen::Vector3f &o2,
                      const Eigen::Vector3f &n2,
-                     const float rho,
-                     const float weight
+                     float weight2,
+                     float rho
 ) {
     const auto l1 = compute_local_lattice_vertices(p1, n1, o1, rho);
     const auto l2 = compute_local_lattice_vertices(p2, n2, o2, rho);
     const auto tuple = closest_points(l1, l2);
     const auto delta = (std::get<2>(tuple) - std::get<3>(tuple));
-    return p1 + weight * delta;
+    const auto new_position =  p1 + (delta * ( weight2/ weight1));
+    return project_vector_to_plane(new_position, n1);
 }

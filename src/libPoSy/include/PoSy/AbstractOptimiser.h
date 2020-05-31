@@ -53,7 +53,7 @@ private:
     virtual bool is_converged() = 0;
     virtual void optimisation_began() = 0;
     virtual void optimisation_ended() = 0;
-    virtual void optimise_surfel(std::shared_ptr<Surfel> surfel_ptr) = 0;
+    virtual void optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr) = 0;
     virtual std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() = 0;
 };
 

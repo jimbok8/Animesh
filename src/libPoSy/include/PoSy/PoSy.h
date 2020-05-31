@@ -24,10 +24,11 @@ closest_points(const std::vector<Eigen::Vector3f>& points_a, const std::vector<E
  average_posy_vectors(const Eigen::Vector3f &p1,
                       const Eigen::Vector3f &o1,
                       const Eigen::Vector3f &n1,
+                      float weight1,
                       const Eigen::Vector3f &p2,
                       const Eigen::Vector3f &o2,
                       const Eigen::Vector3f &n2,
-                      float rho,
-                      float weight
+                      float weight2,
+                      float rho
  );
 
