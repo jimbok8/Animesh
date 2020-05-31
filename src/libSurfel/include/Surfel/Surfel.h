@@ -15,7 +15,6 @@
 struct Surfel {
     Surfel(std::string id,
            const std::vector<FrameData> &frames,
-           std::vector<std::shared_ptr<Surfel>> neighbours,
            Eigen::Vector3f tangent);
 
     static std::map<std::string, std::shared_ptr<Surfel>> surfel_by_id;
@@ -24,7 +23,6 @@ struct Surfel {
 
     std::string id;
     std::vector<FrameData> frame_data;
-    std::vector<std::shared_ptr<Surfel>> neighbouring_surfels;
     Eigen::Vector3f tangent;
     // Relative position of representation lattice intersection [0,1)
     Eigen::Vector3f position;

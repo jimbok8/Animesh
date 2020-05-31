@@ -26,10 +26,8 @@ std::shared_ptr<Surfel> Surfel::surfel_for_id(const std::string& id) {
 
 Surfel::Surfel(std::string id,
                const std::vector<FrameData> &frames,
-               std::vector<std::shared_ptr<Surfel>> neighbours,
                Eigen::Vector3f tangent) :
         id{std::move(id)},
-        neighbouring_surfels{std::move(neighbours)},
         tangent{std::move(tangent)},
         position{0.0f, 0.0f, 0.0f},
         last_correction{0.0f},
