@@ -522,7 +522,7 @@ Optimiser::optimise_surfel(size_t surfel_idx) {
     // Get vector of eligible normal/tangent pairs
     auto neighbouring_normals_and_tangents = get_eligible_normals_and_tangents(surfel_idx);
 
-    // Merge all neighbours; implicitly using optiminsing tier tangents
+    // Merge all neighbours; implicitly using optimising tier tangents
     auto old_tangent = surfel->tangent;
     Vector3f new_tangent{old_tangent};
 
