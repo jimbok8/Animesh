@@ -90,7 +90,7 @@ Eigen::Vector3f vector_by_rotating_around_n( const Eigen::Vector3f & o, const Ei
  * @param n The normal
  * @return a unit vector in the tangent plane
  */
-Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eigen::Vector3f& n) {
+Eigen::Vector3f project_vector_to_plane(const Eigen::Vector3f& v, const Eigen::Vector3f& n) {
 	using namespace Eigen;
 
 	Vector3f error = v.dot( n ) * n;

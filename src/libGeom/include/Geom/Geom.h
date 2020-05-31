@@ -42,7 +42,7 @@ float degrees_angle_between_vectors(const Eigen::Vector3f& v1, const Eigen::Vect
  * @param n The normal
  * @return a unit vector in the tangent plane
  */
-Eigen::Vector3f reproject_to_tangent_space( const Eigen::Vector3f& v, const Eigen::Vector3f& n);
+Eigen::Vector3f project_vector_to_plane(const Eigen::Vector3f& v, const Eigen::Vector3f& n);
 
 /**
  * Construct the skew symmetric matrix correesponding to 
