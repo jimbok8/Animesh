@@ -30,6 +30,7 @@ target_link_libraries(
 		DepthMap
 		Geom
 		GeomFileUtils
+		Graph
 		Properties
 )
 

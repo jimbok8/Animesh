@@ -3,12 +3,13 @@
 #endif
 
 #include <map>
-#include <set>
 #include <regex>
 #include <random>
 #include <iostream>
+#include <memory>
 #include <DepthMap/DepthMap.h>
 #include <Geom/Geom.h>
+#include <Graph/Graph.h>
 #include <Properties/Properties.h>
 #include "Surfel_Compute.h"
 #include "PixelInFrame.h"
@@ -125,30 +126,35 @@ are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Sur
  * @param surfels The list of all surfels.
  * @param neighbours 
  */
-void
-populate_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected) {
+animesh::Graph<std::shared_ptr<Surfel>, int>
+make_surfel_graph(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected) {
     using namespace std;
     using namespace spdlog;
 
+    animesh::Graph<shared_ptr<Surfel>, int> graph;
+
     assert(!surfels.empty());
+
+    // Add surfels to graph
+    map<string, animesh::Graph<shared_ptr<Surfel>, int>::GraphNode*> m;
+    for( const auto& surfel : surfels) {
+        auto node = graph.add_node(surfel);
+        m.emplace(surfel->id, node);
+    }
 
     for (unsigned int i = 0; i < surfels.size() - 1; ++i) {
         auto & surfel = surfels.at(i);
         debug ("Populating neighbours of surfel : {:d}", i);
         for (unsigned int j = i + 1; j < surfels.size(); ++j) {
             if (are_neighbours(surfel, surfels.at(j), eight_connected)) {
-                surfel->neighbouring_surfels.push_back(surfels.at(j));
-                surfels.at(j)->neighbouring_surfels.push_back(surfel);
+                auto node1 = m.at(surfels.at(j)->id);
+                auto node2 = m.at(surfels.at(i)->id);
+                graph.add_edge(node1, node2, 1.0f, 0);
+                graph.add_edge(node2, node1, 1.0f, 0);
             }
         }
     }
-    for (auto &s : surfels) {
-        sort(s->neighbouring_surfels.begin(),
-             s->neighbouring_surfels.end(),
-             [](const std::shared_ptr<Surfel> &s1, const std::shared_ptr<Surfel> &s2) {
-                 return s1->id < s2->id;
-             });
-    }
+    return graph;
 }
 
 /**
@@ -241,7 +247,6 @@ generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
     return make_shared<Surfel>(
         generate_uuid(),
         populate_frame_data(corresponding_pifs, depth_maps),
-        vector<shared_ptr<Surfel>>{},
         Eigen::Vector3f::Zero());
 }
 
@@ -288,9 +293,6 @@ generate_surfels(const std::vector<DepthMap> &depth_maps,
 
     // Initialise tangents to random, legal values.
     randomize_tangents(surfels);
-
-    // Build inter-surfel neighbour list
-    populate_neighbours(surfels, eight_connected);
 
     // Sort neighbours and frames
     for( auto& s : surfels) {

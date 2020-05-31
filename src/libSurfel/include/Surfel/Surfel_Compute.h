@@ -3,6 +3,7 @@
 #include <Eigen/Core>
 #include <DepthMap/DepthMap.h>
 #include <Properties/Properties.h>
+#include <Graph/Graph.h>
 #include "PixelInFrame.h"
 #include "Surfel.h"
 
@@ -46,21 +47,8 @@ are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Sur
  * @param surfels The list of all surfels.
  * @param neighbours
  */
-void
-populate_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected);
-
-/**
- * Sort all framedata for each surfel in ascending order of frame id.
- * We do this once to facilitate finding common frames.
- */
-void
-sort_frame_data(std::vector<Surfel> &surfels);
-
-/**
- * Initialise all tangents to random values
- */
-void
-randomize_tangents(std::vector<Surfel> &surfels);
+animesh::Graph<std::shared_ptr<Surfel>, int>
+make_surfel_graph(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected);
 
 std::vector<std::shared_ptr<Surfel>>
 generate_surfels(const std::vector<DepthMap> &depth_maps,
