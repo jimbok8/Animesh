@@ -248,6 +248,13 @@ namespace animesh {
         /**
         * @return a vector of the neghbours of a given node
         */
+        std::vector<GraphNode *> neighbours(const NodeData& data) const {
+            return neighbours(nodes_by_content.at(data));
+        }
+
+        /**
+        * @return a vector of the neghbours of a given node
+        */
         std::vector<GraphNode *> neighbours(GraphNode *node) const {
             std::vector<GraphNode *> data;
             auto range = m_adjacency.equal_range(node);
