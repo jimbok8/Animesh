@@ -25,6 +25,22 @@ TEST_F(TestGraph, AddNodeByDataShouldAddNode) {
     EXPECT_EQ( graph.num_nodes(), 1 );
 }
 
+TEST_F(TestGraph, AddEdgeByDataShouldAddEdge) {
+    graph.add_node( "a" );
+    graph.add_node( "b" );
+    graph.add_edge("a", "b", 1.0f, 0);
+
+    EXPECT_EQ( graph.num_edges(), 1 );
+}
+
+TEST_F(TestGraph, AddSelfEdgeByDataShouldAddEdge) {
+    graph.add_node( "a" );
+    graph.add_node( "b" );
+    graph.add_edge("a", "a", 1.0f, 0);
+
+    EXPECT_EQ( graph.num_edges(), 1 );
+}
+
 TEST_F(TestGraph, AddNodeDirectShouldAddNode) {
     graph.add_node( gn1 );
 
