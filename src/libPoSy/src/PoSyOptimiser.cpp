@@ -54,7 +54,7 @@ void PoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr) {
     float weight = 0.0f;
 
     auto new_position = surfel_ptr->position;
-    for (const auto &neighbour : surfel_ptr->neighbouring_surfels) {
+    for (const auto neighbour_node : m_surfel_graph.neighbours(surfel_ptr)) {
         float edge_weight = 1.0f;
 
         const Eigen::Vector3f surfel_normal;
@@ -67,7 +67,7 @@ void PoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr) {
                 surfel_tangent,
                 surfel_normal,
                 edge_weight,
-                neighbour->position,
+                neighbour_node->data()->position,
                 neighbour_tangent,
                 neighbour_normal,
                 m_rho,
