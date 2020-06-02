@@ -39,6 +39,7 @@ add_executable(
 		testSurfel
 		tests/main.cpp
 		tests/TestSurfel.h tests/TestSurfel.cpp
+		${CMAKE_BINARY_DIR}/surfel_test_data/gold_graph.bin
 )
 
 target_link_libraries(
@@ -48,11 +49,30 @@ target_link_libraries(
 		gmock
 )
 
+add_custom_command(
+		OUTPUT ${CMAKE_BINARY_DIR}/surfel_test_data/gold_graph.bin
+		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_data ${CMAKE_BINARY_DIR}/surfel_test_data
+		COMMENT "Copying surfel test data."
+		DEPENDS tests/test_data/gold_graph.bin
+)
+
 add_test(
-		NAME TestSurfel.NameOfTest
-		COMMAND testSurtfel --gtest_filter=TestSurfel.NameOfTest
+		NAME TestSurfelIO.LoadFromTestFile
+		COMMAND testSurfel --gtest_filter=TestSurfelIO.LoadFromTestFile
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+
+add_test(
+		NAME TestSurfelIO.SaveToTestFile
+		COMMAND testSurfel --gtest_filter=TestSurfelIO.SaveToTestFile
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+add_test(
+		NAME TestSurfelIO.SaveLoadRoundTrip
+		COMMAND testSurfel --gtest_filter=TestSurfelIO.SaveLoadRoundTrip
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
 
 # Stash it
 install(

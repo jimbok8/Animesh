@@ -62,8 +62,8 @@ void
 Optimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
     if (properties.getBooleanProperty("save-presmooth-surfels")) {
         spdlog::info("   Saving presmooth Surfels");
-        save_surfels_to_file(file_name_from_template_and_level(properties.getProperty("presmooth-surfel-template"),
-                                                               m_current_level_index), m_current_level_surfels);
+        save_surfel_graph_to_file(file_name_from_template_and_level(properties.getProperty("presmooth-surfel-template"),
+                                                                    m_current_level_index), m_current_level_surfels);
     }
 }
 
@@ -74,8 +74,8 @@ void
 Optimiser::maybe_save_smoothed_surfels_to_file(const Properties &properties) {
     if (properties.getBooleanProperty("save-smoothed-surfels")) {
         spdlog::info("   Saving smoothed Surfels");
-        save_surfels_to_file(file_name_from_template_and_level(properties.getProperty("smoothed-surfel-template"),
-                                                               m_current_level_index), m_current_level_surfels);
+        save_surfel_graph_to_file(file_name_from_template_and_level(properties.getProperty("smoothed-surfel-template"),
+                                                                    m_current_level_index), m_current_level_surfels);
     }
 }
 

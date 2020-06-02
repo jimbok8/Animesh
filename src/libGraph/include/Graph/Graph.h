@@ -7,19 +7,9 @@
 #include <list>
 #include <unordered_set>
 #include <Graph/Path.h>
+#include <spdlog/spdlog.h>
 
 namespace animesh {
-
-    struct vector_hash {
-        size_t operator()(const std::vector<size_t> &v) const {
-            std::hash<int> hasher;
-            size_t seed = 0;
-            for (int i : v) {
-                seed ^= hasher(i) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-            }
-            return seed;
-        }
-    };
 
 /**
 * A Graph representation that can handle hierarchical graphs.
@@ -139,16 +129,16 @@ namespace animesh {
         /**
          * Add an edge to the graph connecting two existing nodes
          */
-        Edge *add_edge(const NodeData &from_node, const NodeData &to_node, float weight, const EdgeData &edge_data) {
+        void add_edge(const NodeData &from_node, const NodeData &to_node, float weight, const EdgeData &edge_data) {
             auto n1 = nodes_by_content.at(from_node);
             auto n2 = nodes_by_content.at(to_node);
-            return add_edge(n1, n2, weight, edge_data);
+            add_edge(n1, n2, weight, edge_data);
         }
 
         /**
         * Add an edge to the graph connecting two existing nodes
         */
-        Edge *add_edge(GraphNode *from_node, GraphNode *to_node, float weight, const EdgeData &edge_data) {
+        void add_edge(GraphNode *from_node, GraphNode *to_node, float weight, const EdgeData &edge_data) {
             using namespace std;
 
             assert(from_node != nullptr);
@@ -156,7 +146,10 @@ namespace animesh {
             assert(weight >= 0);
             assert(std::find(m_nodes.begin(), m_nodes.end(), from_node) != m_nodes.end());
             assert(std::find(m_nodes.begin(), m_nodes.end(), to_node) != m_nodes.end());
-            assert(!has_edge(from_node, to_node));
+            if( has_edge(from_node, to_node)) {
+                spdlog::info( "Ignoring add edge, edge already exists");
+                return;
+            }
             m_adjacency.insert(make_pair(from_node, to_node));
             // Undirected graphs we have symmetric adjacency.
             if (!m_is_directed) {
@@ -165,8 +158,6 @@ namespace animesh {
             // But edges are quite specific. Where important, we can flip edges.
             Edge *edge = new Edge(from_node, to_node, weight, edge_data);
             m_edges.push_back(edge);
-
-            return edge;
         }
         /**
         * Remove an edge from the graph. If the graph is directed it will explicitly
@@ -207,8 +198,8 @@ namespace animesh {
                 }
             }
             if (!m_is_directed) {
-                auto range = equal_range(to_node);
-                for (auto it = range.first; it != range.second; ++it) {
+                auto to_range = equal_range(to_node);
+                for (auto it = to_range.first; it != to_range.second; ++it) {
                     if (it->second == from_node) {
                         m_adjacency.erase(it);
                         break;
