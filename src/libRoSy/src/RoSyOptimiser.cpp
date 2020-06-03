@@ -5,8 +5,8 @@
 #include <DepthMap/DepthMap.h>
 #include <Surfel/Surfel.h>
 #include <Surfel/PixelInFrame.h>
-#include "utilities.h"
-#include "hierarchical_mesher_utilities.h"
+#include "../../mesher/utilities.h"
+#include "../../mesher/hierarchical_mesher_utilities.h"
 
 #include <Eigen/Core>
 #include <random>

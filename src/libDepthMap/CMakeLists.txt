@@ -5,6 +5,7 @@ add_library(
 		src/PclNormals.cpp include/DepthMap/PclNormals.h
 		src/PlaneFittingNormals.cpp include/DepthMap/PlaneFittingNormals.h
 		src/DepthMap.cpp include/DepthMap/DepthMap.h
+		src/DepthMapIO.cpp include/DepthMap/DepthMapIO.h
 )
 
 # Define headers for this library. PUBLIC headers are used for
@@ -26,6 +27,7 @@ target_link_libraries(
 		Camera
 		FileUtils
 		Geom
+		GeomFileUtils
 		${PCL_LIBRARIES}
 )
 

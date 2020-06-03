@@ -5,21 +5,21 @@
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
 #include <Camera/Camera.h>
-#include "types.h"
+#include "../../mesher/types.h"
 #include <Eigen/Core>
 #include <map>
 #include <vector>
 #include <string>
 #include <memory>
 
-class Optimiser {
+class RoSyOptimiser {
 public:
     /**
      * Perform a single step of optimisation. Return true if converged or halted.
      */
     bool optimise_do_one_step();
 
-    explicit Optimiser(Properties properties);
+    explicit RoSyOptimiser(Properties properties);
 
     Eigen::Vector2i get_dimensions() const {
         return Eigen::Vector2i{m_depth_map_hierarchy.at(m_current_level_index).at(0).width(),
@@ -143,7 +143,7 @@ private:
     } m_result;
 
 
-    std::function<std::vector<size_t>(Optimiser&)> m_surfel_selection_function;
+    std::function<std::vector<size_t>(RoSyOptimiser&)> m_surfel_selection_function;
 
     /**
      * Start optimisation
