@@ -50,7 +50,7 @@ are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Sur
 animesh::Graph<std::shared_ptr<Surfel>, int>
 make_surfel_graph(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected);
 
-std::vector<std::shared_ptr<Surfel>>
+animesh::Graph<std::shared_ptr<Surfel>, int>
 generate_surfels(const std::vector<DepthMap> &depth_maps,
                  const std::vector<std::vector<PixelInFrame>> &correspondences,
                  const Properties &properties);

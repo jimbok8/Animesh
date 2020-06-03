@@ -3,6 +3,7 @@
 #endif
 
 #include <map>
+#include <set>
 #include <regex>
 #include <random>
 #include <iostream>
@@ -127,7 +128,7 @@ are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Sur
  * @param neighbours 
  */
 animesh::Graph<std::shared_ptr<Surfel>, int>
-make_surfel_graph(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected) {
+populate_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected) {
     using namespace std;
     using namespace spdlog;
 
@@ -260,7 +261,7 @@ generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
 /**
  * Given depth maps and correspondences, compute a vector of surfels
  */
-std::vector<std::shared_ptr<Surfel>>
+animesh::Graph<std::shared_ptr<Surfel>, int>
 generate_surfels(const std::vector<DepthMap> &depth_maps,
                  const std::vector<std::vector<PixelInFrame>> &correspondences,
                  const Properties& properties) {
@@ -301,7 +302,8 @@ generate_surfels(const std::vector<DepthMap> &depth_maps,
         s->error = 45.0f * 45.0f;
     }
 
+    auto surfel_graph = populate_neighbours(surfels, properties.getBooleanProperty("eight-connected"));
 
-    cout << endl << " generated " << surfels.size() << " surfels" << endl;
-    return surfels;
+    spdlog::info(" generated {:d} surfels",  surfels.size());
+    return surfel_graph;
 }
