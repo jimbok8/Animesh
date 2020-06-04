@@ -100,10 +100,9 @@ add_executable(
 		dm_to_point_cloud
 		dm_to_point_cloud.cpp
 		../mesher/correspondences_io.cpp ../mesher/correspondences_io.h
-		../mesher/depth_map_io.cpp ../mesher/depth_map_io.h
+		../libDepthMap/src/DepthMapIO.cpp ../libDepthMap/include/DepthMap/DepthMapIO.h
 		../mesher/types.h
-		../mesher/hierarchical_mesher_utilities.h ../mesher/hierarchical_mesher_utilities.cpp
-		../mesher/utilities.h ../mesher/utilities.cpp
+		../libUtilities/include/Utilities/utilities.h ../libUtilities/src/utilities.cpp
 		)
 
 target_link_libraries(

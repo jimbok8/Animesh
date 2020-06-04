@@ -43,6 +43,7 @@ add_subdirectory( libPoSy )
 add_subdirectory( libProperties )
 add_subdirectory( libRoSy )
 add_subdirectory( libSurfel )
+add_subdirectory( libUtilities )
 add_subdirectory( mesher )
 add_subdirectory( tools )
 

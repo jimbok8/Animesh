@@ -1,12 +1,13 @@
-#include "optimise.h"
+#include "RoSy/RoSyOptimiser.h"
 
 #include <RoSy/RoSy.h>
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
 #include <Surfel/Surfel.h>
+#include <Surfel/Surfel_IO.h>
 #include <Surfel/PixelInFrame.h>
-#include "../../mesher/utilities.h"
-#include "../../mesher/hierarchical_mesher_utilities.h"
+#include <Utilities/utilities.h>
+//#include "../../mesher/hierarchical_mesher_utilities.h"
 
 #include <Eigen/Core>
 #include <random>
@@ -16,21 +17,20 @@
 #include "spdlog/spdlog.h"
 
 
+static const char *SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
+static const char *SSA_SELECT_WORST_100 = "select-worst-100";
 
-static const char * SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
-static const char * SSA_SELECT_WORST_100 = "select-worst-100";
-
-Optimiser::Optimiser(Properties properties) : m_properties{std::move(properties)} {
+RoSyOptimiser::RoSyOptimiser(Properties properties) : m_properties{std::move(properties)} {
     m_surfels_per_step = m_properties.getIntProperty("surfels-per-step");
     assert(m_surfels_per_step > 0);
 
     m_convergence_threshold = m_properties.getFloatProperty("convergence-threshold");
 
     auto ssa = m_properties.getProperty("surfel-selection-algorithm");
-    if( ssa == SSA_SELECT_ALL_IN_RANDOM_ORDER ) {
-        m_surfel_selection_function = &Optimiser::ssa_select_all_in_random_order;
-    } else if (ssa == SSA_SELECT_WORST_100 ) {
-        m_surfel_selection_function = &Optimiser::ssa_select_worst_100;
+    if (ssa == SSA_SELECT_ALL_IN_RANDOM_ORDER) {
+        m_surfel_selection_function = &RoSyOptimiser::ssa_select_all_in_random_order;
+    } else if (ssa == SSA_SELECT_WORST_100) {
+        m_surfel_selection_function = &RoSyOptimiser::ssa_select_worst_100;
     } else {
         throw std::runtime_error("Unknown surfel selection algorithm " + ssa);
     }
@@ -48,7 +48,7 @@ Optimiser::Optimiser(Properties properties) : m_properties{std::move(properties)
  * Check whether user asked for optimiseng to halt.
  */
 bool
-Optimiser::user_canceled_optimise() {
+RoSyOptimiser::user_canceled_optimise() {
     struct stat buffer{};
     auto rv = stat("halt", &buffer);
     return (rv == 0);
@@ -59,11 +59,12 @@ Optimiser::user_canceled_optimise() {
  * Save presmoothed surfels to file if option is set.
  */
 void
-Optimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
+RoSyOptimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
     if (properties.getBooleanProperty("save-presmooth-surfels")) {
         spdlog::info("   Saving presmooth Surfels");
         save_surfel_graph_to_file(file_name_from_template_and_level(properties.getProperty("presmooth-surfel-template"),
-                                                                    m_current_level_index), m_current_level_surfels);
+                                                                    m_current_level_index),
+                                  m_surfel_graph);
     }
 }
 
@@ -71,17 +72,18 @@ Optimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
  * Save post-smoothed surfels to file if option is set.
  */
 void
-Optimiser::maybe_save_smoothed_surfels_to_file(const Properties &properties) {
+RoSyOptimiser::maybe_save_smoothed_surfels_to_file(const Properties &properties) {
     if (properties.getBooleanProperty("save-smoothed-surfels")) {
         spdlog::info("   Saving smoothed Surfels");
         save_surfel_graph_to_file(file_name_from_template_and_level(properties.getProperty("smoothed-surfel-template"),
-                                                                    m_current_level_index), m_current_level_surfels);
+                                                                    m_current_level_index),
+                                  m_surfel_graph);
     }
 }
 
 
 void
-Optimiser::generate_surfels_for_current_level() {
+RoSyOptimiser::generate_surfels_for_current_level() {
     using namespace spdlog;
     using namespace std;
 
@@ -92,17 +94,17 @@ Optimiser::generate_surfels_for_current_level() {
                                                                        m_cameras);
 
     info("   Generating Surfels");
-    m_current_level_surfels = generate_surfels(m_depth_map_hierarchy.at(m_current_level_index),
+    m_surfel_graph = generate_surfels(m_depth_map_hierarchy.at(m_current_level_index),
                                                correspondences, m_properties);
 
     if (!m_previous_level_surfels.empty()) {
-        initialise_tangents_from_previous_level(m_current_level_surfels, m_previous_level_surfels, m_properties);
+        initialise_tangents_from_previous_level(m_surfel_graph, m_previous_level_surfels, m_properties);
     }
     maybe_save_presmooth_surfels_to_file(m_properties);
 }
 
 void
-Optimiser::set_data(const std::vector<DepthMap> &depth_maps, const std::vector<Camera> &cameras) {
+RoSyOptimiser::set_data(const std::vector<DepthMap> &depth_maps, const std::vector<Camera> &cameras) {
     using namespace spdlog;
     using namespace std;
 
@@ -140,7 +142,7 @@ Optimiser::set_data(const std::vector<DepthMap> &depth_maps, const std::vector<C
  * Start global smoothing.
  */
 void
-Optimiser::optimise_begin() {
+RoSyOptimiser::optimise_begin() {
     using namespace std;
 
     assert(m_state == INITIALISED);
@@ -154,7 +156,7 @@ Optimiser::optimise_begin() {
  * Start level smoothing.
  */
 void
-Optimiser::optimise_begin_level() {
+RoSyOptimiser::optimise_begin_level() {
     using namespace spdlog;
 
     assert(m_state == STARTING_LEVEL);
@@ -185,7 +187,7 @@ Optimiser::optimise_begin_level() {
  * End level smoothing.
  */
 void
-Optimiser::optimise_end_level() {
+RoSyOptimiser::optimise_end_level() {
     using namespace spdlog;
 
     assert(m_state == ENDING_LEVEL);
@@ -209,7 +211,7 @@ Optimiser::optimise_end_level() {
  * Perform post-smoothing tidy up.
  */
 void
-Optimiser::optimise_end() {
+RoSyOptimiser::optimise_end() {
     assert(m_state == ENDING_OPTIMISATION);
 
     // TODO: Consider a final state here that can transition back to INITAILISED or make both READY
@@ -220,7 +222,7 @@ Optimiser::optimise_end() {
  * Measure the change in error. If it's below some threshold, consider this level converged.
  */
 void
-Optimiser::check_convergence() {
+RoSyOptimiser::check_convergence() {
     float latest_error = compute_mean_error_per_surfel();
     float improvement = m_last_optimising_error - latest_error;
     m_last_optimising_error = latest_error;
@@ -241,8 +243,8 @@ Optimiser::check_convergence() {
  * return total_neighbour_error / num neighours
  */
 float
-Optimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
-        size_t frame_id) {
+RoSyOptimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
+                                              size_t frame_id) {
     float total_neighbour_error = 0.0f;
 
     // Get all neighbours in frame
@@ -250,18 +252,19 @@ Optimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
 
     const auto &this_surfel_in_this_frame = m_norm_tan_by_surfel_frame.at(surfel_in_frame);
 
-    const auto& bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
+    const auto &bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
     int num_neighbours = 0;
     for (auto np = bounds.first; np != bounds.second; ++np) {
-        const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(SurfelInFrame{np->second->id, frame_id});
+        const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(
+                SurfelInFrame{np->second->id, frame_id});
 
         // Compute the error between this surfel in this frame and the neighbour in this frame.
         total_neighbour_error += compute_error(this_surfel_in_this_frame, this_neighbour_in_this_frame);
         ++num_neighbours;
     }
-    return (num_neighbours == 0 )
+    return (num_neighbours == 0)
            ? 0.0f
-           : (total_neighbour_error / (float)num_neighbours);
+           : (total_neighbour_error / (float) num_neighbours);
 }
 
 
@@ -273,7 +276,7 @@ Optimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
  * total_surfel_error += (total_frame_error / num_frames)
  */
 float
-Optimiser::compute_surfel_error(std::shared_ptr<Surfel> &surfel) {
+RoSyOptimiser::compute_surfel_error(std::shared_ptr<Surfel> &surfel) {
     float total_frame_error = 0.0f;
 
     // For each frame in which this surfel appears
@@ -294,7 +297,7 @@ Optimiser::compute_surfel_error(std::shared_ptr<Surfel> &surfel) {
     err = surfel_error / num surfels
     */
 float
-Optimiser::compute_mean_error_per_surfel() {
+RoSyOptimiser::compute_mean_error_per_surfel() {
 
     float total_error = 0.0f;
     for (auto &surfel : m_current_level_surfels) {
@@ -315,8 +318,8 @@ Optimiser::compute_mean_error_per_surfel() {
  * @return
  */
 float
-Optimiser::compute_error(const NormalTangent &first,
-                         const NormalTangent &second) {
+RoSyOptimiser::compute_error(const NormalTangent &first,
+                             const NormalTangent &second) {
     using namespace std;
     using namespace Eigen;
 
@@ -328,7 +331,7 @@ Optimiser::compute_error(const NormalTangent &first,
 }
 
 void
-Optimiser::check_cancellation() {
+RoSyOptimiser::check_cancellation() {
     if (user_canceled_optimise()) {
         m_state = ENDING_LEVEL;
         m_result = CANCELLED;
@@ -339,7 +342,7 @@ Optimiser::check_cancellation() {
  * Select all surfels in a layer and randomize the order
  */
 std::vector<size_t>
-Optimiser::ssa_select_all_in_random_order() {
+RoSyOptimiser::ssa_select_all_in_random_order() {
     using namespace std;
 
     vector<size_t> indices;
@@ -356,7 +359,7 @@ Optimiser::ssa_select_all_in_random_order() {
  * Surfel selection model 2: Select top 100 error scores
  */
 std::vector<size_t>
-Optimiser::ssa_select_worst_100() {
+RoSyOptimiser::ssa_select_worst_100() {
     using namespace std;
 
     // initialize original index locations
@@ -376,7 +379,7 @@ Optimiser::ssa_select_worst_100() {
 }
 
 std::vector<size_t>
-Optimiser::select_surfels_to_optimise() {
+RoSyOptimiser::select_surfels_to_optimise() {
     using namespace std;
 
     assert(m_surfel_selection_function);
@@ -387,7 +390,7 @@ Optimiser::select_surfels_to_optimise() {
  * Perform a single step of optimisation.
  */
 bool
-Optimiser::optimise_do_one_step() {
+RoSyOptimiser::optimise_do_one_step() {
     using namespace std;
 
     assert(m_state != UNINITIALISED);
@@ -401,7 +404,7 @@ Optimiser::optimise_do_one_step() {
     }
 
     if (m_state == OPTIMISING) {
-        auto sto = select_surfels_to_optimise( );
+        auto sto = select_surfels_to_optimise();
         for (auto surfel_idx : sto) {
             optimise_surfel(surfel_idx);
         }
@@ -428,7 +431,7 @@ Optimiser::optimise_do_one_step() {
  * Return a vector of pairs of framedata for each frame that these surfels have in common
  */
 std::vector<std::pair<std::reference_wrapper<const FrameData>, std::reference_wrapper<const FrameData>>>
-find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel>& surfel2) {
+find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2) {
     using namespace std;
 
     vector<reference_wrapper<const FrameData>> surfel1_frames;
@@ -467,7 +470,7 @@ find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std
  * tan/norm are converted to the orignating surfel's frame of reference.
  */
 std::vector<NormalTangent>
-Optimiser::get_eligible_normals_and_tangents(std::size_t surfel_idx) const {
+RoSyOptimiser::get_eligible_normals_and_tangents(std::size_t surfel_idx) const {
     using namespace std;
     using namespace Eigen;
 
@@ -513,7 +516,7 @@ Optimiser::get_eligible_normals_and_tangents(std::size_t surfel_idx) const {
   end
  */
 void
-Optimiser::optimise_surfel(size_t surfel_idx) {
+RoSyOptimiser::optimise_surfel(size_t surfel_idx) {
     using namespace std;
     using namespace Eigen;
 
@@ -545,7 +548,7 @@ Optimiser::optimise_surfel(size_t surfel_idx) {
  * We should calculate this once per level and then update each time we change a tan.
  */
 void
-Optimiser::populate_norm_tan_by_surfel_frame() {
+RoSyOptimiser::populate_norm_tan_by_surfel_frame() {
     using namespace std;
     using namespace Eigen;
 
@@ -574,7 +577,7 @@ Optimiser::populate_norm_tan_by_surfel_frame() {
  * surfels_by_frame is a member variable.
  */
 void
-Optimiser::populate_frame_to_surfel() {
+RoSyOptimiser::populate_frame_to_surfel() {
     using namespace std;
     assert(m_num_frames > 0);
 
@@ -590,7 +593,8 @@ Optimiser::populate_frame_to_surfel() {
     for (const auto &surfel : m_current_level_surfels) {
         for (const auto &fd : surfel->frame_data) {
             m_surfels_by_frame.at(fd.pixel_in_frame.frame).push_back(surfel->id);
-            m_surfel_frame_map.emplace(SurfelInFrame{surfel->id, fd.pixel_in_frame.frame}, m_surfels_by_frame.at(fd.pixel_in_frame.frame).size() - 1);
+            m_surfel_frame_map.emplace(SurfelInFrame{surfel->id, fd.pixel_in_frame.frame},
+                                       m_surfels_by_frame.at(fd.pixel_in_frame.frame).size() - 1);
         }
         ++surfel_idx;
     }
@@ -599,7 +603,7 @@ Optimiser::populate_frame_to_surfel() {
 }
 
 bool
-Optimiser::surfel_is_in_frame(const std::string& surfel_id, size_t index ) {
+RoSyOptimiser::surfel_is_in_frame(const std::string &surfel_id, size_t index) {
     return (m_surfel_frame_map.find(SurfelInFrame{surfel_id, index}) != m_surfel_frame_map.end());
 }
 
@@ -611,7 +615,7 @@ Optimiser::surfel_is_in_frame(const std::string& surfel_id, size_t index ) {
  * @return A vector of pointers to neighbour Surfels
  */
 std::vector<std::shared_ptr<Surfel>>
-Optimiser::get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned int frame_idx) {
+RoSyOptimiser::get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned int frame_idx) {
     const auto its = m_neighbours_by_surfel_frame.equal_range(SurfelInFrame{surfel, frame_idx});
     std::vector<std::shared_ptr<Surfel>> results;
     for (auto it = its.first; it != its.second; ++it) {
@@ -628,20 +632,242 @@ Optimiser::get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned
  * But num_frames and num_surfels are both known.
  */
 void
-Optimiser::populate_neighbours_by_surfel_frame() {
+RoSyOptimiser::populate_neighbours_by_surfel_frame() {
     using namespace std;
 
     assert(!m_surfels_by_frame.empty());
     m_neighbours_by_surfel_frame.clear();
 
     for (const auto &surfel : m_current_level_surfels) {
-        for( const auto& neighbour : surfel->neighbouring_surfels ) {
-            for( size_t frame_idx =0; frame_idx < m_num_frames; ++frame_idx ) {
-                if( surfel_is_in_frame(neighbour->id, frame_idx) ) {
-                    SurfelInFrame sif{ surfel->id, frame_idx};
+        for (const auto &neighbour : surfel->neighbouring_surfels) {
+            for (size_t frame_idx = 0; frame_idx < m_num_frames; ++frame_idx) {
+                if (surfel_is_in_frame(neighbour->id, frame_idx)) {
+                    SurfelInFrame sif{surfel->id, frame_idx};
                     m_neighbours_by_surfel_frame.emplace(sif, neighbour);
                 }
             }
         }
     }
 }
+
+/**
+ * For each Surfel in the current layer, find parent(s) and initialise this surfels
+ * tangent with a combination of the parents tangents.
+ * Surfels with no parents are pruned.
+ * @param current_level_surfels
+ * @param previous_level_surfels
+ * @param properties
+ */
+void
+initialise_tangents_from_previous_level(std::vector<std::shared_ptr<Surfel>> &current_level_surfels,
+                                        const std::vector<std::shared_ptr<Surfel>> &previous_level_surfels,
+                                        const Properties &properties) {
+    using namespace std;
+
+    vector<shared_ptr<Surfel>> orphans;
+    multimap<shared_ptr<Surfel>, shared_ptr<Surfel>> child_to_parent_surfel_id_map = compute_child_to_parent_surfel_map(
+            current_level_surfels,
+            previous_level_surfels,
+            orphans);
+    // Remove orphan surfels from this level
+    remove_surfels_by_id(current_level_surfels, orphans, properties);
+
+    // Remove orphan surfels from neighbourhoods of current level surfels
+    prune_surfel_neighbours(current_level_surfels, orphans, properties);
+
+    // Finally, remove them from the lookup table
+    unmap_surfels(orphans);
+
+    // Seed the current level surfels with tangents from their parents.
+    down_propagate_tangents(child_to_parent_surfel_id_map);
+
+    // Remove previous level surfels
+    unmap_surfels(previous_level_surfels);
+}
+
+/**
+ * Create a map to allow lookup of a Surfel ID from one of its PIF
+ */
+std::map<PixelInFrame, std::shared_ptr<Surfel>>
+map_pifs_to_surfel(const std::vector<std::shared_ptr<Surfel>> &surfels) {
+    using namespace std;
+
+    map<PixelInFrame, std::shared_ptr<Surfel>> pif_to_surfel;
+    for (const auto &surfel_ptr : surfels) {
+        for (const auto &frame_data : surfel_ptr->frame_data) {
+            pif_to_surfel.emplace(frame_data.pixel_in_frame, surfel_ptr);
+        }
+    }
+    return pif_to_surfel;
+}
+
+namespace std {
+    template<>
+    struct std::less<std::reference_wrapper<Surfel>> {
+        bool operator()(const reference_wrapper<Surfel> &k1, const reference_wrapper<Surfel> &k2) const {
+            return k1.get().id < k2.get().id;
+        }
+    };
+}
+
+/**
+ * Given a set of parent surfels and child surfels, estalish a mapping from child to one or more parents.
+ * Children with no parents are stored as IDs in unmapped
+ */
+std::multimap<std::shared_ptr<Surfel>, std::shared_ptr<Surfel>>
+compute_child_to_parent_surfel_map(const std::vector<std::shared_ptr<Surfel>> &child_surfels, //
+                                   const std::vector<std::shared_ptr<Surfel>> &parent_surfels, //
+                                   std::vector<std::shared_ptr<Surfel>> &orphans) {
+    using namespace std;
+
+    // Construct a map from parent level PIF to Surfel id
+    map<PixelInFrame, shared_ptr<Surfel>> pif_to_parent = map_pifs_to_surfel(parent_surfels);
+
+    // For each PIF in each child surfel, try to find a matching PIF in the parent surfels map
+    multimap<shared_ptr<Surfel>, shared_ptr<Surfel>> child_to_parents_surfel_map;
+
+    for (const auto &child_surfel_ptr : child_surfels) {
+        unsigned int parents_found = 0;
+        for (const auto &child_frame : child_surfel_ptr->frame_data) {
+            PixelInFrame parent_pif{child_frame.pixel_in_frame.pixel.x / 2, //
+                                    child_frame.pixel_in_frame.pixel.y / 2, //
+                                    child_frame.pixel_in_frame.frame};
+            const auto &it = pif_to_parent.find(parent_pif);
+            if (it != pif_to_parent.end()) {
+                child_to_parents_surfel_map.emplace(child_surfel_ptr, it->second);
+                ++parents_found;
+            } // else parent not found for this PIF
+        }
+        if (parents_found == 0) {
+            orphans.push_back(child_surfel_ptr);
+        }
+    }
+    return child_to_parents_surfel_map;
+}
+
+/**
+ * Initialise the child surfel tangents from their psarwent surfel tangents
+ * where the parent-child mappings are defined in child_to_parents
+ */
+void
+down_propagate_tangents(const std::multimap<std::shared_ptr<Surfel>, std::shared_ptr<Surfel>> &child_to_parents) {
+
+    using namespace std;
+    using namespace Eigen;
+    cout << "Propagating surfel tangents from previous level" << endl;
+
+    // for each surfel in the lower level
+    auto child_iterator = child_to_parents.begin();
+    while (child_iterator != child_to_parents.end()) {
+        auto child_ptr = child_iterator->first;
+        int num_parents = 0;
+        Vector3f mean_tangent{0.0f, 0.0f, 0.0};
+        auto parent_iterator = child_iterator;
+        while ((parent_iterator != child_to_parents.end()) && (parent_iterator->first == child_ptr)) {
+            mean_tangent += parent_iterator->second->tangent;
+            ++num_parents;
+            ++parent_iterator;
+        }
+        child_iterator->first->tangent = (mean_tangent / num_parents).normalized();
+        child_iterator = parent_iterator;
+    }
+}
+
+std::vector<std::vector<PixelInFrame>>
+get_correspondences(const Properties &properties,
+                    unsigned int level,
+                    const std::vector<DepthMap> &depth_map,
+                    std::vector<Camera> &cameras) {
+    using namespace std;
+
+    vector<vector<PixelInFrame>> correspondences;
+
+    if (properties.getBooleanProperty("load-correspondences")) {
+        string corr_file_template = properties.getProperty("correspondence-file-template");
+        size_t size = snprintf(nullptr, 0, corr_file_template.c_str(), level) + 1; // Extra space for '\0'
+        std::unique_ptr<char[]> buf(new char[size]);
+        snprintf(buf.get(), size, corr_file_template.c_str(), level);
+        string file_name = std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+
+        load_correspondences_from_file(file_name, correspondences);
+    } else {
+        cout << "Computing correspondences from scratch" << endl;
+        throw runtime_error("Not implemented. Copy code from dm_to_pointcloud");
+    }
+
+    if (correspondences.empty()) {
+        throw runtime_error("No correspondences found");
+    }
+    return correspondences;
+}
+
+
+/**
+ * Remove the previous level surfels from the Surfel::map
+ */
+void
+unmap_surfels(const std::vector<std::shared_ptr<Surfel>> &surfels) {
+    using namespace std;
+
+    for (const auto &surfel_ptr : surfels) {
+        Surfel::surfel_by_id.erase(surfel_ptr->id);
+    }
+}
+
+/**
+ * Given a list of surfel IDs, remove them from the surfel list.
+ * The properties object is consulted to check whether to log this removal or not.
+ */
+void
+remove_surfels_by_id(std::vector<std::shared_ptr<Surfel>> &surfels,
+                     std::vector<std::shared_ptr<Surfel>> &surfels_to_remove,
+                     const Properties &properties) {
+    using namespace std;
+
+    size_t initial_surfel_count = surfels.size();
+    if (!surfels_to_remove.empty()) {
+        sort(surfels_to_remove.begin(),
+             surfels_to_remove.end(),
+             [](std::shared_ptr<Surfel> &s1, std::shared_ptr<Surfel> &s2) {
+                 return s1->id < s2->id;
+             });
+        surfels.erase(remove_if(
+                begin(surfels), end(surfels),
+                [&](const std::shared_ptr<Surfel> &s) {
+                    return binary_search(
+                            begin(surfels_to_remove), end(surfels_to_remove),
+                            s,
+                            [](const std::shared_ptr<Surfel> &s1, const std::shared_ptr<Surfel> &s2) {
+                                return s1->id < s2->id;
+                            });
+                }), surfels.end());
+
+        // optionally log
+        if (properties.getBooleanProperty("log-dropped-surfels")) {
+            cout << "Removed " << surfels_to_remove.size() << " of " << initial_surfel_count
+                 << " surfels. Surfels remaining: " << surfels.size() << endl;
+            for (const auto &id : surfels_to_remove) {
+                cout << "  " << id << endl;
+            }
+        }
+    }
+}
+
+/**
+ * Remove Surfels in the provided list from the neighbours list of esch surfel in the surfels list.
+ * @param surfels The list of source Surfels
+ * @param surfels_to_remove The list of surfels to be removed from source Surfels' neighbours
+ * @param properties Loggin settings
+ */
+void
+prune_surfel_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels,
+                        std::vector<std::shared_ptr<Surfel>> &surfels_to_remove,
+                        const Properties &properties) {
+    using namespace std;
+
+    // Now update lists of neighbours to remove ones that have gone
+    for (auto &surfel : surfels) {
+        remove_surfels_by_id(surfel->neighbouring_surfels, surfels_to_remove, properties);
+    }
+}
+

@@ -19,7 +19,7 @@
 
 #include "../mesher/types.h"
 #include "../mesher/correspondences_io.h"
-#include "../mesher/utilities.h"
+#include "../libUtilities/include/Utilities/utilities.h"
 
 #include <cpd/gauss_transform_fgt.hpp>
 #include <cpd/rigid.hpp>
