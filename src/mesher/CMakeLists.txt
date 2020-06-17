@@ -32,7 +32,6 @@ endif ()
 # Building Animesh
 add_executable(
 		animesh
-		../libCorrespondence/include/Correspondence/CorrespondenceIO.h ../libCorrespondence/src/CorrespondenceIO.cpp
 		hierarchical_mesher_cli.cpp
 		types.h
 )
@@ -40,6 +39,7 @@ add_executable(
 target_link_libraries(
 		animesh
 		Properties
+		Correspondence
 		DepthMap
 		Camera
 		RoSy
@@ -75,7 +75,6 @@ include_directories(${NANOGUI_EXTRA_INCS})
 
 add_executable(
 		animesh_ui
-		../libCorrespondence/include/Correspondence/CorrespondenceIO.h ../libCorrespondence/src/CorrespondenceIO.cpp
 		AnimeshApplication.h AnimeshApplication.cpp
 		types.h
 		CrossFieldGLCanvas.h CrossFieldGLCanvas.cpp
@@ -85,6 +84,7 @@ add_executable(
 target_link_libraries(
 		animesh_ui
 		Camera
+		Correspondence
 		DepthMap
 		FileUtils
 		GeomFileUtils
