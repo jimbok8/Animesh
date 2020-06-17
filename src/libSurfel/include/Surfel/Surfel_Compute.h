@@ -50,7 +50,7 @@ are_neighbours(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Sur
  * @param neighbours
  */
 SurfelGraph
-make_surfel_graph(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected);
+graph_from_surfels(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_connected);
 
 SurfelGraph
 generate_surfels(const std::vector<DepthMap> &depth_maps,

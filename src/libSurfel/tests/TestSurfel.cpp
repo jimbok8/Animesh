@@ -12,14 +12,16 @@
 void TestSurfel::SetUp( ) {}
 void TestSurfel::TearDown( ) {}
 
+using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>,float>;
+
 void TestSurfelIO::SetUp( ) {
     using namespace std;
 
     const auto s1 = make_shared<Surfel>("a", std::vector<FrameData>{}, Eigen::Vector3f{ 1.0f, 2.0f, 3.0f});
     const auto s2 = make_shared<Surfel>("b", std::vector<FrameData>{}, Eigen::Vector3f{ 5.0f, 6.0f, 7.0f});
-    surfel_graph.add_node(s1);
-    surfel_graph.add_node(s2);
-    surfel_graph.add_edge(s1, s2, 1.0, 0);
+    const auto & sn1 = surfel_graph.add_node(s1);
+    const auto & sn2 = surfel_graph.add_node(s2);
+    surfel_graph.add_edge(sn1, sn2, 1.0);
 }
 
 void TestSurfelIO::TearDown( ) {}
@@ -47,8 +49,8 @@ bool compare_files(const std::string& p1, const std::string& p2) {
 }
 
 void
-expect_graphs_equal( const animesh::Graph<std::shared_ptr<Surfel>,int>& graph1,
-                          const animesh::Graph<std::shared_ptr<Surfel>,int>& graph2) {
+expect_graphs_equal( const SurfelGraph & graph1,
+                          const SurfelGraph & graph2) {
     EXPECT_EQ(graph1.num_nodes(), graph2.num_nodes());
     EXPECT_EQ(graph1.num_edges(), graph2.num_edges());
 }

@@ -134,24 +134,29 @@ TEST_F(TestUtilities, populate_surfel_neighbours) {
     std::vector<std::shared_ptr<Surfel>> surfels{
             std::make_shared<Surfel>(s1),
             std::make_shared<Surfel>(s1_neighbour)};
-    auto graph = make_surfel_graph(surfels, true);
+    auto graph = graph_from_surfels(surfels, true);
 
-    auto n = graph.neighbours(surfels.at(0));
+    auto n1 = graph.nodes().at(0);
+    auto n2 = graph.nodes().at(1);
+    auto n = graph.neighbours(n1);
     EXPECT_EQ(n.size(), 1);
-    EXPECT_EQ(n.at(0)->data()->id, s1_neighbour.id);
+    EXPECT_EQ(n.at(0)->data()->id, n2->data()->id);
 
-    n = graph.neighbours(surfels.at(1));
+    n = graph.neighbours(n2);
     EXPECT_EQ(n.size(), 1);
-    EXPECT_EQ(n.at(0)->data()->id, s1.id);
+    EXPECT_EQ(n.at(0)->data()->id, n1->data()->id);
 }
 
 TEST_F(TestUtilities, fail_to_populate_surfel_neighbours) {
 
     std::vector<std::shared_ptr<Surfel>> surfels{
             std::make_shared<Surfel>(s1),
-            std::make_shared<Surfel>(s1_neighbour)};
-    auto graph = make_surfel_graph(surfels, true);
+            std::make_shared<Surfel>(s1_not_neighbour)};
+    auto graph = graph_from_surfels(surfels, true);
 
-    EXPECT_EQ(graph.neighbours(surfels.at(0)).size(), 0);
-    EXPECT_EQ(graph.neighbours(surfels.at(1)).size(), 0);
+    auto n1 = graph.nodes().at(0);
+    auto n2 = graph.nodes().at(1);
+
+    EXPECT_EQ(graph.neighbours(n1).size(), 0);
+    EXPECT_EQ(graph.neighbours(n2).size(), 0);
 }

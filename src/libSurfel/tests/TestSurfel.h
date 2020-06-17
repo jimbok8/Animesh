@@ -24,5 +24,5 @@ public:
     void TearDown();
 
 protected:
-    animesh::Graph<std::shared_ptr<Surfel>, int> surfel_graph;
+    animesh::Graph<std::shared_ptr<Surfel>, float> surfel_graph;
 };
