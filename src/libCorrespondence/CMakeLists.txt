@@ -1,7 +1,7 @@
 add_library(
 		Correspondence SHARED
 		src/CorrespondenceIO.cpp include/Correspondence/CorrespondenceIO.h
-		include/Correspondence/CorrespondencesCompute.h
+		include/Correspondence/CorrespondenceCompute.h
 )
 
 # Define headers for this library. PUBLIC headers are used for
@@ -12,9 +12,8 @@ target_include_directories(
 		PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
-#		${EIGEN3_INCLUDE_DIR}
 		PRIVATE
-		include/Correspondence
+		Correspondence/include
 )
 
 target_link_libraries(
