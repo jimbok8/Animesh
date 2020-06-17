@@ -7,6 +7,8 @@
 #include <utility>
 #include <sys/stat.h>
 
+using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
+
 AbstractOptimiser::AbstractOptimiser(Properties properties) : m_properties(std::move(properties)),
                                                               m_state{UNINITIALISED},
                                                               m_optimisation_cycles{0} {
@@ -50,9 +52,9 @@ AbstractOptimiser::optimise_do_one_step() {
     }
 
     if (m_state == OPTIMISING) {
-        auto sto = select_surfels_to_optimise();
-        for (const auto& surfel_ptr : sto) {
-            optimise_surfel(surfel_ptr);
+        auto nodes_to_optimise = select_nodes_to_optimise();
+        for (const auto& node : nodes_to_optimise) {
+            optimise_node(node);
         }
         ++m_optimisation_cycles;
         check_cancellation();
@@ -66,6 +68,13 @@ AbstractOptimiser::optimise_do_one_step() {
     return false;
 }
 
+std::vector<SurfelGraphNodePtr>
+AbstractOptimiser::select_nodes_to_optimise() {
+    using namespace std;
+
+    assert(m_node_selection_function);
+    return m_node_selection_function(*this);
+}
 
 /**
  * Check whether the user cancelled optimisation by creating the
@@ -94,7 +103,7 @@ AbstractOptimiser::check_convergence() {
  * Set the optimisation data
  */
 void
-AbstractOptimiser::set_data(animesh::Graph<std::shared_ptr<Surfel>, int> &surfel_graph) {
+AbstractOptimiser::set_data(const SurfelGraph &surfel_graph) {
     m_surfel_graph = surfel_graph;
     m_state = INITIALISED;
 }

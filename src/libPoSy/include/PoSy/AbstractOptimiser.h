@@ -10,6 +10,9 @@
 #include <Surfel/Surfel.h>
 
 class AbstractOptimiser {
+    using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
+    using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
+
 public:
     explicit AbstractOptimiser(Properties properties);
 
@@ -33,14 +36,18 @@ public:
     /**
      * Set the optimisation data
      */
-    void set_data(animesh::Graph<std::shared_ptr<Surfel>, int> &surfel_graph);
+    void set_data(const SurfelGraph & graph);
 
 protected:
-    animesh::Graph<std::shared_ptr<Surfel>, int> m_surfel_graph;
+    SurfelGraph m_surfel_graph;
 
 private:
     Properties m_properties;
     unsigned int m_optimisation_cycles;
+
+    std::function<std::vector<SurfelGraphNodePtr>(AbstractOptimiser&)> m_node_selection_function;
+
+    std::vector<SurfelGraphNodePtr> select_nodes_to_optimise();
 
     void begin_optimisation();
 
@@ -53,8 +60,7 @@ private:
     virtual bool is_converged() = 0;
     virtual void optimisation_began() = 0;
     virtual void optimisation_ended() = 0;
-    virtual void optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr) = 0;
-    virtual std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() = 0;
+    virtual void optimise_node(const SurfelGraphNodePtr& node) = 0;
 };
 
 #endif //ANIMESH_ABSTRACTOPTIMISER_H

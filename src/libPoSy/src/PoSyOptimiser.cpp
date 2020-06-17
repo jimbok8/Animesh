@@ -7,6 +7,8 @@
 #include <utility>
 #include <vector>
 
+using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
+
 
 // ========
 /**
@@ -48,28 +50,30 @@ void PoSyOptimiser::optimisation_ended() {
   next neighbour
 
  */
-void PoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr) {
+void PoSyOptimiser::optimise_surfel(
+        const std::shared_ptr<Surfel> &surfel_ptr,
+        const std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>>& neighbour_data) const {
     using namespace std;
+    using namespace Eigen;
 
     float weight = 0.0f;
 
     auto new_position = surfel_ptr->position;
-    for (const auto neighbour_node : m_surfel_graph.neighbours(surfel_ptr)) {
+    for (const auto& neighbour : neighbour_data) {
         float edge_weight = 1.0f;
 
-        const Eigen::Vector3f surfel_normal;
-        const Eigen::Vector3f surfel_tangent;
-        const Eigen::Vector3f neighbour_normal;
-        const Eigen::Vector3f neighbour_tangent;
+        // TODO(dave.d) THIS IS ILLUSTRATIVE CODE ONLY AND NEEDS TO BE MADE CORRECT
+        const auto & surfel_normal = surfel_ptr->frame_data.at(0).normal;
+        const auto & surfel_tangent = surfel_ptr->tangent;
 
         new_position = average_posy_vectors(
                 new_position,
                 surfel_tangent,
                 surfel_normal,
                 edge_weight,
-                neighbour_node->data()->position,
-                neighbour_tangent,
-                neighbour_normal,
+                get<0>(neighbour), // position
+                get<1>(neighbour), // tangent
+                get<2>(neighbour), // normal
                 m_rho,
                 weight
         );
@@ -78,7 +82,21 @@ void PoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr) {
     surfel_ptr->position = new_position;
 }
 
-std::vector<std::shared_ptr<Surfel>> PoSyOptimiser::select_surfels_to_optimise() {
-    return std::vector<std::shared_ptr<Surfel>>{};
-}
 
+void PoSyOptimiser::optimise_node(const SurfelGraphNodePtr& node) {
+    using namespace std;
+    using namespace Eigen;
+
+    // Get neighbours
+    auto neighbouring_nodes = m_surfel_graph.neighbours(node);
+    vector<tuple<Vector3f, Vector3f, Vector3f>> neighbour_data{neighbouring_nodes.size()};
+    for( const auto& neighbour : neighbouring_nodes ) {
+        neighbour_data.emplace_back(
+                neighbour->data()->position,
+                neighbour->data()->tangent,
+                Vector3f::UnitY());
+    }
+
+    // Optimise it
+    optimise_surfel(node->data(), neighbour_data);
+}

@@ -12,6 +12,8 @@
 
 
 class PoSyOptimiser : public AbstractOptimiser {
+    using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
+
 public:
     /**
      * Construct a PoSyOptimiser.
@@ -24,11 +26,14 @@ protected:
     bool is_converged() override;
     void optimisation_began() override;
     void optimisation_ended() override;
-    void optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr) override;
-    std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() override;
+    void optimise_node(const SurfelGraphNodePtr& node) override;
 
 private:
     float m_rho;
+
+    void optimise_surfel(
+            const std::shared_ptr<Surfel> &surfel_ptr,
+            const std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>>& neighbour_data) const;
 };
 
 
