@@ -6,9 +6,9 @@
 #include <memory>
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
-#include "optimise.h"
+#include "RoSy/RoSyOptimiser.h"
 #include "types.h"
-#include "utilities.h"
+#include "../libUtilities/include/Utilities/utilities.h"
 #include "spdlog/spdlog.h"
 #include <nanogui/nanogui.h>
 
@@ -99,7 +99,7 @@ void AnimeshApplication::load_all_the_things() {
     using namespace std;
     using namespace spdlog;
 
-    m_optimiser = new Optimiser(*m_properties);
+    m_optimiser = new RoSyOptimiser(*m_properties);
 
     info("Loading depth maps");
     const auto depth_maps = load_depth_maps(*m_properties);

@@ -6,7 +6,7 @@
 #pragma once
 
 #include <vector>
-#include "types.h"
+#include <Surfel/PixelInFrame.h>
 #include <DepthMap/DepthMap.h>
 #include <Camera/Camera.h>
 

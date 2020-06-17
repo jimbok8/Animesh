@@ -4,46 +4,45 @@
 
 #include <iostream>
 #include <Surfel/PixelInFrame.h>
-#include "correspondences_io.h"
 #include <GeomFileUtils/io_utils.h>
+#include <spdlog/spdlog.h>
+
+#include "CorrespondenceIO.h"
 
 void
 load_correspondences_from_file(const std::string &file_name,
                                std::vector<std::vector<PixelInFrame>> &correspondences) {
     using namespace std;
 
-    cout << "Loading correspondences from " << file_name << endl;
+    spdlog::info("Loading correspondences from {:s}", file_name);
 
     ifstream file{file_name, ios::out | ios::binary};
     if (file.fail()) {
         throw runtime_error("Failed to open file " + file_name);
     }
 
-    unsigned int num_correspondences = read_unsigned_int(file);
+    auto num_correspondences = read_unsigned_int(file);
     correspondences.clear();
     correspondences.reserve(num_correspondences);
 
-
     int count = 0;
     for (unsigned int i = 0; i < num_correspondences; ++i) {
-        cout << " \r" << ++count << " of " << num_correspondences << flush;
-        unsigned int num_entries = read_unsigned_int(file);
+        auto num_entries = read_unsigned_int(file);
         vector<PixelInFrame> correspondence;
         correspondence.reserve(num_entries);
 
         for (unsigned int j = 0; j < num_entries; ++j) {
             // PixelInFrame
             // TODO: Fix correspondence generation and then come back and fix this.
-            // Right now correspondences are generated using frames with non0zero rooted count
-            unsigned int frame = read_unsigned_int(file);
-            unsigned int x = read_unsigned_int(file);
-            unsigned int y = read_unsigned_int(file);
+            // Right now correspondences are generated using frames with non-zero rooted count
+            auto frame = read_unsigned_int(file);
+            auto x = read_unsigned_int(file);
+            auto y = read_unsigned_int(file);
             correspondence.emplace_back(x, y, frame);
         }
         correspondences.push_back(correspondence);
     }
     file.close();
-    cout << " done." << endl;
 }
 
 void
@@ -51,7 +50,7 @@ save_correspondences_to_file(const std::string &file_name,
                              const std::vector<std::vector<PixelInFrame>> &correspondences) {
     using namespace std;
 
-    cout << "Saving correspondences to " << file_name << "..." << flush;
+    spdlog::info("Saving correspondences to {:s}", file_name);
 
     ofstream file{file_name, ios::out | ios::binary};
     // Count
@@ -67,5 +66,4 @@ save_correspondences_to_file(const std::string &file_name,
         }
     }
     file.close();
-    cout << " done." << endl;
 }

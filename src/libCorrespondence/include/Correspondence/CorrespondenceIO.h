@@ -6,9 +6,7 @@
 
 #include <string>
 #include <vector>
-#include "mesher_args.h"
-
-#include "types.h"
+#include <Surfel/PixelInFrame.h>
 
 void
 load_correspondences_from_file(const std::string &file_name,

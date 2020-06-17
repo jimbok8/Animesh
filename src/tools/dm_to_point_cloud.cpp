@@ -18,8 +18,8 @@
 #include <Surfel/PixelInFrame.h>
 
 #include "../mesher/types.h"
-#include "../mesher/correspondences_io.h"
-#include "../mesher/utilities.h"
+#include "../libCorrespondence/include/Correspondence/CorrespondenceIO.h"
+#include "../libUtilities/include/Utilities/utilities.h"
 
 #include <cpd/gauss_transform_fgt.hpp>
 #include <cpd/rigid.hpp>

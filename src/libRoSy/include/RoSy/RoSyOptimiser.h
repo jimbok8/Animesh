@@ -4,22 +4,27 @@
 #include <Surfel/Surfel_Compute.h>
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
+#include <Graph/Graph.h>
 #include <Camera/Camera.h>
-#include "types.h"
-#include <Eigen/Core>
+#include "../../../mesher/types.h"
+#include "../../../mesher/ext/nanogui/ext/eigen/Eigen/Core"
 #include <map>
 #include <vector>
 #include <string>
 #include <memory>
 
-class Optimiser {
+using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
+using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
+
+
+class RoSyOptimiser {
 public:
     /**
      * Perform a single step of optimisation. Return true if converged or halted.
      */
     bool optimise_do_one_step();
 
-    explicit Optimiser(Properties properties);
+    explicit RoSyOptimiser(Properties properties);
 
     Eigen::Vector2i get_dimensions() const {
         return Eigen::Vector2i{m_depth_map_hierarchy.at(m_current_level_index).at(0).width(),
@@ -36,9 +41,9 @@ public:
     set_data(const std::vector<DepthMap> &depth_maps, const std::vector<Camera> &cameras);
 
     /**
-     * Return a const reference to the surfels being transformed so externals can play with it
+     * Return a copy of the data.
      */
-    const std::vector<std::shared_ptr<Surfel>> &get_surfel_data() { return m_current_level_surfels; }
+    std::vector<std::shared_ptr<Surfel>> get_surfel_data() const;
 
     bool
     surfel_is_in_frame(const std::string &surfel_id, size_t index);
@@ -65,11 +70,14 @@ private:
     /** Cameras. One per frame */
     std::vector<Camera> m_cameras;
 
-    /** Surfels in the current level */
-    std::vector<std::shared_ptr<Surfel>> m_current_level_surfels;
-
     /** Surfels in the previous level of smoothing if there's more than one. */
     std::vector<std::shared_ptr<Surfel>> m_previous_level_surfels;
+
+    /** Graph of current level surfels */
+    SurfelGraph m_surfel_graph;
+
+    /** Graph of previous level surfels */
+    SurfelGraph m_previous_surfel_graph;
 
     /** Properties to use for the optimiser */
     const Properties m_properties;
@@ -142,8 +150,7 @@ private:
         CANCELLED,
     } m_result;
 
-
-    std::function<std::vector<size_t>(Optimiser&)> m_surfel_selection_function;
+    std::function<std::vector<SurfelGraphNodePtr>(RoSyOptimiser&)> m_surfel_selection_function;
 
     /**
      * Start optimisation
@@ -163,14 +170,16 @@ private:
     void optimise_begin_level();
 
     /**
-     * Select one random surfel and smooth with neighbours
+     * Optimise a single GraphNode
      */
-    void optimise_one_surfel_frame();
+    void
+    optimise_node(const SurfelGraphNodePtr& node );
 
     /**
      * Optimise a single Surfel
      */
-    void optimise_surfel(size_t surfel_idx);
+    static void optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr,
+                         const std::vector<NormalTangent>& neighbouring_normals_and_tangents);
 
     /**
      * Measure the change in error. If it's below some threshold, consider this level converged.
@@ -189,7 +198,7 @@ private:
     void optimise_end_level();
 
     std::vector<NormalTangent>
-    get_eligible_normals_and_tangents(std::size_t surfel_idx) const;
+    get_eligible_normals_and_tangents(const SurfelGraph & surfel_graph, const SurfelGraphNodePtr& node) const;
 
     /**
      * Calculate error between two normal/tangent pairs.
@@ -199,24 +208,19 @@ private:
                   const NormalTangent &second);
 
     float
-    compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel, size_t frame_id);
+    compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel, size_t frame_id) const;
 
     float
-    compute_surfel_error(std::shared_ptr<Surfel> &surfel);
+    compute_surfel_error(const std::shared_ptr<Surfel> &surfel) const;
 
     float
-    compute_mean_error_per_surfel();
+    compute_mean_error_per_surfel() const;
 
     /**
      * Check whether optimising should stop either because user asked for that to happen or else
      * because convergence has happened.
      */
     static bool user_canceled_optimise();
-
-    /**
-     * Select a random integer in the range [0, max_index)
-     */
-    static std::size_t random_index(unsigned int max_index);
 
     /**
      * Build the norm_tan_by_surfel_frame data structure for this level of the
@@ -258,27 +262,90 @@ private:
     void
     maybe_save_smoothed_surfels_to_file(const Properties &properties);
 
-    /**
-     * Compute the intersection of the two provided vectors and place the results into the third.
-     */
-    static std::vector<std::string>
-    compute_intersection_of(std::vector<std::string> neighbours_of_this_surfel,
-                            std::vector<std::string> surfels_in_this_frame);
-
-
-    std::vector<size_t>
-    select_surfels_to_optimise();
+    std::vector<SurfelGraphNodePtr>
+    select_nodes_to_optimise();
 
     /**
      * Surfel selection model 1: Select all in random order. The default.
      */
-    std::vector<size_t>
+    std::vector<SurfelGraphNodePtr>
     ssa_select_all_in_random_order();
 
     /**
      * Surfel selection model 2: Select top 100 error scores
      */
-    std::vector<size_t>
+    std::vector<SurfelGraphNodePtr>
     ssa_select_worst_100();
 
 };
+
+/**
+ * Create a map to allow lookup of a GraphNode from a PIF
+ */
+std::map<PixelInFrame, SurfelGraphNodePtr>
+create_pif_to_graphnode_map(const SurfelGraph & surfel_graph);
+
+/**
+ * Given a set of parent and child GraphNodes, estalish a mapping from child to one or more parents.
+ * Children with no parents are stored as IDs in unmapped
+ */
+std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr>
+compute_child_to_parent_surfel_map(const SurfelGraph & child_graph, //
+                                   const SurfelGraph & parent_graph, //
+                                   std::vector<SurfelGraphNodePtr> &orphans);
+
+/**
+ * Initialise the child surfel tangents from their psarwent surfel tangents
+ * where the parent-child mappings are defined in child_to_parents
+ */
+void
+down_propagate_tangents(const std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr> & child_to_parents);
+
+std::vector<std::vector<PixelInFrame>>
+get_correspondences(const Properties &properties,
+                    unsigned int level,
+                    const std::vector<DepthMap> &depth_map,
+                    std::vector<Camera> &cameras);
+
+/**
+ * Remove any surfels which cannot be found from the neighbours of remaining surfels
+ */
+void
+prune_surfel_neighbours(std::vector<std::shared_ptr<Surfel>> &surfels,
+                        std::vector<std::shared_ptr<Surfel>> &surfels_to_remove,
+                        const Properties &properties);
+
+/**
+ * Remove the previous level surfels from the Surfel::map
+ */
+void
+unmap_surfels(const std::vector<std::shared_ptr<Surfel>> &surfel_ids);
+
+/**
+ * Remove the previous level surfels from the Surfel::map
+ */
+void
+unmap_surfels(const std::vector<std::shared_ptr<Surfel>> &surfels);
+
+/**
+ * Given a list of surfel IDs, remove them from the surfel list.
+ * The properties object is consulted to check whether to log this removal or not.
+ */
+void
+remove_surfels_by_id(std::vector<std::shared_ptr<Surfel>> &surfels,
+                     std::vector<std::shared_ptr<Surfel>> &surfels_to_remove,
+                     const Properties &properties);
+
+
+/**
+ * For each Surfel in the current layer, find parent(s) and initialise this Surfel's
+ * tangent with a combination of the parents tangents.
+ * Surfels with no parents are pruned.
+ * @param current_level_surfel_graph
+ * @param previous_level_surfel_graph
+ * @param properties
+ */
+void
+initialise_tangents_from_previous_level(SurfelGraph & current_level_surfel_graph,
+                                        const SurfelGraph & previous_level_surfel_graph,
+                                        const Properties &properties);

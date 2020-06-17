@@ -1,12 +1,13 @@
-#include "optimise.h"
+#include "RoSy/RoSyOptimiser.h"
 
 #include <RoSy/RoSy.h>
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
 #include <Surfel/Surfel.h>
+#include <Surfel/Surfel_IO.h>
 #include <Surfel/PixelInFrame.h>
-#include "utilities.h"
-#include "hierarchical_mesher_utilities.h"
+#include <Utilities/utilities.h>
+//#include "../../mesher/hierarchical_mesher_utilities.h"
 
 #include <Eigen/Core>
 #include <random>
@@ -14,23 +15,27 @@
 #include <utility>
 #include <sys/stat.h>
 #include "spdlog/spdlog.h"
+#include "../../libCorrespondence/include/Correspondence/CorrespondenceIO.h"
 
 
+static const char *SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
+static const char *SSA_SELECT_WORST_100 = "select-worst-100";
 
-static const char * SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
-static const char * SSA_SELECT_WORST_100 = "select-worst-100";
-
-Optimiser::Optimiser(Properties properties) : m_properties{std::move(properties)} {
+/**
+ * Construct one with the given properties.
+ * @param properties
+ */
+RoSyOptimiser::RoSyOptimiser(Properties properties) : m_properties{std::move(properties)} {
     m_surfels_per_step = m_properties.getIntProperty("surfels-per-step");
     assert(m_surfels_per_step > 0);
 
     m_convergence_threshold = m_properties.getFloatProperty("convergence-threshold");
 
     auto ssa = m_properties.getProperty("surfel-selection-algorithm");
-    if( ssa == SSA_SELECT_ALL_IN_RANDOM_ORDER ) {
-        m_surfel_selection_function = &Optimiser::ssa_select_all_in_random_order;
-    } else if (ssa == SSA_SELECT_WORST_100 ) {
-        m_surfel_selection_function = &Optimiser::ssa_select_worst_100;
+    if (ssa == SSA_SELECT_ALL_IN_RANDOM_ORDER) {
+        m_surfel_selection_function = &RoSyOptimiser::ssa_select_all_in_random_order;
+    } else if (ssa == SSA_SELECT_WORST_100) {
+        m_surfel_selection_function = &RoSyOptimiser::ssa_select_worst_100;
     } else {
         throw std::runtime_error("Unknown surfel selection algorithm " + ssa);
     }
@@ -45,25 +50,41 @@ Optimiser::Optimiser(Properties properties) : m_properties{std::move(properties)
 }
 
 /**
- * Check whether user asked for optimiseng to halt.
+ * Check whether user asked for optimising to halt.
  */
 bool
-Optimiser::user_canceled_optimise() {
+RoSyOptimiser::user_canceled_optimise() {
     struct stat buffer{};
-    auto rv = stat("halt", &buffer);
-    return (rv == 0);
+    return (stat("halt", &buffer) == 0);
 }
 
 
 /**
- * Save presmoothed surfels to file if option is set.
+ * Return a const reference to the surfels being transformed so externals can play with it
+ */
+std::vector<std::shared_ptr<Surfel>>
+RoSyOptimiser::get_surfel_data() const {
+    using namespace std;
+    vector<shared_ptr<Surfel>> surfels;
+    for( const auto& n : m_surfel_graph.nodes()) {
+        surfels.push_back(n->data());
+    }
+    return surfels;
+}
+
+
+/**
+ * Save pre-smoothed surfels to file if option is set.
  */
 void
-Optimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
+RoSyOptimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
     if (properties.getBooleanProperty("save-presmooth-surfels")) {
         spdlog::info("   Saving presmooth Surfels");
-        save_surfels_to_file(file_name_from_template_and_level(properties.getProperty("presmooth-surfel-template"),
-                                                               m_current_level_index), m_current_level_surfels);
+        save_surfel_graph_to_file(
+                file_name_from_template_and_level(
+                        properties.getProperty("presmooth-surfel-template"),
+                        m_current_level_index),
+                m_surfel_graph);
     }
 }
 
@@ -71,17 +92,17 @@ Optimiser::maybe_save_presmooth_surfels_to_file(const Properties &properties) {
  * Save post-smoothed surfels to file if option is set.
  */
 void
-Optimiser::maybe_save_smoothed_surfels_to_file(const Properties &properties) {
+RoSyOptimiser::maybe_save_smoothed_surfels_to_file(const Properties &properties) {
     if (properties.getBooleanProperty("save-smoothed-surfels")) {
         spdlog::info("   Saving smoothed Surfels");
-        save_surfels_to_file(file_name_from_template_and_level(properties.getProperty("smoothed-surfel-template"),
-                                                               m_current_level_index), m_current_level_surfels);
+        save_surfel_graph_to_file(file_name_from_template_and_level(properties.getProperty("smoothed-surfel-template"),
+                                                                    m_current_level_index),
+                                  m_surfel_graph);
     }
 }
 
-
 void
-Optimiser::generate_surfels_for_current_level() {
+RoSyOptimiser::generate_surfels_for_current_level() {
     using namespace spdlog;
     using namespace std;
 
@@ -92,17 +113,17 @@ Optimiser::generate_surfels_for_current_level() {
                                                                        m_cameras);
 
     info("   Generating Surfels");
-    m_current_level_surfels = generate_surfels(m_depth_map_hierarchy.at(m_current_level_index),
+    m_surfel_graph = generate_surfels(m_depth_map_hierarchy.at(m_current_level_index),
                                                correspondences, m_properties);
 
     if (!m_previous_level_surfels.empty()) {
-        initialise_tangents_from_previous_level(m_current_level_surfels, m_previous_level_surfels, m_properties);
+        initialise_tangents_from_previous_level(m_surfel_graph, m_previous_surfel_graph, m_properties);
     }
     maybe_save_presmooth_surfels_to_file(m_properties);
 }
 
 void
-Optimiser::set_data(const std::vector<DepthMap> &depth_maps, const std::vector<Camera> &cameras) {
+RoSyOptimiser::set_data(const std::vector<DepthMap> &depth_maps, const std::vector<Camera> &cameras) {
     using namespace spdlog;
     using namespace std;
 
@@ -140,7 +161,7 @@ Optimiser::set_data(const std::vector<DepthMap> &depth_maps, const std::vector<C
  * Start global smoothing.
  */
 void
-Optimiser::optimise_begin() {
+RoSyOptimiser::optimise_begin() {
     using namespace std;
 
     assert(m_state == INITIALISED);
@@ -154,7 +175,7 @@ Optimiser::optimise_begin() {
  * Start level smoothing.
  */
 void
-Optimiser::optimise_begin_level() {
+RoSyOptimiser::optimise_begin_level() {
     using namespace spdlog;
 
     assert(m_state == STARTING_LEVEL);
@@ -185,7 +206,7 @@ Optimiser::optimise_begin_level() {
  * End level smoothing.
  */
 void
-Optimiser::optimise_end_level() {
+RoSyOptimiser::optimise_end_level() {
     using namespace spdlog;
 
     assert(m_state == ENDING_LEVEL);
@@ -196,7 +217,10 @@ Optimiser::optimise_end_level() {
         m_state = ENDING_OPTIMISATION;
     } else {
         --m_current_level_index;
-        m_previous_level_surfels = m_current_level_surfels;
+        // TODO(dave.d) This causes compile errors. Figure out why.
+        m_previous_surfel_graph = m_surfel_graph;
+
+        // Copy all surfels in prev level to lookup table
         Surfel::surfel_by_id.clear();
         for (auto &s : m_previous_level_surfels) {
             Surfel::surfel_by_id.emplace(s->id, s);
@@ -209,7 +233,7 @@ Optimiser::optimise_end_level() {
  * Perform post-smoothing tidy up.
  */
 void
-Optimiser::optimise_end() {
+RoSyOptimiser::optimise_end() {
     assert(m_state == ENDING_OPTIMISATION);
 
     // TODO: Consider a final state here that can transition back to INITAILISED or make both READY
@@ -220,7 +244,7 @@ Optimiser::optimise_end() {
  * Measure the change in error. If it's below some threshold, consider this level converged.
  */
 void
-Optimiser::check_convergence() {
+RoSyOptimiser::check_convergence() {
     float latest_error = compute_mean_error_per_surfel();
     float improvement = m_last_optimising_error - latest_error;
     m_last_optimising_error = latest_error;
@@ -241,8 +265,8 @@ Optimiser::check_convergence() {
  * return total_neighbour_error / num neighours
  */
 float
-Optimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
-        size_t frame_id) {
+RoSyOptimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
+                                              size_t frame_id) const {
     float total_neighbour_error = 0.0f;
 
     // Get all neighbours in frame
@@ -250,18 +274,19 @@ Optimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
 
     const auto &this_surfel_in_this_frame = m_norm_tan_by_surfel_frame.at(surfel_in_frame);
 
-    const auto& bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
+    const auto &bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
     int num_neighbours = 0;
     for (auto np = bounds.first; np != bounds.second; ++np) {
-        const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(SurfelInFrame{np->second->id, frame_id});
+        const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(
+                SurfelInFrame{np->second->id, frame_id});
 
         // Compute the error between this surfel in this frame and the neighbour in this frame.
         total_neighbour_error += compute_error(this_surfel_in_this_frame, this_neighbour_in_this_frame);
         ++num_neighbours;
     }
-    return (num_neighbours == 0 )
+    return (num_neighbours == 0)
            ? 0.0f
-           : (total_neighbour_error / (float)num_neighbours);
+           : (total_neighbour_error / (float) num_neighbours);
 }
 
 
@@ -273,7 +298,7 @@ Optimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
  * total_surfel_error += (total_frame_error / num_frames)
  */
 float
-Optimiser::compute_surfel_error(std::shared_ptr<Surfel> &surfel) {
+RoSyOptimiser::compute_surfel_error(const std::shared_ptr<Surfel> &surfel) const {
     float total_frame_error = 0.0f;
 
     // For each frame in which this surfel appears
@@ -282,7 +307,7 @@ Optimiser::compute_surfel_error(std::shared_ptr<Surfel> &surfel) {
         total_frame_error += compute_surfel_error_for_frame(surfel, frame_data.pixel_in_frame.frame);
     }
     // Return mean error per frame
-    surfel->error = total_frame_error / surfel->frame_data.size();
+    (std::const_pointer_cast<Surfel>(surfel))->error = total_frame_error / surfel->frame_data.size();
     return surfel->error;
 }
 
@@ -294,13 +319,13 @@ Optimiser::compute_surfel_error(std::shared_ptr<Surfel> &surfel) {
     err = surfel_error / num surfels
     */
 float
-Optimiser::compute_mean_error_per_surfel() {
+RoSyOptimiser::compute_mean_error_per_surfel() const {
 
     float total_error = 0.0f;
-    for (auto &surfel : m_current_level_surfels) {
-        total_error += compute_surfel_error(surfel);
+    for (const auto &n : m_surfel_graph.nodes()) {
+        total_error += compute_surfel_error(n->data());
     }
-    return total_error / m_current_level_surfels.size();
+    return total_error / m_surfel_graph.num_nodes();
 }
 
 
@@ -315,20 +340,20 @@ Optimiser::compute_mean_error_per_surfel() {
  * @return
  */
 float
-Optimiser::compute_error(const NormalTangent &first,
-                         const NormalTangent &second) {
+RoSyOptimiser::compute_error(const NormalTangent &first,
+                             const NormalTangent &second) {
     using namespace std;
     using namespace Eigen;
 
     // parameter order in RoSy is tangent, normal
-    pair<Vector3f, Vector3f> best_pair = best_rosy_vector_pair(first.tangent, first.normal, second.tangent,
+    auto best_pair = best_rosy_vector_pair(first.tangent, first.normal, second.tangent,
                                                                second.normal);
     float theta = degrees_angle_between_vectors(best_pair.first, best_pair.second);
     return (theta * theta);
 }
 
 void
-Optimiser::check_cancellation() {
+RoSyOptimiser::check_cancellation() {
     if (user_canceled_optimise()) {
         m_state = ENDING_LEVEL;
         m_result = CANCELLED;
@@ -338,56 +363,62 @@ Optimiser::check_cancellation() {
 /**
  * Select all surfels in a layer and randomize the order
  */
-std::vector<size_t>
-Optimiser::ssa_select_all_in_random_order() {
+std::vector<SurfelGraphNodePtr>
+RoSyOptimiser::ssa_select_all_in_random_order() {
     using namespace std;
 
-    vector<size_t> indices;
-    indices.reserve(m_current_level_surfels.size());
-    for (int i = 0; i < m_current_level_surfels.size(); ++i) {
-        indices.push_back(i);
-    }
-    shuffle(indices.begin(), indices.end(),
+    vector<size_t> indices(m_surfel_graph.num_nodes());
+    iota(begin(indices), end(indices), 0 );
+    shuffle(begin(indices), end(indices),
             default_random_engine(chrono::system_clock::now().time_since_epoch().count()));
-    return indices;
+    vector<SurfelGraphNodePtr> selected_nodes{indices.size()};
+    for( const auto i : indices) {
+        selected_nodes.push_back(m_surfel_graph.nodes().at(i));
+    }
+    return selected_nodes;
 }
 
 /**
  * Surfel selection model 2: Select top 100 error scores
  */
-std::vector<size_t>
-Optimiser::ssa_select_worst_100() {
+std::vector<SurfelGraphNodePtr>
+RoSyOptimiser::ssa_select_worst_100() {
     using namespace std;
 
-    // initialize original index locations
-    vector<size_t> indices(m_current_level_surfels.size());
-    iota(indices.begin(), indices.end(), 0);
-
-    // sort indexes based on comparing values in m_current_level_surfels
-    // using std::stable_sort instead of std::sort
-    // to avoid unnecessary index re-orderings
-    // when m_current_level_surfels contains elements of equal values
-    stable_sort(indices.begin(), indices.end(),
-                [this](size_t i1, size_t i2) {
-                    return m_current_level_surfels.at(i1)->error > m_current_level_surfels.at(i2)->error;
+    vector<SurfelGraphNodePtr> selected_nodes;
+    for( const auto & n : m_surfel_graph.nodes()) {
+        selected_nodes.push_back(n);
+    }
+    stable_sort(begin(selected_nodes), end(selected_nodes),
+                [this](const SurfelGraphNodePtr & s1, const SurfelGraphNodePtr & s2) {
+                    return s1->data()->error > s2->data()->error;
                 });
 
-    return indices;
+    selected_nodes.resize(100);
+    return selected_nodes;
 }
 
-std::vector<size_t>
-Optimiser::select_surfels_to_optimise() {
+std::vector<SurfelGraphNodePtr>
+RoSyOptimiser::select_nodes_to_optimise() {
     using namespace std;
 
     assert(m_surfel_selection_function);
     return m_surfel_selection_function(*this);
 }
 
+
+void
+RoSyOptimiser::optimise_node(const SurfelGraphNodePtr& node ) {
+    // Get vector of eligible normal/tangent pairs
+    auto neighbouring_normals_and_tangents = get_eligible_normals_and_tangents(m_surfel_graph, node);
+    optimise_surfel(node->data(), neighbouring_normals_and_tangents);
+}
+
 /**
  * Perform a single step of optimisation.
  */
 bool
-Optimiser::optimise_do_one_step() {
+RoSyOptimiser::optimise_do_one_step() {
     using namespace std;
 
     assert(m_state != UNINITIALISED);
@@ -401,9 +432,9 @@ Optimiser::optimise_do_one_step() {
     }
 
     if (m_state == OPTIMISING) {
-        auto sto = select_surfels_to_optimise( );
-        for (auto surfel_idx : sto) {
-            optimise_surfel(surfel_idx);
+        auto nodes_to_optimise = select_nodes_to_optimise();
+        for (const auto& node : nodes_to_optimise) {
+            optimise_node(node);
         }
 
         // Then, project each Surfel's norm and tangent to each frame in which it appears
@@ -425,10 +456,10 @@ Optimiser::optimise_do_one_step() {
 }
 
 /**
- * Return a vector of pairs of framedata for each frame that these surfels have in common
+ * Return a vector of pairs of FrameData for each frame that these surfels have in common
  */
 std::vector<std::pair<std::reference_wrapper<const FrameData>, std::reference_wrapper<const FrameData>>>
-find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel>& surfel2) {
+find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2) {
     using namespace std;
 
     vector<reference_wrapper<const FrameData>> surfel1_frames;
@@ -467,35 +498,36 @@ find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std
  * tan/norm are converted to the orignating surfel's frame of reference.
  */
 std::vector<NormalTangent>
-Optimiser::get_eligible_normals_and_tangents(std::size_t surfel_idx) const {
+RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph & surfel_graph,
+        const SurfelGraphNodePtr& node) const {
     using namespace std;
     using namespace Eigen;
 
-    std::vector<NormalTangent> eligible_normals_and_tangents;
-
-    const auto &this_surfel = m_current_level_surfels.at(surfel_idx);
+    vector<NormalTangent> eligible_normals_and_tangents;
 
     // For each neighbour
     int total_common_frames = 0;
-    for (const auto &that_surfel_ptr : this_surfel->neighbouring_surfels) {
-        auto common_frames = find_common_frames_for_surfels(this_surfel, that_surfel_ptr);
+    const auto& this_surfel_ptr = node->data();
+    for (const auto &surfel_ptr_neighbour : m_surfel_graph.neighbours(node)) {
+        const auto that_surfel_ptr = surfel_ptr_neighbour->data();
+        auto common_frames = find_common_frames_for_surfels(this_surfel_ptr, that_surfel_ptr);
         total_common_frames += common_frames.size();
 
         // For each common frame, get normal and tangent in surfel space
         for (auto const &frame_pair : common_frames) {
-            const Matrix3f surfel_to_frame = frame_pair.first.get().transform;
-            const Matrix3f frame_to_surfel = surfel_to_frame.transpose();
-            const Matrix3f neighbour_to_frame = frame_pair.second.get().transform;
-            Vector3f neighbour_normal_in_frame = frame_pair.second.get().normal;
+            auto surfel_to_frame = frame_pair.first.get().transform;
+            auto frame_to_surfel = surfel_to_frame.transpose();
+            auto neighbour_to_frame = frame_pair.second.get().transform;
+            auto neighbour_normal_in_frame = frame_pair.second.get().normal;
 
             // Push the neighbour normal and tangent into the right frame
             // Transform the frame tangent back to the surfel space using inv. surfel matrix
             // So we need:
             //    transform from free space to frame space for tangent (stored) (we already have normal in frame space)
             //	  transform from frame space to free space using surfel data. (inv of stored)
-            const Matrix3f neighbour_to_surfel = frame_to_surfel * neighbour_to_frame;
-            Vector3f neighbour_tan_in_surfel_space = neighbour_to_surfel * that_surfel_ptr->tangent;
-            Vector3f neighbour_norm_in_surfel_space = frame_to_surfel * neighbour_normal_in_frame;
+            auto neighbour_to_surfel = frame_to_surfel * neighbour_to_frame;
+            auto neighbour_tan_in_surfel_space = neighbour_to_surfel * that_surfel_ptr->tangent;
+            auto neighbour_norm_in_surfel_space = frame_to_surfel * neighbour_normal_in_frame;
 
             eligible_normals_and_tangents.emplace_back(neighbour_norm_in_surfel_space, neighbour_tan_in_surfel_space);
         }
@@ -513,17 +545,13 @@ Optimiser::get_eligible_normals_and_tangents(std::size_t surfel_idx) const {
   end
  */
 void
-Optimiser::optimise_surfel(size_t surfel_idx) {
+RoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr,
+        const std::vector<NormalTangent>& neighbouring_normals_and_tangents) {
     using namespace std;
     using namespace Eigen;
 
-    auto &surfel = m_current_level_surfels.at(surfel_idx);
-
-    // Get vector of eligible normal/tangent pairs
-    auto neighbouring_normals_and_tangents = get_eligible_normals_and_tangents(surfel_idx);
-
     // Merge all neighbours; implicitly using optimising tier tangents
-    auto old_tangent = surfel->tangent;
+    auto old_tangent = surfel_ptr->tangent;
     Vector3f new_tangent{old_tangent};
 
     float weight = 0;
@@ -534,9 +562,9 @@ Optimiser::optimise_surfel(size_t surfel_idx) {
         weight += edge_weight;
     }
 
-    surfel->tangent = new_tangent;
+    surfel_ptr->tangent = new_tangent;
     auto vec_pair = best_rosy_vector_pair(new_tangent, Vector3f::UnitY(), old_tangent, Vector3f::UnitY());
-    surfel->last_correction = fmod(degrees_angle_between_vectors(vec_pair.first, vec_pair.second), 90.0f);
+    surfel_ptr->last_correction = fmod(degrees_angle_between_vectors(vec_pair.first, vec_pair.second), 90.0f);
 }
 
 /**
@@ -545,7 +573,7 @@ Optimiser::optimise_surfel(size_t surfel_idx) {
  * We should calculate this once per level and then update each time we change a tan.
  */
 void
-Optimiser::populate_norm_tan_by_surfel_frame() {
+RoSyOptimiser::populate_norm_tan_by_surfel_frame() {
     using namespace std;
     using namespace Eigen;
 
@@ -555,10 +583,12 @@ Optimiser::populate_norm_tan_by_surfel_frame() {
        For each surfel
        For each framedata in the surfel
        Generate a surfel-frame pair
+       Generate a surfel-frame pair
        transform the norm and tan
        put it in the map.
      */
-    for (const auto &surfel : m_current_level_surfels) {
+    for (const auto &n : m_surfel_graph.nodes()) {
+        const auto & surfel = n->data();
         for (const auto &fd : surfel->frame_data) {
             SurfelInFrame surfel_in_frame{surfel->id, fd.pixel_in_frame.frame};
             Vector3f new_norm = fd.normal;
@@ -574,7 +604,7 @@ Optimiser::populate_norm_tan_by_surfel_frame() {
  * surfels_by_frame is a member variable.
  */
 void
-Optimiser::populate_frame_to_surfel() {
+RoSyOptimiser::populate_frame_to_surfel() {
     using namespace std;
     assert(m_num_frames > 0);
 
@@ -587,19 +617,19 @@ Optimiser::populate_frame_to_surfel() {
 
     // For each Surfel add it to each frame in which it appears.
     unsigned int surfel_idx = 0;
-    for (const auto &surfel : m_current_level_surfels) {
+    for (const auto &n : m_surfel_graph.nodes()) {
+        const auto & surfel = n->data();
         for (const auto &fd : surfel->frame_data) {
             m_surfels_by_frame.at(fd.pixel_in_frame.frame).push_back(surfel->id);
-            m_surfel_frame_map.emplace(SurfelInFrame{surfel->id, fd.pixel_in_frame.frame}, m_surfels_by_frame.at(fd.pixel_in_frame.frame).size() - 1);
+            m_surfel_frame_map.emplace(SurfelInFrame{surfel->id, fd.pixel_in_frame.frame},
+                                       m_surfels_by_frame.at(fd.pixel_in_frame.frame).size() - 1);
         }
         ++surfel_idx;
     }
-
-
 }
 
 bool
-Optimiser::surfel_is_in_frame(const std::string& surfel_id, size_t index ) {
+RoSyOptimiser::surfel_is_in_frame(const std::string &surfel_id, size_t index) {
     return (m_surfel_frame_map.find(SurfelInFrame{surfel_id, index}) != m_surfel_frame_map.end());
 }
 
@@ -611,7 +641,7 @@ Optimiser::surfel_is_in_frame(const std::string& surfel_id, size_t index ) {
  * @return A vector of pointers to neighbour Surfels
  */
 std::vector<std::shared_ptr<Surfel>>
-Optimiser::get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned int frame_idx) {
+RoSyOptimiser::get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned int frame_idx) {
     const auto its = m_neighbours_by_surfel_frame.equal_range(SurfelInFrame{surfel, frame_idx});
     std::vector<std::shared_ptr<Surfel>> results;
     for (auto it = its.first; it != its.second; ++it) {
@@ -628,20 +658,160 @@ Optimiser::get_neighbours_of_surfel_in_frame(const std::string &surfel, unsigned
  * But num_frames and num_surfels are both known.
  */
 void
-Optimiser::populate_neighbours_by_surfel_frame() {
+RoSyOptimiser::populate_neighbours_by_surfel_frame() {
     using namespace std;
 
     assert(!m_surfels_by_frame.empty());
     m_neighbours_by_surfel_frame.clear();
 
-    for (const auto &surfel : m_current_level_surfels) {
-        for( const auto& neighbour : surfel->neighbouring_surfels ) {
-            for( size_t frame_idx =0; frame_idx < m_num_frames; ++frame_idx ) {
-                if( surfel_is_in_frame(neighbour->id, frame_idx) ) {
-                    SurfelInFrame sif{ surfel->id, frame_idx};
-                    m_neighbours_by_surfel_frame.emplace(sif, neighbour);
+    for (const auto &surfel_ptr_node : m_surfel_graph.nodes()) {
+        const auto surfel_ptr = surfel_ptr_node->data();
+        for (const auto &neighbour : m_surfel_graph.neighbours(surfel_ptr_node)) {
+            for (size_t frame_idx = 0; frame_idx < m_num_frames; ++frame_idx) {
+                if (surfel_is_in_frame(neighbour->data()->id, frame_idx)) {
+                    SurfelInFrame sif{surfel_ptr->id, frame_idx};
+                    m_neighbours_by_surfel_frame.emplace(sif, neighbour->data());
                 }
             }
         }
     }
+}
+
+/**
+ * For each Surfel in the current layer, find parent(s) and initialise this Surfel's
+ * tangent with a combination of the parents tangents.
+ * Surfels with no parents are pruned.
+ * @param current_level_surfel_graph
+ * @param previous_level_surfel_graph
+ * @param properties
+ */
+void
+initialise_tangents_from_previous_level(SurfelGraph & current_level_surfel_graph,
+                                        const SurfelGraph & previous_level_surfel_graph,
+                                        const Properties &properties) {
+    using namespace std;
+    vector<SurfelGraphNodePtr> orphans;
+
+    // Construct mapping from previous graph node to this based on surfel parentage
+    auto child_to_parent_surfel_id_map = compute_child_to_parent_surfel_map(
+            current_level_surfel_graph,
+            previous_level_surfel_graph,
+            orphans);
+
+    // Remove unparented graphnodes from this levels graph
+    for( const auto & orphan : orphans) {
+        current_level_surfel_graph.remove_node(orphan);
+    }
+
+    // Seed the current level surfels with tangents from their parents.
+    down_propagate_tangents(child_to_parent_surfel_id_map);
+}
+
+/**
+ * Create a map to allow lookup of a GraphNode from a PIF
+ */
+std::map<PixelInFrame, SurfelGraphNodePtr>
+create_pif_to_graphnode_map(const SurfelGraph & surfel_graph) {
+    using namespace std;
+
+    map<PixelInFrame, SurfelGraphNodePtr> pif_to_graph_node;
+    for (const auto & node : surfel_graph.nodes()) {
+        for (const auto &frame_data : node->data()->frame_data) {
+            pif_to_graph_node.emplace(frame_data.pixel_in_frame, node);
+        }
+    }
+    return pif_to_graph_node;
+}
+
+/**
+ * Given a set of parent and child GraphNodes, estalish a mapping from child to one or more parents.
+ * Children with no parents are stored as IDs in unmapped
+ */
+std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr>
+compute_child_to_parent_surfel_map(const SurfelGraph & child_graph, //
+                                   const SurfelGraph & parent_graph, //
+                                   std::vector<SurfelGraphNodePtr> &orphans) {
+    using namespace std;
+
+    // Construct a map from parent level PIF to parent graphnode
+    const auto & pif_to_parent_graphnode_map = create_pif_to_graphnode_map(parent_graph);
+
+    // For each PIF in each child graphnode, try to find a matching PIF in the parent graphnodemap
+    // if found, these nodes are in a parent child relationship
+    multimap<SurfelGraphNodePtr, SurfelGraphNodePtr> child_to_parents_graphnode_map;
+    for (const auto &child_node : child_graph.nodes()) {
+        size_t parents_found = 0;
+        for (const auto &child_frame : child_node->data()->frame_data) {
+            PixelInFrame parent_pif{child_frame.pixel_in_frame.pixel.x / 2, //
+                                    child_frame.pixel_in_frame.pixel.y / 2, //
+                                    child_frame.pixel_in_frame.frame};
+            const auto &it = pif_to_parent_graphnode_map.find(parent_pif);
+            if (it != end(pif_to_parent_graphnode_map)) {
+                child_to_parents_graphnode_map.emplace(child_node, it->second);
+                ++parents_found;
+            } // else parent not found for this PIF
+        }
+        if (parents_found == 0) {
+            orphans.push_back(child_node);
+        }
+    }
+    return child_to_parents_graphnode_map;
+}
+
+// TODO(dave): Factor out the actual blending operation
+/**
+ * Initialise the child surfel tangents from their psarwent surfel tangents
+ * where the parent-child mappings are defined in child_to_parents
+ */
+void
+down_propagate_tangents(const std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr> & child_to_parents) {
+
+    using namespace std;
+    using namespace Eigen;
+    cout << "Propagating surfel tangents from previous level" << endl;
+
+    // for each surfel in the lower level
+    auto outer_it = begin(child_to_parents);
+    while (outer_it != end(child_to_parents)) {
+        auto child_graphnode = outer_it->first;
+        int num_parents = 0;
+        Vector3f mean_tangent{0.0f, 0.0f, 0.0};
+        auto inner_it = outer_it;
+        while ((inner_it != end(child_to_parents)) && (inner_it->first == child_graphnode)) {
+            mean_tangent += inner_it->second->data()->tangent;
+            ++num_parents;
+            ++inner_it;
+        }
+        // Set the child Surfel's tangent
+        outer_it->first->data()->tangent = (mean_tangent / num_parents).normalized();
+        outer_it = inner_it;
+    }
+}
+
+std::vector<std::vector<PixelInFrame>>
+get_correspondences(const Properties &properties,
+                    unsigned int level,
+                    const std::vector<DepthMap> &depth_map,
+                    std::vector<Camera> &cameras) {
+    using namespace std;
+
+    vector<vector<PixelInFrame>> correspondences;
+
+    if (properties.getBooleanProperty("load-correspondences")) {
+        string corr_file_template = properties.getProperty("correspondence-file-template");
+        size_t size = snprintf(nullptr, 0, corr_file_template.c_str(), level) + 1; // Extra space for '\0'
+        std::unique_ptr<char[]> buf(new char[size]);
+        snprintf(buf.get(), size, corr_file_template.c_str(), level);
+        string file_name = std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+
+        load_correspondences_from_file(file_name, correspondences);
+    } else {
+        cout << "Computing correspondences from scratch" << endl;
+        throw runtime_error("Not implemented. Copy code from dm_to_pointcloud");
+    }
+
+    if (correspondences.empty()) {
+        throw runtime_error("No correspondences found");
+    }
+    return correspondences;
 }

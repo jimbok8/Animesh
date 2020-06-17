@@ -32,13 +32,9 @@ endif ()
 # Building Animesh
 add_executable(
 		animesh
-		depth_map_io.h depth_map_io.cpp
-		correspondences_io.h correspondences_io.cpp
-		optimise.h optimise.cpp
-		utilities.h utilities.cpp
+		../libCorrespondence/include/Correspondence/CorrespondenceIO.h ../libCorrespondence/src/CorrespondenceIO.cpp
 		hierarchical_mesher_cli.cpp
 		types.h
-		hierarchical_mesher_utilities.h hierarchical_mesher_utilities.cpp
 )
 
 target_link_libraries(
@@ -50,6 +46,7 @@ target_link_libraries(
 		FileUtils
 		GeomFileUtils
 		Surfel
+		Utilities
 		Cpd::Library-C++
 )
 
@@ -78,11 +75,7 @@ include_directories(${NANOGUI_EXTRA_INCS})
 
 add_executable(
 		animesh_ui
-		depth_map_io.h depth_map_io.cpp
-		correspondences_io.h correspondences_io.cpp
-		optimise.h optimise.cpp
-		utilities.h utilities.cpp
-		hierarchical_mesher_utilities.h hierarchical_mesher_utilities.cpp
+		../libCorrespondence/include/Correspondence/CorrespondenceIO.h ../libCorrespondence/src/CorrespondenceIO.cpp
 		AnimeshApplication.h AnimeshApplication.cpp
 		types.h
 		CrossFieldGLCanvas.h CrossFieldGLCanvas.cpp
@@ -98,6 +91,7 @@ target_link_libraries(
 		Properties
 		RoSy
 		Surfel
+		Utilities
 		Cpd::Library-C++
 		nanogui
 		${NANOGUI_EXTRA_LIBS}

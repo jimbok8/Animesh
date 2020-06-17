@@ -57,4 +57,9 @@ file_name_from_template_level_and_frame(const std::string &file_name_template, u
 std::string
 file_name_from_template_and_frame(const std::string &file_name_template, unsigned int frame);
 
+
+void
+maybe_save_depth_and_normal_maps(const Properties &properties,
+                                 const std::vector<std::vector<DepthMap>> &depth_map_hierarchy);
+
 #endif //ANIMESH_UTILITIES_H

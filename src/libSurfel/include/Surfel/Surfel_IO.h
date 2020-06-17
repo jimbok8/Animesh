@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Surfel.h"
-
+#include <Graph/Graph.h>
 #include <vector>
 #include <string>
 #include <memory>
@@ -10,13 +10,12 @@
  * Save surfel data as binary file to disk
  */
 void
-save_surfels_to_file(const std::string& file_name,
-                     const std::vector<std::shared_ptr<Surfel>>& surfels);
+save_surfel_graph_to_file(const std::string& file_name,
+                          const animesh::Graph<std::shared_ptr<Surfel>, float>& surfel_graph);
 
 /**
  * Load surfel data from binary file
  */
-void
-load_from_file( const std::string& file_name,
-                std::vector<std::shared_ptr<Surfel>>& surfels);
+animesh::Graph<std::shared_ptr<Surfel>,float>
+load_surfel_graph_from_file(const std::string &file_name);
 

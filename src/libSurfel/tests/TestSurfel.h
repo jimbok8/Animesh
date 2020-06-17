@@ -3,6 +3,8 @@
 #include <Eigen/Core>
 #include <vector>
 #include <gtest/gtest.h>
+#include <Graph/Graph.h>
+#include <Surfel/Surfel.h>
 
 class TestSurfel : public ::testing::Test {
 public:
@@ -13,4 +15,14 @@ public:
 
 	void SetUp( );
 	void TearDown();
+};
+
+
+class TestSurfelIO : public ::testing::Test {
+public:
+    void SetUp( );
+    void TearDown();
+
+protected:
+    animesh::Graph<std::shared_ptr<Surfel>, int> surfel_graph;
 };

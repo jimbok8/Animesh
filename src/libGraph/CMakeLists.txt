@@ -4,7 +4,7 @@ add_library(
 		include/Graph/Graph.h
 		include/Graph/GraphSimplifier.h
 		include/Graph/Path.h
-)
+		src/Path.cpp)
 
 target_include_directories(
 		Graph
@@ -25,17 +25,32 @@ add_executable(
 		"tests/TestGraph.cpp"
 		"tests/TestGraphSimplifier.cpp"
 		"tests/TestGraphCycles.cpp"
+		${CMAKE_BINARY_DIR}/graph_test_data/cube.obj
+		${CMAKE_BINARY_DIR}/graph_test_data/cloth2_1.obj
 )
 
 target_link_libraries(
 		testGraph
 		Graph
-		Field
 		GeomFileUtils
 		gtest gmock
 		${CMAKE_THREAD_LIBS_INIT}
 )
 
+add_custom_command(
+		OUTPUT
+		${CMAKE_BINARY_DIR}/graph_test_data/cube.obj
+		${CMAKE_BINARY_DIR}/graph_test_data/cloth2_1.obj
+		${CMAKE_BINARY_DIR}/graph_test_data/sphere.obj
+		${CMAKE_BINARY_DIR}/graph_test_data/sphere10x10.obj
+		COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_data ${CMAKE_BINARY_DIR}/graph_test_data
+		COMMENT "Copying graph test data."
+		DEPENDS
+		tests/test_data/cube.obj
+		tests/test_data/cloth2_1.obj
+		tests/test_data/sphere.obj
+		tests/test_data/sphere10x10.obj
+)
 
 add_test(
 		NAME TestGraphAddElementShouldMakeSizeLargerByOne

@@ -28,7 +28,6 @@ protected:
     std::vector<std::shared_ptr<Surfel>> select_surfels_to_optimise() override;
 
 private:
-    animesh::Graph<Surfel,int> m_surfel_graph;
     float m_rho;
 };
 

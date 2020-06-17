@@ -1,6 +1,7 @@
 add_library(
 		RoSy SHARED
 		include/RoSy/RoSy.h src/RoSy.cpp
+		include/RoSy/RoSyOptimiser.h src/RoSyOptimiser.cpp
 )
 
 # Define headers for this library. PUBLIC headers are used for
@@ -16,9 +17,13 @@ target_include_directories(
 
 target_link_libraries(
 		RoSy
+		Correspondence
 		Geom
+		Surfel
+		Utilities
 )
 
+# Tests
 add_executable(
 		testRoSy
 		tests/main.cpp

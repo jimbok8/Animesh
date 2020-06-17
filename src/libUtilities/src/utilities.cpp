@@ -5,10 +5,10 @@
 #include <vector>
 #include <iostream>
 #include <DepthMap/DepthMap.h>
+#include <DepthMap/DepthMapIO.h>
 #include <Properties/Properties.h>
 #include <Camera/Camera.h>
-#include "../mesher/depth_map_io.h"
-#include "../mesher/hierarchical_mesher_utilities.h"
+//#include "../../mesher/hierarchical_mesher_utilities.h"
 
 const std::string CAMERA_TEMPLATE = "camera_F%02d.txt";
 
@@ -113,6 +113,29 @@ tNormalMethod normal_computation_method(const Properties& properties ) {
         throw std::runtime_error("Unrecognised normal computation method ["+normal_method_name+"]");
     }
     return method;
+}
+
+void
+maybe_save_depth_and_normal_maps(const Properties &properties,
+                                 const std::vector<std::vector<DepthMap>> &depth_map_hierarchy) {
+    using namespace std;
+
+    int num_levels = depth_map_hierarchy.size();
+    int num_frames = depth_map_hierarchy.at(0).size();
+
+    if (properties.getBooleanProperty("dump-depth-maps")) {
+        string dm_template = properties.getProperty("generated-depth-map-template");
+        string norm_template = properties.getProperty("generated-normal-file-template");
+        cout << " Dumping depth maps" << endl;
+        for (unsigned int level = 0; level < num_levels; ++level) {
+            for (unsigned int frame = 0; frame < num_frames; ++frame) {
+                auto dm_file_name = file_name_from_template_level_and_frame(dm_template, level, frame);
+                save_depth_map_as_pgm(dm_file_name, depth_map_hierarchy.at(level).at(frame));
+                auto norm_file_name = file_name_from_template_level_and_frame(norm_template, level, frame);
+                save_normals_as_ppm(norm_file_name, depth_map_hierarchy.at(level).at(frame));
+            }
+        }
+    }
 }
 
 /**
