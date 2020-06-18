@@ -31,7 +31,16 @@ protected:
 private:
     float m_rho;
 
-    void optimise_surfel(
+
+    /**
+     * Populate positions, tangents and normals for all eligible surfel neighbours
+     * pos/tan/norm is eligible iff the neighbour and surfel share a common frame
+     * pos/tan/norm are converted to the orignating surfel's frame of reference.
+     */
+    std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>>
+    get_neighbouring_data(const SurfelGraphNodePtr& node);
+
+        void optimise_surfel(
             const std::shared_ptr<Surfel> &surfel_ptr,
             const std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>>& neighbour_data) const;
 };
