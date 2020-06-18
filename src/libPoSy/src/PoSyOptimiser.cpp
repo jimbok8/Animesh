@@ -62,7 +62,6 @@ void PoSyOptimiser::optimise_surfel(
     for (const auto &neighbour : neighbour_data) {
         float edge_weight = 1.0f;
 
-        // TODO(dave.d) THIS IS ILLUSTRATIVE CODE ONLY AND NEEDS TO BE MADE CORRECT
         const auto &surfel_normal = surfel_ptr->frame_data.at(0).normal;
         const auto &surfel_tangent = surfel_ptr->tangent;
 
@@ -81,6 +80,7 @@ void PoSyOptimiser::optimise_surfel(
     }
     surfel_ptr->position = new_position;
 }
+
 /**
  * Return a vector of pairs of FrameData for each frame that these surfels have in common
  */
