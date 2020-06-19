@@ -51,28 +51,6 @@ target_compile_features(
 		cxx_std_11
 )
 
-# Perf Tool
-add_executable(
-		perf_tool
-		perfTool.cpp perfTool.h
-)
-
-target_link_libraries(
-		perf_tool
-		Args
-		Field
-		FileUtils
-		GeomFileUtils
-		Graph
-		RoSy
-)
-
-target_compile_features(
-		perf_tool
-		PUBLIC
-		cxx_std_11
-)
-
 # Depth map renderer
 add_executable(
 		dmr
@@ -97,21 +75,18 @@ find_package(Cpd REQUIRED)
 
 
 add_executable(
-		dm_to_point_cloud
-		dm_to_point_cloud.cpp
-		../libCorrespondence/src/CorrespondenceIO.cpp ../libCorrespondence/include/Correspondence/CorrespondenceIO.h
-		../libDepthMap/src/DepthMapIO.cpp ../libDepthMap/include/DepthMap/DepthMapIO.h
-		../mesher/types.h
-		../libUtilities/include/Utilities/utilities.h ../libUtilities/src/utilities.cpp
-		)
+		dm_to_point_cloud dm_to_point_cloud.cpp
+)
 
 target_link_libraries(
 		dm_to_point_cloud
 		Camera
+		Correspondence
 		DepthMap
 		GeomFileUtils
 		Properties
 		Surfel
+		Utilities
 		Cpd::Library-C++)
 
 target_link_libraries(dmr ${EXTRA_LIBS} glfw ${ASSIMP_LIBRARY})

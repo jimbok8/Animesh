@@ -16,14 +16,11 @@
 #include <Camera/Camera.h>
 #include <Surfel/Pixel.h>
 #include <Surfel/PixelInFrame.h>
-
-#include "../mesher/types.h"
-#include "../libCorrespondence/include/Correspondence/CorrespondenceIO.h"
-#include "../libUtilities/include/Utilities/utilities.h"
+#include <Correspondence/CorrespondenceIO.h>
+#include <Utilities/utilities.h>
 
 #include <cpd/gauss_transform_fgt.hpp>
 #include <cpd/rigid.hpp>
-#include <Eigen/Dense>
 
 /**
  * Print usage instructions if the number of arguments is wrong or arguments are inconsistent
