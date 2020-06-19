@@ -58,6 +58,9 @@ save_surfel_graph_to_file(const std::string &file_name,
 
             // Normal
             write_vector_3f(file, fd.normal);
+
+            // Position
+            write_vector_3f(file, fd.position);
         }
 
         const auto neighbours = surfel_graph.neighbours(surfel);
@@ -115,6 +118,10 @@ load_surfel_graph_from_file(const std::string &file_name) {
 
             // Normal
             fd.normal = read_vector_3f(file);
+
+            // Position
+            fd.position = read_vector_3f(file);
+
             frames.push_back(fd);
         }
 
