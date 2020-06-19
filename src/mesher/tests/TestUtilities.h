@@ -27,20 +27,26 @@ protected:
                     FrameData{test_pixel_frame_2, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero()},
                     FrameData{test_pixel, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero()}
             },
-            Eigen::Vector3f{1.0, 0.0, 0.0}};
+            Eigen::Vector3f{1.0, 0.0, 0.0},
+            Eigen::Vector3f{1.0, 0.0, 0.0}
+    };
 
     Surfel s1_neighbour{
             "id2",
             std::vector<FrameData>{
                     FrameData{test_pixel_up, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero()}
             },
-            Eigen::Vector3f{1.0, 0.0, 0.0}};
+            Eigen::Vector3f{1.0, 0.0, 0.0},
+            Eigen::Vector3f{1.0, 0.0, 0.0}
+    };
     Surfel s1_not_neighbour{
             "id3",
             std::vector<FrameData>{
                     FrameData{test_pixel_far_away, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero()}
             },
-            Eigen::Vector3f{1.0, 0.0, 0.0}};
+            Eigen::Vector3f{1.0, 0.0, 0.0},
+            Eigen::Vector3f{1.0, 0.0, 0.0}
+    };
 
 public:
     void SetUp() override;

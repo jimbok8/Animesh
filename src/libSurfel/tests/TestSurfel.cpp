@@ -9,28 +9,37 @@
 #include <memory>
 #include <fstream>
 
-void TestSurfel::SetUp( ) {}
-void TestSurfel::TearDown( ) {}
+void TestSurfel::SetUp() {}
 
-using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>,float>;
+void TestSurfel::TearDown() {}
 
-void TestSurfelIO::SetUp( ) {
+using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
+
+void TestSurfelIO::SetUp() {
     using namespace std;
 
-    const auto s1 = make_shared<Surfel>("a", std::vector<FrameData>{}, Eigen::Vector3f{ 1.0f, 2.0f, 3.0f});
-    const auto s2 = make_shared<Surfel>("b", std::vector<FrameData>{}, Eigen::Vector3f{ 5.0f, 6.0f, 7.0f});
-    const auto & sn1 = surfel_graph.add_node(s1);
-    const auto & sn2 = surfel_graph.add_node(s2);
+    const auto s1 = make_shared<Surfel>("a",
+                                        std::vector<FrameData>{},
+                                        Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                                        Eigen::Vector3f{1.5f, 2.5f, 3.5f}
+    );
+    const auto s2 = make_shared<Surfel>("b",
+                                        std::vector<FrameData>{},
+                                        Eigen::Vector3f{5.0f, 6.0f, 7.0f},
+                                        Eigen::Vector3f{5.5f, 6.5f, 7.5f}
+    );
+    const auto &sn1 = surfel_graph.add_node(s1);
+    const auto &sn2 = surfel_graph.add_node(s2);
     surfel_graph.add_edge(sn1, sn2, 1.0);
 }
 
-void TestSurfelIO::TearDown( ) {}
+void TestSurfelIO::TearDown() {}
 
-bool compare_files(const std::string& p1, const std::string& p2) {
+bool compare_files(const std::string &p1, const std::string &p2) {
     using namespace std;
 
-    ifstream f1(p1, ifstream::binary|ifstream::ate);
-    ifstream f2(p2, ifstream::binary|ifstream::ate);
+    ifstream f1(p1, ifstream::binary | ifstream::ate);
+    ifstream f2(p2, ifstream::binary | ifstream::ate);
 
     if (f1.fail() || f2.fail()) {
         return false; //file problem
@@ -44,13 +53,13 @@ bool compare_files(const std::string& p1, const std::string& p2) {
     f1.seekg(0, ifstream::beg);
     f2.seekg(0, ifstream::beg);
     return equal(istreambuf_iterator<char>(f1.rdbuf()),
-                      istreambuf_iterator<char>(),
-                      istreambuf_iterator<char>(f2.rdbuf()));
+                 istreambuf_iterator<char>(),
+                 istreambuf_iterator<char>(f2.rdbuf()));
 }
 
 void
-expect_graphs_equal( const SurfelGraph & graph1,
-                          const SurfelGraph & graph2) {
+expect_graphs_equal(const SurfelGraph &graph1,
+                    const SurfelGraph &graph2) {
     EXPECT_EQ(graph1.num_nodes(), graph2.num_nodes());
     EXPECT_EQ(graph1.num_edges(), graph2.num_edges());
 }

@@ -69,6 +69,7 @@ save_surfel_graph_to_file(const std::string &file_name,
             write_string(file, surfel_ptr->data()->id);
         }
         write_vector_3f(file, surfel->data()->tangent);
+        write_vector_3f(file, surfel->data()->closest_mesh_vertex_position);
     }
     file.close();
     cout << " done." << endl;
@@ -133,8 +134,9 @@ load_surfel_graph_from_file(const std::string &file_name) {
         }
 
         const auto tangent = read_vector_3f(file);
+        const auto closest_mesh_vertex_position = read_vector_3f(file);
 
-        auto surfel_ptr = make_shared<Surfel>(surfel_id, frames, tangent);
+        auto surfel_ptr = make_shared<Surfel>(surfel_id, frames, tangent, closest_mesh_vertex_position);
         auto graph_node = graph.add_node(surfel_ptr);
         neighbours_of_surfel_by_id.emplace(surfel_id, neighbours);
         graph_node_by_id.emplace(surfel_id, graph_node);

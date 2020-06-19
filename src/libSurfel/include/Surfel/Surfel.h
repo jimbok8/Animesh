@@ -15,7 +15,9 @@
 struct Surfel {
     Surfel(std::string id,
            const std::vector<FrameData> &frames,
-           Eigen::Vector3f tangent);
+           Eigen::Vector3f tangent,
+           Eigen::Vector3f closest_mesh_vertex_position
+    );
 
     static std::map<std::string, std::shared_ptr<Surfel>> surfel_by_id;
 
