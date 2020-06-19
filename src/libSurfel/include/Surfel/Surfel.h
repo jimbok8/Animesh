@@ -25,7 +25,7 @@ struct Surfel {
     std::vector<FrameData> frame_data;
     Eigen::Vector3f tangent;
     // Relative position of representation lattice intersection [0,1)
-    Eigen::Vector3f position;
+    Eigen::Vector3f closest_mesh_vertex_position;
     float last_correction;
     float error;
 

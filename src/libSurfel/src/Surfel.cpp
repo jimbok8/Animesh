@@ -29,7 +29,7 @@ Surfel::Surfel(std::string id,
                Eigen::Vector3f tangent) :
         id{std::move(id)},
         tangent{std::move(tangent)},
-        position{0.0f, 0.0f, 0.0f},
+        closest_mesh_vertex_position{0.0f, 0.0f, 0.0f},
         last_correction{0.0f},
         error{0.0} {
 

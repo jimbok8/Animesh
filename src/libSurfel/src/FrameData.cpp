@@ -8,13 +8,14 @@ FrameData::FrameData(const PixelInFrame &pif, float depth, Eigen::Matrix3f tran,
         pixel_in_frame{pif},
         depth{depth},
         transform{std::move(tran)},
-        normal{std::move(norm)} {
+        normal{std::move(norm)},
+        position{0.0f, 0.0f, 0.0f} {
 
 }
 
 FrameData::FrameData() :
         pixel_in_frame{0, 0, 0},
-        depth{0},
+        depth{0.0f},
         transform{Eigen::Matrix3f::Identity()},
         normal{Eigen::Vector3f::Zero()} {
 

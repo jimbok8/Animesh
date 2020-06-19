@@ -58,7 +58,7 @@ void PoSyOptimiser::optimise_surfel(
 
     float weight = 0.0f;
 
-    auto new_position = surfel_ptr->position;
+    auto new_position = surfel_ptr->closest_mesh_vertex_position;
     for (const auto &neighbour : neighbour_data) {
         float edge_weight = 1.0f;
 
@@ -78,7 +78,7 @@ void PoSyOptimiser::optimise_surfel(
         );
         weight += edge_weight;
     }
-    surfel_ptr->position = new_position;
+    surfel_ptr->closest_mesh_vertex_position = new_position;
 }
 
 /**
@@ -156,7 +156,7 @@ PoSyOptimiser::get_neighbouring_data(const SurfelGraphNodePtr &node) {
 
             // Surfel 'position' field is the absolute position of the nearest mesh vertex in Surfel space
             // i.e assuming v = (0,0,0)
-            auto neighbour_pos_in_frame = (neighbour_to_frame * that_surfel_ptr->position) + frame_pair.second.get().position;
+            auto neighbour_pos_in_frame = (neighbour_to_frame * that_surfel_ptr->closest_mesh_vertex_position) + frame_pair.second.get().position;
             auto neighbour_pos_in_surfel_space = frame_to_surfel * (neighbour_pos_in_frame - frame_pair.first.get().position);
 
             eligible_neighbour_pos_tan_norms.emplace_back(
