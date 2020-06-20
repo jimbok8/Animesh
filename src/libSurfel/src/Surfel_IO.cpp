@@ -27,8 +27,9 @@ void
 save_surfel_graph_to_file(const std::string &file_name,
                           const SurfelGraph &surfel_graph) {
     using namespace std;
+    using namespace spdlog;
 
-    cout << "Saving..." << flush;
+    info("Saving {:d} surfels from graph to file {:s}", surfel_graph.num_nodes(), file_name);
 
     ofstream file{file_name, ios::out | ios::binary};
     // Count
@@ -72,7 +73,7 @@ save_surfel_graph_to_file(const std::string &file_name,
         write_vector_3f(file, surfel->data()->closest_mesh_vertex_position);
     }
     file.close();
-    cout << " done." << endl;
+    info(" done.");
 }
 
 /**

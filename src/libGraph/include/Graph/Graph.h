@@ -144,7 +144,7 @@ namespace animesh {
             using namespace std;
 
             if (has_edge(from_node, to_node)) {
-                spdlog::error("Ignoring attempt to add duplicate edge from {:x} to {:x}", fmt::ptr(from_node), fmt::ptr(to_node));
+                spdlog::warn("Ignoring attempt to add duplicate edge from {:p} to {:p}", fmt::ptr(from_node), fmt::ptr(to_node));
                 return;
             }
             m_adjacency.at(from_node).push_back(make_pair(to_node, edge_data));
