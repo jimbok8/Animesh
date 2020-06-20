@@ -66,7 +66,7 @@ std::vector<std::shared_ptr<Surfel>>
 RoSyOptimiser::get_surfel_data() const {
     using namespace std;
     vector<shared_ptr<Surfel>> surfels;
-    for( const auto& n : m_surfel_graph.nodes()) {
+    for (const auto &n : m_surfel_graph.nodes()) {
         surfels.push_back(n->data());
     }
     return surfels;
@@ -101,6 +101,27 @@ RoSyOptimiser::maybe_save_smoothed_surfels_to_file(const Properties &properties)
     }
 }
 
+
+std::map<PixelInFrame, Eigen::Vector3f>
+compute_coordinates_by_pif(const std::vector<std::vector<PixelInFrame>> &correspondences,
+                           const std::vector<DepthMap> &depth_maps_by_frame,
+                           const std::vector<Camera> &cameras_by_frame) {
+    using namespace std;
+
+    std::map<PixelInFrame, Eigen::Vector3f> coordinates_by_pif;
+    for (const auto &correspondence_group : correspondences) {
+        for (const auto &pif : correspondence_group) {
+            if (coordinates_by_pif.find(pif) == end(coordinates_by_pif)) {
+                auto depth = depth_maps_by_frame.at(pif.frame).depth_at(pif.pixel.x, pif.pixel.y);
+                auto coord = cameras_by_frame.at(pif.frame).to_world_coordinates(pif.pixel.x, pif.pixel.y, depth);
+                coordinates_by_pif.emplace(pif, coord);
+            }
+        }
+    }
+    return coordinates_by_pif;
+}
+
+
 void
 RoSyOptimiser::generate_surfels_for_current_level() {
     using namespace spdlog;
@@ -108,13 +129,30 @@ RoSyOptimiser::generate_surfels_for_current_level() {
 
     info("Generating surfels for level : {:d}", m_current_level_index);
     info("   Getting correspondences");
+    const auto &level_depth_maps = m_depth_map_hierarchy.at(m_current_level_index);
+
+    std::vector<Camera> level_cameras;
+    for (const auto &camera : m_cameras) {
+        Camera level_camera{camera};
+        level_camera.set_image_size(level_depth_maps.at(0).width(), level_depth_maps.at(0).height());
+        level_cameras.push_back(level_camera);
+    }
     vector<vector<PixelInFrame>> correspondences = get_correspondences(m_properties, m_current_level_index,
-                                                                       m_depth_map_hierarchy.at(m_current_level_index),
-                                                                       m_cameras);
+                                                                       level_depth_maps,
+                                                                       level_cameras);
+
+    info("   Generating pif to coordinate for depth maps");
+    map<PixelInFrame, Eigen::Vector3f> coordinates_by_pif = compute_coordinates_by_pif(
+            correspondences,
+            level_depth_maps,
+            level_cameras
+    );
 
     info("   Generating Surfels");
-    m_surfel_graph = generate_surfels(m_depth_map_hierarchy.at(m_current_level_index),
-                                               correspondences, m_properties);
+    m_surfel_graph = generate_surfels(level_depth_maps,
+                                      correspondences,
+                                      coordinates_by_pif,
+                                      m_properties);
 
     if (!m_previous_level_surfels.empty()) {
         initialise_tangents_from_previous_level(m_surfel_graph, m_previous_surfel_graph, m_properties);
@@ -347,7 +385,7 @@ RoSyOptimiser::compute_error(const NormalTangent &first,
 
     // parameter order in RoSy is tangent, normal
     auto best_pair = best_rosy_vector_pair(first.tangent, first.normal, second.tangent,
-                                                               second.normal);
+                                           second.normal);
     float theta = degrees_angle_between_vectors(best_pair.first, best_pair.second);
     return (theta * theta);
 }
@@ -368,11 +406,11 @@ RoSyOptimiser::ssa_select_all_in_random_order() {
     using namespace std;
 
     vector<size_t> indices(m_surfel_graph.num_nodes());
-    iota(begin(indices), end(indices), 0 );
+    iota(begin(indices), end(indices), 0);
     shuffle(begin(indices), end(indices),
             default_random_engine(chrono::system_clock::now().time_since_epoch().count()));
     vector<SurfelGraphNodePtr> selected_nodes{indices.size()};
-    for( const auto i : indices) {
+    for (const auto i : indices) {
         selected_nodes.push_back(m_surfel_graph.nodes().at(i));
     }
     return selected_nodes;
@@ -386,11 +424,11 @@ RoSyOptimiser::ssa_select_worst_100() {
     using namespace std;
 
     vector<SurfelGraphNodePtr> selected_nodes;
-    for( const auto & n : m_surfel_graph.nodes()) {
+    for (const auto &n : m_surfel_graph.nodes()) {
         selected_nodes.push_back(n);
     }
     stable_sort(begin(selected_nodes), end(selected_nodes),
-                [this](const SurfelGraphNodePtr & s1, const SurfelGraphNodePtr & s2) {
+                [this](const SurfelGraphNodePtr &s1, const SurfelGraphNodePtr &s2) {
                     return s1->data()->error > s2->data()->error;
                 });
 
@@ -408,7 +446,7 @@ RoSyOptimiser::select_nodes_to_optimise() {
 
 
 void
-RoSyOptimiser::optimise_node(const SurfelGraphNodePtr& node ) {
+RoSyOptimiser::optimise_node(const SurfelGraphNodePtr &node) {
     // Get vector of eligible normal/tangent pairs
     auto neighbouring_normals_and_tangents = get_eligible_normals_and_tangents(m_surfel_graph, node);
     optimise_surfel(node->data(), neighbouring_normals_and_tangents);
@@ -433,7 +471,7 @@ RoSyOptimiser::optimise_do_one_step() {
 
     if (m_state == OPTIMISING) {
         auto nodes_to_optimise = select_nodes_to_optimise();
-        for (const auto& node : nodes_to_optimise) {
+        for (const auto &node : nodes_to_optimise) {
             optimise_node(node);
         }
 
@@ -498,8 +536,8 @@ find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std
  * tan/norm are converted to the orignating surfel's frame of reference.
  */
 std::vector<NormalTangent>
-RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph & surfel_graph,
-        const SurfelGraphNodePtr& node) const {
+RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph &surfel_graph,
+                                                 const SurfelGraphNodePtr &node) const {
     using namespace std;
     using namespace Eigen;
 
@@ -507,7 +545,7 @@ RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph & surfel_grap
 
     // For each neighbour
     int total_common_frames = 0;
-    const auto& this_surfel_ptr = node->data();
+    const auto &this_surfel_ptr = node->data();
     for (const auto &surfel_ptr_neighbour : m_surfel_graph.neighbours(node)) {
         const auto that_surfel_ptr = surfel_ptr_neighbour->data();
         auto common_frames = find_common_frames_for_surfels(this_surfel_ptr, that_surfel_ptr);
@@ -545,8 +583,8 @@ RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph & surfel_grap
   end
  */
 void
-RoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr,
-        const std::vector<NormalTangent>& neighbouring_normals_and_tangents) {
+RoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr,
+                               const std::vector<NormalTangent> &neighbouring_normals_and_tangents) {
     using namespace std;
     using namespace Eigen;
 
@@ -588,7 +626,7 @@ RoSyOptimiser::populate_norm_tan_by_surfel_frame() {
        put it in the map.
      */
     for (const auto &n : m_surfel_graph.nodes()) {
-        const auto & surfel = n->data();
+        const auto &surfel = n->data();
         for (const auto &fd : surfel->frame_data) {
             SurfelInFrame surfel_in_frame{surfel->id, fd.pixel_in_frame.frame};
             Vector3f new_norm = fd.normal;
@@ -618,7 +656,7 @@ RoSyOptimiser::populate_frame_to_surfel() {
     // For each Surfel add it to each frame in which it appears.
     unsigned int surfel_idx = 0;
     for (const auto &n : m_surfel_graph.nodes()) {
-        const auto & surfel = n->data();
+        const auto &surfel = n->data();
         for (const auto &fd : surfel->frame_data) {
             m_surfels_by_frame.at(fd.pixel_in_frame.frame).push_back(surfel->id);
             m_surfel_frame_map.emplace(SurfelInFrame{surfel->id, fd.pixel_in_frame.frame},
@@ -686,8 +724,8 @@ RoSyOptimiser::populate_neighbours_by_surfel_frame() {
  * @param properties
  */
 void
-initialise_tangents_from_previous_level(SurfelGraph & current_level_surfel_graph,
-                                        const SurfelGraph & previous_level_surfel_graph,
+initialise_tangents_from_previous_level(SurfelGraph &current_level_surfel_graph,
+                                        const SurfelGraph &previous_level_surfel_graph,
                                         const Properties &properties) {
     using namespace std;
     vector<SurfelGraphNodePtr> orphans;
@@ -699,7 +737,7 @@ initialise_tangents_from_previous_level(SurfelGraph & current_level_surfel_graph
             orphans);
 
     // Remove unparented graphnodes from this levels graph
-    for( const auto & orphan : orphans) {
+    for (const auto &orphan : orphans) {
         current_level_surfel_graph.remove_node(orphan);
     }
 
@@ -711,11 +749,11 @@ initialise_tangents_from_previous_level(SurfelGraph & current_level_surfel_graph
  * Create a map to allow lookup of a GraphNode from a PIF
  */
 std::map<PixelInFrame, SurfelGraphNodePtr>
-create_pif_to_graphnode_map(const SurfelGraph & surfel_graph) {
+create_pif_to_graphnode_map(const SurfelGraph &surfel_graph) {
     using namespace std;
 
     map<PixelInFrame, SurfelGraphNodePtr> pif_to_graph_node;
-    for (const auto & node : surfel_graph.nodes()) {
+    for (const auto &node : surfel_graph.nodes()) {
         for (const auto &frame_data : node->data()->frame_data) {
             pif_to_graph_node.emplace(frame_data.pixel_in_frame, node);
         }
@@ -728,13 +766,13 @@ create_pif_to_graphnode_map(const SurfelGraph & surfel_graph) {
  * Children with no parents are stored as IDs in unmapped
  */
 std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr>
-compute_child_to_parent_surfel_map(const SurfelGraph & child_graph, //
-                                   const SurfelGraph & parent_graph, //
+compute_child_to_parent_surfel_map(const SurfelGraph &child_graph, //
+                                   const SurfelGraph &parent_graph, //
                                    std::vector<SurfelGraphNodePtr> &orphans) {
     using namespace std;
 
     // Construct a map from parent level PIF to parent graphnode
-    const auto & pif_to_parent_graphnode_map = create_pif_to_graphnode_map(parent_graph);
+    const auto &pif_to_parent_graphnode_map = create_pif_to_graphnode_map(parent_graph);
 
     // For each PIF in each child graphnode, try to find a matching PIF in the parent graphnodemap
     // if found, these nodes are in a parent child relationship
@@ -764,7 +802,7 @@ compute_child_to_parent_surfel_map(const SurfelGraph & child_graph, //
  * where the parent-child mappings are defined in child_to_parents
  */
 void
-down_propagate_tangents(const std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr> & child_to_parents) {
+down_propagate_tangents(const std::multimap<SurfelGraphNodePtr, SurfelGraphNodePtr> &child_to_parents) {
 
     using namespace std;
     using namespace Eigen;

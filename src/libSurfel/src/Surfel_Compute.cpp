@@ -165,18 +165,20 @@ graph_from_surfels(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_con
  */
 std::vector<FrameData>
 populate_frame_data(const std::vector<PixelInFrame> &pifs_in_correspondence_group,
-                    const std::vector<DepthMap> &depth_maps) {
+                    const std::vector<DepthMap> &depth_maps_by_frame,
+                    const std::map<PixelInFrame, Eigen::Vector3f>& coordinates_by_pif) {
     using namespace std;
     using namespace Eigen;
 
     Vector3f y_axis{0.0, 1.0, 0.0};
     vector<FrameData> frame_data;
     for (const auto& pif : pifs_in_correspondence_group) {
-        const auto& normal = depth_maps.at(pif.frame).normal_at(pif.pixel.x, pif.pixel.y);
+        const auto& normal = depth_maps_by_frame.at(pif.frame).normal_at(pif.pixel.x, pif.pixel.y);
         Vector3f target_normal{normal.x, normal.y, normal.z};
-        float depth = depth_maps.at(pif.frame).depth_at(pif.pixel.x, pif.pixel.y);
+        auto depth = depth_maps_by_frame.at(pif.frame).depth_at(pif.pixel.x, pif.pixel.y);
+        auto target_position = coordinates_by_pif.at(pif);
 
-        frame_data.emplace_back(pif, depth, vector_to_vector_rotation(y_axis, target_normal), target_normal);
+        frame_data.emplace_back(pif, depth, vector_to_vector_rotation(y_axis, target_normal), target_normal, target_position);
     }
     std::sort( frame_data.begin(), frame_data.end());
     return frame_data;
@@ -240,16 +242,17 @@ generate_uuid() {
  */
 std::shared_ptr<Surfel>
 generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
-                const std::vector<DepthMap> &depth_maps) {
+                const std::vector<DepthMap> &depth_maps_by_frame,
+                const std::map<PixelInFrame, Eigen::Vector3f> &coordinates_by_pif) {
     using namespace std;
 
-    assert( !corresponding_pifs.empty());
+    assert(!corresponding_pifs.empty());
 
     return make_shared<Surfel>(
-        generate_uuid(),
-        populate_frame_data(corresponding_pifs, depth_maps),
-        Eigen::Vector3f::Zero(),
-        Eigen::Vector3f::Zero());
+            generate_uuid(),
+            populate_frame_data(corresponding_pifs, depth_maps_by_frame, coordinates_by_pif),
+            Eigen::Vector3f::Zero(),
+            Eigen::Vector3f::Zero());
 }
 
 
@@ -265,12 +268,11 @@ generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
 SurfelGraph
 generate_surfels(const std::vector<DepthMap> &depth_maps,
                  const std::vector<std::vector<PixelInFrame>> &correspondences,
+                 const std::map<PixelInFrame, Eigen::Vector3f> &coordinates_by_pif,
                  const Properties& properties) {
     using namespace std;
     assert(!correspondences.empty());
     assert(!depth_maps.empty());
-
-    bool eight_connected = properties.getBooleanProperty("eight-connected");
 
     vector<shared_ptr<Surfel>> surfels;
 
@@ -289,7 +291,7 @@ generate_surfels(const std::vector<DepthMap> &depth_maps,
             continue;
         }
 
-        auto surfel = generate_surfel(pifs_with_normals, depth_maps);
+        auto surfel = generate_surfel(pifs_with_normals, depth_maps, coordinates_by_pif);
         surfels.push_back(surfel);
     }
 

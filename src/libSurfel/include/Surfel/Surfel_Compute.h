@@ -55,6 +55,7 @@ graph_from_surfels(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_con
 SurfelGraph
 generate_surfels(const std::vector<DepthMap> &depth_maps,
                  const std::vector<std::vector<PixelInFrame>> &correspondences,
+                 const std::map<PixelInFrame, Eigen::Vector3f> &coordinates_by_pif,
                  const Properties &properties);
 
 /**
@@ -62,4 +63,5 @@ generate_surfels(const std::vector<DepthMap> &depth_maps,
  */
 std::shared_ptr<Surfel>
 generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
-                const std::vector<DepthMap> &depth_maps);
+                const std::vector<DepthMap> &depth_maps,
+                const std::map<PixelInFrame, Eigen::Vector3f> &coordinates_by_pif);

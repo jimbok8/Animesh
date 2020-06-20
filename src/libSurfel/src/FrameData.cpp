@@ -4,21 +4,24 @@
 
 #include "FrameData.h"
 
-FrameData::FrameData(const PixelInFrame &pif, float depth, Eigen::Matrix3f tran, Eigen::Vector3f norm) :
+FrameData::FrameData(const PixelInFrame &pif,
+                     float depth,
+                     Eigen::Matrix3f tran,
+                     Eigen::Vector3f norm,
+                     Eigen::Vector3f pos) :
         pixel_in_frame{pif},
         depth{depth},
         transform{std::move(tran)},
         normal{std::move(norm)},
-        position{0.0f, 0.0f, 0.0f} {
-
+        position{std::move(pos)} {
 }
 
 FrameData::FrameData() :
         pixel_in_frame{0, 0, 0},
         depth{0.0f},
         transform{Eigen::Matrix3f::Identity()},
-        normal{Eigen::Vector3f::Zero()} {
-
+        normal{Eigen::Vector3f::Zero()},
+        position{Eigen::Vector3f::Zero()} {
 }
 
 bool FrameData::operator<(const FrameData &other) const {
