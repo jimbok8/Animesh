@@ -41,11 +41,18 @@ bool compare_files(const std::string &p1, const std::string &p2) {
     ifstream f1(p1, ifstream::binary | ifstream::ate);
     ifstream f2(p2, ifstream::binary | ifstream::ate);
 
-    if (f1.fail() || f2.fail()) {
+    if (f1.fail() ) {
+        spdlog::error("Error reading file {:s}", p1);
+        return false; //file problem
+    }
+
+    if (f2.fail() ) {
+        spdlog::error("Error reading file {:s}", p2);
         return false; //file problem
     }
 
     if (f1.tellg() != f2.tellg()) {
+        spdlog::error("File are different sizes {:s}: {:d}, {:s}:{:d}", p1, f1.tellg(), p2, f2.tellg());
         return false; //size mismatch
     }
 
