@@ -9,6 +9,8 @@
 #include <Graph/Graph.h>
 #include <Surfel/Surfel.h>
 
+#include <utility>
+
 class AbstractOptimiser {
     using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
     using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
@@ -47,10 +49,9 @@ private:
         std::shared_ptr<Surfel> surfel_ptr;
         size_t frame_index;
 
-        SurfelInFrame(const std::shared_ptr<Surfel> &surfel_ptr, size_t f)
-                : surfel_ptr{surfel_ptr},
+        SurfelInFrame(std::shared_ptr<Surfel> surfel_ptr, size_t f)
+                : surfel_ptr{std::move(surfel_ptr)},
                   frame_index{f} {
-            int i;
         }
 
         // Sort By surfel ID
@@ -85,7 +86,6 @@ private:
     float compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel, size_t frame_id) const;
 
     void check_convergence();
-
 
     /**
      * Useful cache for error computation. Stores a list of surfels which are neighbours of the given surfels in frame

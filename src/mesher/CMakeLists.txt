@@ -38,13 +38,14 @@ add_executable(
 
 target_link_libraries(
 		animesh
-		Properties
+		Camera
 		Correspondence
 		DepthMap
-		Camera
-		RoSy
 		FileUtils
 		GeomFileUtils
+		PoSy
+		Properties
+		RoSy
 		Surfel
 		Utilities
 		Cpd::Library-C++
@@ -53,6 +54,26 @@ target_link_libraries(
 target_compile_features(animesh
 		PUBLIC
 		cxx_std_11)
+
+# Building posy_cli
+add_executable(
+		posy_cli
+		posy_cli.cpp
+)
+
+target_link_libraries(
+		posy_cli
+		PoSy
+		Properties
+		Surfel
+		Cpd::Library-C++
+)
+
+target_compile_features(
+		posy_cli
+		PUBLIC
+		cxx_std_11
+)
 
 
 # Building Animesh UI

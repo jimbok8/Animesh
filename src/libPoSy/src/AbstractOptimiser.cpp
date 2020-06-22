@@ -115,7 +115,9 @@ AbstractOptimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> 
                 SurfelInFrame{np->second, frame_id});
 
         // Compute the error between this surfel in this frame and the neighbour in this frame.
-        total_neighbour_error += compute_error(this_surfel_in_this_frame, this_neighbour_in_this_frame);
+        total_neighbour_error += compute_error(
+                this_surfel_in_this_frame.normal, this_surfel_in_this_frame.tangent, surfel->closest_mesh_vertex_position,
+                this_neighbour_in_this_frame.normal, this_neighbour_in_this_frame.tangent, np->second->closest_mesh_vertex_position);
         ++num_neighbours;
     }
     return (num_neighbours == 0)

@@ -1,17 +1,17 @@
-//#include <memory>
-#include <RoSy/RoSyOptimiser.h>
+
 #include <PoSy/PoSyOptimiser.h>
 #include <Properties/Properties.h>
-#include <Camera/Camera.h>
-#include <DepthMap/DepthMap.h>
-#include <DepthMap/DepthMapIO.h>
+#include <Surfel/Surfel_IO.h>
+
 #include <Utilities/utilities.h>
+
 #include "spdlog/spdlog.h"
 #include "spdlog/cfg/env.h"
 #include <string>
 #include <vector>
 #include <chrono>
 #include <iostream>
+#include <iomanip>
 
 
 /**
@@ -32,26 +32,17 @@ int main(int argc, char *argv[]) {
     string property_file_name = (argc == 2) ? argv[1] : "animesh.properties";
     Properties properties{property_file_name};
 
-    RoSyOptimiser o{properties};
-
-    info("Loading depth maps");
-    vector<DepthMap> depth_maps = load_depth_maps(properties);
-    size_t num_frames = depth_maps.size();
-
-    info("Loading cameras");
-    vector<Camera> cameras = load_cameras(num_frames);
-
-    o.set_data(depth_maps, cameras);
+    PoSyOptimiser poSyOptimiser{properties};
+    const auto num_levels = properties.getIntProperty("num-levels");
+    const auto file_name_template = properties.getProperty("smoothed-surfel-template");
+    const auto file_name = file_name_from_template_and_level(file_name_template, num_levels - 1);
+    auto surfel_graph = load_surfel_graph_from_file(file_name);
+    poSyOptimiser.set_data(surfel_graph);
 
     auto start_time = std::chrono::system_clock::now();
-    unsigned int hierarchy_iterations = 0;
-    while( ( o.get_current_level() != 0 ) && (! o.optimise_do_one_step())) {
-        ++hierarchy_iterations;
-    }
-
     unsigned int last_level_iterations = 0;
     auto last_level_start_time = std::chrono::system_clock::now();
-    while( ! o.optimise_do_one_step()) {
+    while( ! poSyOptimiser.optimise_do_one_step()) {
         ++last_level_iterations;
     }
 
@@ -62,13 +53,13 @@ int main(int argc, char *argv[]) {
     auto mins = (int) elapsed_time / 60;
     auto secs = elapsed_time - (mins * 60);
     cout << "Total time " << elapsed_time <<"s  (" << mins << ":" << setw(2) << setfill('0') << secs << ")" << endl;
-    cout << "Total iterations : " << (hierarchy_iterations + last_level_iterations) << endl;
+    cout << "Total iterations : " << ( last_level_iterations) << endl;
 
     mins = (int) last_level_elapsed_time / 60;
     secs = last_level_elapsed_time - (mins * 60);
     cout << "Last level time " << last_level_elapsed_time <<"s  (" << mins << ":" << setw(2) << setfill('0') << secs << ")" << endl;
     cout << "Last level iterations : " << last_level_iterations << endl;
-    cout << "Smoothness : " << o.get_mean_error() << endl;
+//    cout << "Smoothness : " << poSyOptimiser.() << endl;
 
     return 0;
 }
