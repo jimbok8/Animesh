@@ -20,13 +20,15 @@ public:
      * @param properties Parameters for the optimiser.
      */
     explicit PoSyOptimiser(Properties properties);
+
     ~PoSyOptimiser() override;
 
 protected:
-    bool is_converged() override;
     void optimisation_began() override;
+
     void optimisation_ended() override;
-    void optimise_node(const SurfelGraphNodePtr& node) override;
+
+    void optimise_node(const SurfelGraphNodePtr &node) override;
 
 private:
     float m_rho;
@@ -38,11 +40,17 @@ private:
      * pos/tan/norm are converted to the orignating surfel's frame of reference.
      */
     std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>>
-    get_neighbouring_data(const SurfelGraphNodePtr& node);
+    get_neighbouring_data(const SurfelGraphNodePtr &node);
 
-        void optimise_surfel(
+    void optimise_surfel(
             const std::shared_ptr<Surfel> &surfel_ptr,
-            const std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>>& neighbour_data) const;
+            const std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>> &neighbour_data) const;
+
+    float
+    compute_error(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
+                  const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
+                  const Eigen::Vector3f &position2) const override;
+
 };
 
 

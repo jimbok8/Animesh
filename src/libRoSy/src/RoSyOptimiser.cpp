@@ -15,7 +15,7 @@
 #include <utility>
 #include <sys/stat.h>
 #include "spdlog/spdlog.h"
-#include "../../libCorrespondence/include/Correspondence/CorrespondenceIO.h"
+#include <Correspondence/CorrespondenceIO.h>
 
 
 static const char *SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
@@ -409,9 +409,11 @@ RoSyOptimiser::ssa_select_all_in_random_order() {
     iota(begin(indices), end(indices), 0);
     shuffle(begin(indices), end(indices),
             default_random_engine(chrono::system_clock::now().time_since_epoch().count()));
-    vector<SurfelGraphNodePtr> selected_nodes{indices.size()};
+    vector<SurfelGraphNodePtr> selected_nodes;
+    selected_nodes.reserve(indices.size());
+    const auto graph_nodes = m_surfel_graph.nodes();
     for (const auto i : indices) {
-        selected_nodes.push_back(m_surfel_graph.nodes().at(i));
+        selected_nodes.push_back(graph_nodes.at(i));
     }
     return selected_nodes;
 }
@@ -546,7 +548,7 @@ RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph &surfel_graph
     // For each neighbour
     int total_common_frames = 0;
     const auto &this_surfel_ptr = node->data();
-    for (const auto &surfel_ptr_neighbour : m_surfel_graph.neighbours(node)) {
+    for (const auto &surfel_ptr_neighbour : surfel_graph.neighbours(node)) {
         const auto that_surfel_ptr = surfel_ptr_neighbour->data();
         auto common_frames = find_common_frames_for_surfels(this_surfel_ptr, that_surfel_ptr);
         total_common_frames += common_frames.size();
@@ -570,7 +572,6 @@ RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph &surfel_graph
             eligible_normals_and_tangents.emplace_back(neighbour_norm_in_surfel_space, neighbour_tan_in_surfel_space);
         }
     }
-    // cout << "  total common frames " << total_common_frames << endl;
     return eligible_normals_and_tangents;
 }
 

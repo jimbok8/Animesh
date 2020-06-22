@@ -18,6 +18,7 @@ target_include_directories(PoSy
 target_link_libraries(PoSy
         Properties
         Graph
+		RoSy
 		Surfel)
 
 add_executable(testPoSy

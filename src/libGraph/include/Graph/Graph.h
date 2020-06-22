@@ -229,6 +229,7 @@ namespace animesh {
         */
         std::vector<std::shared_ptr<GraphNode>> neighbours(const std::shared_ptr<GraphNode>& node) const {
             using namespace std;
+            assert( node != nullptr);
 
             auto nodes_with_edge_data = m_adjacency.at(node);
             vector<shared_ptr<GraphNode>> neighbours;

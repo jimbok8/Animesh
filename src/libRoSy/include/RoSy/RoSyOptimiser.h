@@ -7,7 +7,7 @@
 #include <Graph/Graph.h>
 #include <Camera/Camera.h>
 #include "../../../mesher/types.h"
-#include "../../../mesher/ext/nanogui/ext/eigen/Eigen/Core"
+#include <Eigen/Core>
 #include <map>
 #include <vector>
 #include <string>
@@ -67,6 +67,20 @@ public:
 
 
 private:
+    struct SurfelInFrame {
+        std::string surfel_id;
+        size_t frame_index;
+
+        SurfelInFrame(std::string s, size_t f) : surfel_id{std::move(s)}, frame_index{f} {}
+
+        bool operator<(const SurfelInFrame &other) const {
+            if (frame_index != other.frame_index)
+                return frame_index < other.frame_index;
+
+            return surfel_id < other.surfel_id;
+        }
+    };
+
     /** Cameras. One per frame */
     std::vector<Camera> m_cameras;
 

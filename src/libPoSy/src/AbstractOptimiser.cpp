@@ -11,7 +11,8 @@ using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel
 
 AbstractOptimiser::AbstractOptimiser(Properties properties) : m_properties(std::move(properties)),
                                                               m_state{UNINITIALISED},
-                                                              m_optimisation_cycles{0} {
+                                                              m_optimisation_cycles{0},
+                                                              m_last_smoothness{0.0f} {
 }
 
 AbstractOptimiser::~AbstractOptimiser() = default;
@@ -53,7 +54,7 @@ AbstractOptimiser::optimise_do_one_step() {
 
     if (m_state == OPTIMISING) {
         auto nodes_to_optimise = select_nodes_to_optimise();
-        for (const auto& node : nodes_to_optimise) {
+        for (const auto &node : nodes_to_optimise) {
             optimise_node(node);
         }
         ++m_optimisation_cycles;
@@ -89,12 +90,83 @@ AbstractOptimiser::check_cancellation() {
     }
 }
 
+
+/*
+ * total_neighbour_error = 0
+ * for each neighbour
+ *   total_neighbour_error += neighour_error
+ * next
+ * return total_neighbour_error / num neighours
+ */
+float
+AbstractOptimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
+                                              size_t frame_id) const {
+    float total_neighbour_error = 0.0f;
+
+    // Get all neighbours in frame
+    const SurfelInFrame surfel_in_frame{surfel, frame_id};
+
+    const auto &this_surfel_in_this_frame = m_norm_tan_by_surfel_frame.at(surfel_in_frame);
+
+    const auto &bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
+    unsigned int num_neighbours = 0;
+    for (auto np = bounds.first; np != bounds.second; ++np) {
+        const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(
+                SurfelInFrame{np->second, frame_id});
+
+        // Compute the error between this surfel in this frame and the neighbour in this frame.
+        total_neighbour_error += compute_error(this_surfel_in_this_frame, this_neighbour_in_this_frame);
+        ++num_neighbours;
+    }
+    return (num_neighbours == 0)
+           ? 0.0f
+           : (total_neighbour_error / (float) num_neighbours);
+}
+
+/*
+ * total_frame_error = 0
+ * for each frame
+ *   total_frame_error += compute_surfel_error_in_frame
+ * next
+ * total_surfel_error += (total_frame_error / num_frames)
+ */
+float
+AbstractOptimiser::compute_surfel_error(const std::shared_ptr<Surfel> &surfel) const {
+    float total_frame_error = 0.0f;
+
+    // For each frame in which this surfel appears
+    for (const auto &frame_data : surfel->frame_data) {
+        // Compute the error in this frame
+        total_frame_error += compute_surfel_error_for_frame(surfel, frame_data.pixel_in_frame.frame);
+    }
+    // Return mean error per frame
+    (std::const_pointer_cast<Surfel>(surfel))->error = total_frame_error / surfel->frame_data.size();
+    return surfel->error;
+}
+
+
+float
+AbstractOptimiser::compute_mean_error_per_surfel() const {
+    float total_error = 0.0f;
+    for (const auto &n : m_surfel_graph.nodes()) {
+        total_error += compute_surfel_error(n->data());
+    }
+    return total_error / m_surfel_graph.num_nodes();
+}
+
 /**
  * Check whether optimisation has converged.
  */
 void
 AbstractOptimiser::check_convergence() {
-    if (is_converged()) {
+    using namespace spdlog;
+
+    float current_smoothness = compute_mean_error_per_surfel();
+    float improvement = m_last_smoothness - current_smoothness;
+    m_last_smoothness = current_smoothness;
+    float pct = (100.0f * improvement) / m_last_smoothness;
+    info("Mean error per surfel: {:d} ({:f}%", current_smoothness, pct);
+    if ((pct >= 0) && (std::abs(pct) < m_convergence_threshold)) {
         m_state = ENDING_OPTIMISATION;
     }
 }

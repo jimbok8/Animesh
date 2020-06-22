@@ -6,6 +6,7 @@
 #include "PoSy.h"
 #include <utility>
 #include <vector>
+#include <RoSy/RoSy.h>
 
 using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
@@ -21,10 +22,6 @@ PoSyOptimiser::PoSyOptimiser(Properties properties) : AbstractOptimiser(std::mov
 
 PoSyOptimiser::~PoSyOptimiser() = default;
 
-
-bool PoSyOptimiser::is_converged() {
-    return true;
-}
 
 void PoSyOptimiser::optimisation_began() {
 
@@ -156,8 +153,10 @@ PoSyOptimiser::get_neighbouring_data(const SurfelGraphNodePtr &node) {
 
             // Surfel 'position' field is the absolute position of the nearest mesh vertex in Surfel space
             // i.e assuming v = (0,0,0)
-            auto neighbour_pos_in_frame = (neighbour_to_frame * that_surfel_ptr->closest_mesh_vertex_position) + frame_pair.second.get().position;
-            auto neighbour_pos_in_surfel_space = frame_to_surfel * (neighbour_pos_in_frame - frame_pair.first.get().position);
+            auto neighbour_pos_in_frame = (neighbour_to_frame * that_surfel_ptr->closest_mesh_vertex_position) +
+                                          frame_pair.second.get().position;
+            auto neighbour_pos_in_surfel_space =
+                    frame_to_surfel * (neighbour_pos_in_frame - frame_pair.first.get().position);
 
             eligible_neighbour_pos_tan_norms.emplace_back(
                     neighbour_pos_in_surfel_space,
@@ -171,4 +170,19 @@ PoSyOptimiser::get_neighbouring_data(const SurfelGraphNodePtr &node) {
 void PoSyOptimiser::optimise_node(const SurfelGraphNodePtr &node) {
     auto neighbouring_data = get_neighbouring_data(node);
     optimise_surfel(node->data(), neighbouring_data);
+}
+
+float
+PoSyOptimiser::compute_error(
+        const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
+        const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2, const Eigen::Vector3f &position2) const {
+    using namespace std;
+    using namespace Eigen;
+
+    // parameter order in RoSy is tangent, normal
+    auto best_pair = best_rosy_vector_pair(tangent1, normal1, tangent2, normal2);
+    const auto l1 = compute_local_lattice_vertices(position1, normal1, best_pair.first, m_rho);
+    const auto l2 = compute_local_lattice_vertices(position2, normal2, best_pair.second, m_rho);
+    const auto tuple = closest_points(l1, l2);
+    return std::get<4>(tuple);
 }
