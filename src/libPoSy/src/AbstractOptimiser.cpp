@@ -6,13 +6,16 @@
 
 #include <utility>
 #include <sys/stat.h>
+#include <algorithm>
+#include <random>
 
 using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
 AbstractOptimiser::AbstractOptimiser(Properties properties) : m_properties(std::move(properties)),
                                                               m_state{UNINITIALISED},
                                                               m_optimisation_cycles{0},
-                                                              m_last_smoothness{0.0f} {
+                                                              m_last_smoothness{0.0f},
+                                                              m_convergence_threshold{1.0} {
 }
 
 AbstractOptimiser::~AbstractOptimiser() = default;
@@ -70,11 +73,11 @@ AbstractOptimiser::optimise_do_one_step() {
 }
 
 std::vector<SurfelGraphNodePtr>
-AbstractOptimiser::select_nodes_to_optimise() {
+AbstractOptimiser::select_nodes_to_optimise() const {
     using namespace std;
 
     assert(m_node_selection_function);
-    return m_node_selection_function(*this);
+    return m_node_selection_function();
 }
 
 /**
@@ -180,4 +183,24 @@ void
 AbstractOptimiser::set_data(const SurfelGraph &surfel_graph) {
     m_surfel_graph = surfel_graph;
     m_state = INITIALISED;
+}
+
+/**
+ * Select all surfels in a layer and randomize the order
+ */
+std::vector<SurfelGraphNodePtr>
+AbstractOptimiser::ssa_select_all_in_random_order() {
+    using namespace std;
+
+    vector<size_t> indices(m_surfel_graph.num_nodes());
+    iota(begin(indices), end(indices), 0);
+    shuffle(begin(indices), end(indices),
+            default_random_engine(chrono::system_clock::now().time_since_epoch().count()));
+    vector<SurfelGraphNodePtr> selected_nodes;
+    selected_nodes.reserve(indices.size());
+    const auto graph_nodes = m_surfel_graph.nodes();
+    for (const auto i : indices) {
+        selected_nodes.push_back(graph_nodes.at(i));
+    }
+    return selected_nodes;
 }

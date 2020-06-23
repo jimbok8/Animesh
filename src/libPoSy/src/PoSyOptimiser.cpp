@@ -10,6 +10,8 @@
 
 using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
+static const char *SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
+static const char *SSA_SELECT_WORST_100 = "select-worst-100";
 
 // ========
 /**
@@ -17,7 +19,16 @@ using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel
  * @param properties Parameters for the optimiser.
  */
 PoSyOptimiser::PoSyOptimiser(Properties properties) : AbstractOptimiser(std::move(properties)) {
-    m_rho = properties.getFloatProperty("rho");
+    m_rho = m_properties.getFloatProperty("rho");
+    m_convergence_threshold = m_properties.getFloatProperty("convergence-threshold");
+    auto ssa = m_properties.getProperty("surfel-selection-algorithm");
+    if (ssa == SSA_SELECT_ALL_IN_RANDOM_ORDER) {
+        m_node_selection_function = bind(&PoSyOptimiser::ssa_select_all_in_random_order, this);
+    } else if (ssa == SSA_SELECT_WORST_100) {
+        m_node_selection_function = bind(&PoSyOptimiser::ssa_select_worst_100, this);
+    } else {
+        throw std::runtime_error("Unknown surfel selection algorithm " + ssa);
+    }
 }
 
 PoSyOptimiser::~PoSyOptimiser() = default;
@@ -76,6 +87,26 @@ void PoSyOptimiser::optimise_surfel(
         weight += edge_weight;
     }
     surfel_ptr->closest_mesh_vertex_position = new_position;
+}
+
+/**
+ * Surfel selection model 2: Select top 100 error scores
+ */
+std::vector<SurfelGraphNodePtr>
+PoSyOptimiser::ssa_select_worst_100() {
+    using namespace std;
+
+    vector<SurfelGraphNodePtr> selected_nodes;
+    for (const auto &n : m_surfel_graph.nodes()) {
+        selected_nodes.push_back(n);
+    }
+    stable_sort(begin(selected_nodes), end(selected_nodes),
+                [this](const SurfelGraphNodePtr &s1, const SurfelGraphNodePtr &s2) {
+                    return s1->data()->position_error > s2->data()->position_error;
+                });
+
+    selected_nodes.resize(100);
+    return selected_nodes;
 }
 
 /**

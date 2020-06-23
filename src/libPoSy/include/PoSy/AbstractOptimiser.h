@@ -43,6 +43,18 @@ public:
 protected:
     SurfelGraph m_surfel_graph;
 
+    Properties m_properties;
+
+    std::function<std::vector<SurfelGraphNodePtr>()> m_node_selection_function;
+
+    /**
+     * Select all surfels in a layer and randomize the order
+     */
+    std::vector<SurfelGraphNodePtr>
+    ssa_select_all_in_random_order();
+
+    float m_convergence_threshold;
+
 private:
     // Utility class to map a surfel and frame
     struct SurfelInFrame {
@@ -72,12 +84,10 @@ private:
     };
 
 
-    Properties m_properties;
     unsigned int m_optimisation_cycles;
 
     // Error and convergence
     float m_last_smoothness;
-    float m_convergence_threshold;
 
     float compute_mean_error_per_surfel() const;
 
@@ -99,10 +109,7 @@ private:
      */
     std::map<SurfelInFrame, NormalTangent> m_norm_tan_by_surfel_frame;
 
-
-    std::function<std::vector<SurfelGraphNodePtr>(AbstractOptimiser &)> m_node_selection_function;
-
-    std::vector<SurfelGraphNodePtr> select_nodes_to_optimise();
+    std::vector<SurfelGraphNodePtr> select_nodes_to_optimise() const;
 
     void begin_optimisation();
 

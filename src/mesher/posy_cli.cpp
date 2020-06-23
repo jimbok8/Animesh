@@ -33,10 +33,7 @@ int main(int argc, char *argv[]) {
     Properties properties{property_file_name};
 
     PoSyOptimiser poSyOptimiser{properties};
-    const auto num_levels = properties.getIntProperty("num-levels");
-    const auto file_name_template = properties.getProperty("smoothed-surfel-template");
-    const auto file_name = file_name_from_template_and_level(file_name_template, num_levels - 1);
-    auto surfel_graph = load_surfel_graph_from_file(file_name);
+    auto surfel_graph = load_surfel_graph_from_file("smoothed_00.bin");
     poSyOptimiser.set_data(surfel_graph);
 
     auto start_time = std::chrono::system_clock::now();

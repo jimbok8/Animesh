@@ -30,6 +30,12 @@ protected:
 
     void optimise_node(const SurfelGraphNodePtr &node) override;
 
+    /**
+     * Surfel selection model 2: Select top 100 error scores
+     */
+    std::vector<SurfelGraphNodePtr>
+    ssa_select_worst_100();
+
 private:
     float m_rho;
 
@@ -50,7 +56,6 @@ private:
     compute_error(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
                   const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
                   const Eigen::Vector3f &position2) const override;
-
 };
 
 

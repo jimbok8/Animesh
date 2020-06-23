@@ -33,7 +33,8 @@ Surfel::Surfel(std::string id,
         tangent{std::move(tangent)},
         closest_mesh_vertex_position{std::move(closest_mesh_vertex_position)},
         last_correction{0.0f},
-        error{0.0} {
+        error{0.0},
+        position_error{0.0f} {
 
     for (auto &fd : frames) {
         frame_data.push_back(fd);
