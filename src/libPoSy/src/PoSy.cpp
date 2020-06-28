@@ -7,7 +7,7 @@
 #include <tuple>
 
 /**
- * Given two sets of 3D positions, return the indices and values of the closest two along with the distance between them.
+ * Given two sets of 3D positions, return the indices and values of the closest two along with the squared distance between them.
  */
 std::tuple<size_t, size_t, Eigen::Vector3f, Eigen::Vector3f, float>
 closest_points(const std::vector<Eigen::Vector3f>& points_a, const std::vector<Eigen::Vector3f>& points_b ) {
@@ -88,7 +88,7 @@ average_posy_vectors(const Eigen::Vector3f &p1,
     const auto l1 = compute_local_lattice_vertices(p1, n1, o1, rho);
     const auto l2 = compute_local_lattice_vertices(p2, n2, o2, rho);
     const auto tuple = closest_points(l1, l2);
-    const auto delta = (std::get<2>(tuple) - std::get<3>(tuple));
-    const auto new_position =  p1 + (delta * ( weight2/ weight1));
-    return project_vector_to_plane(new_position, n1);
+    const auto delta = (std::get<3>(tuple) - std::get<2>(tuple));
+    const auto new_position =  p1 + (delta * ( weight1/ (weight1 + weight2)));
+    return project_vector_to_plane(new_position, n1,false);
 }
