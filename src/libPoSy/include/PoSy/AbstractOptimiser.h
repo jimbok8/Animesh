@@ -8,12 +8,11 @@
 #include <Properties/Properties.h>
 #include <Graph/Graph.h>
 #include <Surfel/Surfel.h>
+#include <Surfel/SurfelGraph.h>
 
 #include <utility>
 
 class AbstractOptimiser {
-    using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
-    using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
 public:
     explicit AbstractOptimiser(Properties properties);

@@ -2,6 +2,7 @@
 
 #include <Surfel/Surfel.h>
 #include <Surfel/Surfel_Compute.h>
+#include <Surfel/SurfelGraph.h>
 #include <Properties/Properties.h>
 #include <DepthMap/DepthMap.h>
 #include <Graph/Graph.h>
@@ -12,9 +13,6 @@
 #include <vector>
 #include <string>
 #include <memory>
-
-using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
-using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
 
 class RoSyOptimiser {

@@ -2,6 +2,7 @@
 #include <Surfel/Surfel.h>
 #include <Surfel/FrameData.h>
 #include <Surfel/Surfel_IO.h>
+#include <Surfel/SurfelGraph.h>
 #include <Eigen/Core>
 #include <gtest/gtest.h>
 #include <string>
@@ -12,8 +13,6 @@
 void TestSurfel::SetUp() {}
 
 void TestSurfel::TearDown() {}
-
-using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
 
 void TestSurfelIO::SetUp() {
     using namespace std;

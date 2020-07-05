@@ -2,6 +2,7 @@
 #include <PoSy/PoSyOptimiser.h>
 #include <Properties/Properties.h>
 #include <Surfel/Surfel_IO.h>
+#include <Surfel/SurfelGraph.h>
 
 #include <Utilities/utilities.h>
 

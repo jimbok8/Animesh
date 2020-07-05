@@ -150,8 +150,9 @@ graph_from_surfels(std::vector<std::shared_ptr<Surfel>> &surfels, bool eight_con
             if (are_neighbours(surfel, surfels.at(j), eight_connected)) {
                 auto node1 = m.at(surfels.at(j)->id);
                 auto node2 = m.at(surfels.at(i)->id);
-                graph.add_edge(node1, node2, 1.0f);
-                graph.add_edge(node2, node1, 1.0f);
+
+                graph.add_edge(node1, node2, SurfelGraphEdge{1.0});
+                graph.add_edge(node2, node1, SurfelGraphEdge{1.0});
             }
         }
     }

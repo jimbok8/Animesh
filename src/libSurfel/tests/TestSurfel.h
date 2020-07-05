@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <Graph/Graph.h>
 #include <Surfel/Surfel.h>
+#include <Surfel/SurfelGraph.h>
 
 class TestSurfel : public ::testing::Test {
 public:
@@ -24,5 +25,5 @@ public:
     void TearDown();
 
 protected:
-    animesh::Graph<std::shared_ptr<Surfel>, float> surfel_graph;
+    SurfelGraph surfel_graph;
 };

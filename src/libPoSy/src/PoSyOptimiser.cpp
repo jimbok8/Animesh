@@ -8,8 +8,6 @@
 #include <vector>
 #include <RoSy/RoSy.h>
 
-using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
-
 static const char *SSA_SELECT_ALL_IN_RANDOM_ORDER = "select-all-in-random-order";
 static const char *SSA_SELECT_WORST_100 = "select-worst-100";
 

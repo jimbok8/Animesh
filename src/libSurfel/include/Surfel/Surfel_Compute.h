@@ -6,13 +6,11 @@
 #include <Graph/Graph.h>
 #include "PixelInFrame.h"
 #include "Surfel.h"
+#include "SurfelGraph.h"
 
 #include <vector>
 #include <fstream>
 #include <memory>
-
-using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
-using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
 /**
  * Return true if the two pixel in frames are neighbours.

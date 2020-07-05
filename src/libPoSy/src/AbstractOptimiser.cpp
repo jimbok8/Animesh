@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <random>
 
-using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
-
 AbstractOptimiser::AbstractOptimiser(Properties properties) : m_properties(std::move(properties)),
                                                               m_state{UNINITIALISED},
                                                               m_optimisation_cycles{0},

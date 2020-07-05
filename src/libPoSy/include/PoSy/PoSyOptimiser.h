@@ -12,7 +12,6 @@
 
 
 class PoSyOptimiser : public AbstractOptimiser {
-    using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>, float>::GraphNode>;
 
 public:
     /**

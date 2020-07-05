@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 #include <spdlog/spdlog.h>
-
+#include "SurfelGraph.h"
 /*
 	********************************************************************************
 	**																			  **
@@ -16,9 +16,6 @@
 	**																			  **
 	********************************************************************************
 */
-
-using SurfelGraph = animesh::Graph<std::shared_ptr<Surfel>, float>;
-using SurfelGraphNodePtr = std::shared_ptr<animesh::Graph<std::shared_ptr<Surfel>,float>::GraphNode>;
 
 /**
  * Save surfel data as binary file to disk
