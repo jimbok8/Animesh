@@ -83,17 +83,57 @@ private:
         }
     };
 
+    /**
+     * Build a mapping from frame to the Surfels which appear in that frame.
+     * This allows us to work with frames individually.
+     * surfels_by_frame is a member variable.
+     */
+    void
+    populate_frame_to_surfel();
+
+    /**
+     * Build the norm_tan_by_surfel_frame data structure for this level of the
+     * surfel hierarchy. Note that tans will be updated every optimisation
+     * We should calculate this once per level and then update each time we change a tan.
+     */
+    void
+    populate_norm_tan_by_surfel_frame();
+
+    /**
+     * Build the neighbours_by_surfel_frame data structure. Neighbours stay neighbours throughout and so we can compute this once
+     * We assume that
+     * -- surfels_by_frame is populated for this level
+     *
+     * But num_frames and num_surfels are both known.
+     */
+    void
+    populate_neighbours_by_surfel_frame();
 
     unsigned int m_optimisation_cycles;
 
     // Error and convergence
     float m_last_smoothness;
 
-    float compute_mean_error_per_surfel() const;
+    float compute_smoothness_per_surfel() const;
 
-    float compute_surfel_error(const std::shared_ptr<Surfel> &surfel) const;
+    float compute_surfel_smoothness(const std::shared_ptr<Surfel> &surfel) const;
 
-    float compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel, size_t frame_id) const;
+    float compute_surfel_smoothness_for_frame(const std::shared_ptr<Surfel> &surfel_ptr, size_t frame_id) const;
+
+    /**
+     * Surfels in each frame.
+     */
+    std::vector<std::vector<std::shared_ptr<Surfel>>> m_surfels_by_frame;
+
+    /**
+     * Return true if the given Surfel is in the specified frame.
+     */
+    bool
+    surfel_is_in_frame(const std::shared_ptr<Surfel> & surfel_ptr, size_t frame_index) const;
+
+    FrameData frame_data_for_surfel_in_frame(const std::shared_ptr<Surfel>& surfel_ptr, unsigned int frame_index  ) const;
+    FrameData frame_data_for_surfel_in_frame(const SurfelInFrame& sif ) const;
+
 
     void check_convergence();
 
@@ -115,7 +155,6 @@ private:
 
     void optimise_end();
 
-
     void check_cancellation();
 
     virtual void optimisation_began() = 0;
@@ -125,9 +164,16 @@ private:
     virtual void optimise_node(const SurfelGraphNodePtr &node) = 0;
 
     virtual float
-    compute_error(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
-                  const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
-                  const Eigen::Vector3f &position2) const = 0;
+    compute_smoothness(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
+                       const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
+                       const Eigen::Vector3f &position2) const = 0;
 };
+
+
+/**
+ * Return a vector of pairs of FrameData for each frame that these surfels have in common
+ */
+std::vector<std::pair<std::reference_wrapper<const FrameData>, std::reference_wrapper<const FrameData>>>
+find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2);
 
 #endif //ANIMESH_ABSTRACTOPTIMISER_H

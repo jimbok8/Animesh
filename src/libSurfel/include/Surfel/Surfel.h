@@ -30,7 +30,7 @@ struct Surfel {
     Eigen::Vector3f closest_mesh_vertex_position;
     float last_correction;
     float error;
-    float position_error;
+    float posy_smoothness;
 };
 
 #endif //ANIMESH_SURFEL_H

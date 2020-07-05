@@ -34,7 +34,7 @@ Surfel::Surfel(std::string id,
         closest_mesh_vertex_position{std::move(closest_mesh_vertex_position)},
         last_correction{0.0f},
         error{0.0},
-        position_error{0.0f} {
+        posy_smoothness{0.0f} {
 
     for (auto &fd : frames) {
         frame_data.push_back(fd);

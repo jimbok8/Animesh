@@ -703,14 +703,24 @@ RoSyOptimiser::populate_neighbours_by_surfel_frame() {
     assert(!m_surfels_by_frame.empty());
     m_neighbours_by_surfel_frame.clear();
 
+    // For each Surfel
     for (const auto &surfel_ptr_node : m_surfel_graph.nodes()) {
         const auto surfel_ptr = surfel_ptr_node->data();
+
+        // Consider each neighbour
         for (const auto &neighbour : m_surfel_graph.neighbours(surfel_ptr_node)) {
+
+            // And each frame
             for (size_t frame_idx = 0; frame_idx < m_num_frames; ++frame_idx) {
-                if (surfel_is_in_frame(neighbour->data()->id, frame_idx)) {
-                    SurfelInFrame sif{surfel_ptr->id, frame_idx};
-                    m_neighbours_by_surfel_frame.emplace(sif, neighbour->data());
+                if (!surfel_is_in_frame(surfel_ptr->id, frame_idx)) {
+                    continue;
                 }
+
+                if (!surfel_is_in_frame(neighbour->data()->id, frame_idx)) {
+                    continue;
+                }
+                SurfelInFrame sif{surfel_ptr->id, frame_idx};
+                m_neighbours_by_surfel_frame.emplace(sif, neighbour->data());
             }
         }
     }

@@ -34,8 +34,11 @@ PoSyOptimiser::PoSyOptimiser(Properties properties) : AbstractOptimiser(std::mov
 PoSyOptimiser::~PoSyOptimiser() = default;
 
 
+/**
+ * Entered the begin optimisation phase. Prepare by constructing cached records of important data that will
+ * be used later to optimise.
+ */
 void PoSyOptimiser::optimisation_began() {
-
 }
 
 void PoSyOptimiser::optimisation_ended() {
@@ -43,20 +46,8 @@ void PoSyOptimiser::optimisation_ended() {
 }
 
 /**
- * Apply following smoothing operation to this Surfel
-
- for each neighbour N of v
-    compute 9 plausible positions to compare with neighbours
-    Pv = {pv , pv + ov, pv + ov', pv + ov + ov', pv - ov + ov' etc.}
-
-    compute 9 plausible positions of neighbour
-    PN = { pN , pN + oN , pN + oN', pN + oN + oN', pN - oN + oN' etc.}
-
-    brute force the closest pair of points {vc, Nc} in Pv and PN
-    compute d = Nc - vc
-    add weighted proportion of d to pv
-  next neighbour
-
+ * Smooth a surfel wrt it's neighbours.
+ * @param neighbour_data is a vector of <pos, normal, tangent> in surfel space for each neighbour.
  */
 void PoSyOptimiser::optimise_surfel(
         const std::shared_ptr<Surfel> &surfel_ptr,
@@ -67,22 +58,31 @@ void PoSyOptimiser::optimise_surfel(
     float weight = 0.0f;
 
     auto new_position = surfel_ptr->closest_mesh_vertex_position;
+
     for (const auto &neighbour : neighbour_data) {
         float edge_weight = 1.0f;
 
-        const auto &surfel_normal = surfel_ptr->frame_data.at(0).normal;
+        const Vector3f surfel_normal{0.0, 1.0, 0.0};
         const auto &surfel_tangent = surfel_ptr->tangent;
+        const auto &neighbour_normal = get<1>(neighbour);
+        const auto &neighbour_tangent = get<2>(neighbour);
+
+        // TODO(dave.d): We don't want to compute this every time. It should have been stabilised after computing
+        // the orientation field and we should store it in the graph on edges.
+        const auto best_pair = best_rosy_vector_pair(
+                surfel_tangent, surfel_normal,
+                neighbour_tangent, neighbour_normal );
 
         new_position = average_posy_vectors(
                 new_position,
-                surfel_tangent,
+                best_pair.first,
                 surfel_normal,
-                edge_weight,
+                1.0f, //edge_weight,
                 get<0>(neighbour), // position
-                get<1>(neighbour), // tangent
+                best_pair.second, // tangent
                 get<2>(neighbour), // normal
                 m_rho,
-                weight
+                1.0f//weight
         );
         weight += edge_weight;
     }
@@ -90,7 +90,7 @@ void PoSyOptimiser::optimise_surfel(
 }
 
 /**
- * Surfel selection model 2: Select top 100 error scores
+ * Surfel selection model 2: Select worst 100 smoothness scores
  */
 std::vector<SurfelGraphNodePtr>
 PoSyOptimiser::ssa_select_worst_100() {
@@ -102,50 +102,12 @@ PoSyOptimiser::ssa_select_worst_100() {
     }
     stable_sort(begin(selected_nodes), end(selected_nodes),
                 [this](const SurfelGraphNodePtr &s1, const SurfelGraphNodePtr &s2) {
-                    return s1->data()->position_error > s2->data()->position_error;
+                    return s1->data()->posy_smoothness > s2->data()->posy_smoothness;
                 });
 
     selected_nodes.resize(100);
     return selected_nodes;
 }
-
-/**
- * Return a vector of pairs of FrameData for each frame that these surfels have in common
- */
-std::vector<std::pair<std::reference_wrapper<const FrameData>, std::reference_wrapper<const FrameData>>>
-find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2) {
-    using namespace std;
-
-    vector<reference_wrapper<const FrameData>> surfel1_frames;
-    vector<reference_wrapper<const FrameData>> surfel2_frames;
-    for (const auto &f : surfel1->frame_data) {
-        surfel1_frames.emplace_back(f);
-    }
-    for (const auto &f : surfel2->frame_data) {
-        surfel2_frames.emplace_back(f);
-    }
-    sort(surfel1_frames.begin(), surfel1_frames.end(),
-         [](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; });
-    sort(surfel2_frames.begin(), surfel2_frames.end(),
-         [](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; });
-
-    vector<pair<reference_wrapper<const FrameData>, reference_wrapper<const FrameData>>> common_frames;
-    auto it1 = surfel1->frame_data.begin();
-    auto it2 = surfel2->frame_data.begin();
-    while (it1 != surfel1->frame_data.end() && it2 != surfel2->frame_data.end()) {
-        if (it1->pixel_in_frame.frame < it2->pixel_in_frame.frame) {
-            ++it1;
-        } else if (it2->pixel_in_frame.frame < it1->pixel_in_frame.frame) {
-            ++it2;
-        } else {
-            common_frames.emplace_back(ref(*it1), ref(*it2));
-            ++it1;
-            ++it2;
-        }
-    }
-    return common_frames;
-}
-
 
 /**
  * Populate positions, tangents and normals for all eligible surfel neighbours
@@ -204,7 +166,7 @@ void PoSyOptimiser::optimise_node(const SurfelGraphNodePtr &node) {
 }
 
 float
-PoSyOptimiser::compute_error(
+PoSyOptimiser::compute_smoothness(
         const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
         const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2, const Eigen::Vector3f &position2) const {
     using namespace std;

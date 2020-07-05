@@ -53,9 +53,9 @@ private:
             const std::vector<std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f>> &neighbour_data) const;
 
     float
-    compute_error(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
-                  const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
-                  const Eigen::Vector3f &position2) const override;
+    compute_smoothness(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
+                       const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
+                       const Eigen::Vector3f &position2) const override;
 };
 
 

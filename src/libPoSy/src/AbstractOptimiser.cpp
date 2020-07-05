@@ -21,11 +21,134 @@ AbstractOptimiser::AbstractOptimiser(Properties properties) : m_properties(std::
 AbstractOptimiser::~AbstractOptimiser() = default;
 
 /**
+ * Build the norm_tan_by_surfel_frame data structure for this level of the
+ * surfel hierarchy. Note that tans will be updated every optimisation
+ * We should calculate this once per level and then update each time we change a tan.
+ */
+void
+AbstractOptimiser::populate_norm_tan_by_surfel_frame() {
+    using namespace std;
+    using namespace Eigen;
+
+    m_norm_tan_by_surfel_frame.clear();
+
+    /*
+       For each surfel
+       For each framedata in the surfel
+       Generate a surfel-frame pair
+       Transform the norm and tan
+       Put it in the map.
+     */
+    for (const auto &n : m_surfel_graph.nodes()) {
+        const auto &surfel_ptr = n->data();
+        for (const auto &fd : surfel_ptr->frame_data) {
+            SurfelInFrame surfel_in_frame{surfel_ptr, fd.pixel_in_frame.frame};
+            Vector3f new_tan = fd.transform * surfel_ptr->tangent;
+            m_norm_tan_by_surfel_frame.emplace(surfel_in_frame, NormalTangent{fd.normal, new_tan});
+        }
+    }
+}
+
+/**
+ * Build a mapping from frame to the Surfels which appear in that frame.
+ * This allows us to work with frames individually.
+ * surfels_by_frame is a member variable.
+ */
+void
+AbstractOptimiser::populate_frame_to_surfel() {
+    using namespace std;
+
+    multimap<size_t, shared_ptr<Surfel>> surfels_by_frame;
+
+    // Push an empty vector of Surfel references for each frame
+    m_surfels_by_frame.clear();
+    // For each Surfel add it to each frame in which it appears.
+    size_t max_frame_index = 0;
+    for (const auto &n : m_surfel_graph.nodes()) {
+        const auto &surfel = n->data();
+        for (const auto &fd : surfel->frame_data) {
+            surfels_by_frame.emplace(fd.pixel_in_frame.frame, surfel);
+            if (fd.pixel_in_frame.frame > max_frame_index) {
+                max_frame_index = fd.pixel_in_frame.frame;
+            }
+        }
+    }
+
+    m_surfels_by_frame.reserve(max_frame_index + 1);
+    for (auto i = 0; i < max_frame_index; i++) {
+        m_surfels_by_frame.emplace_back();
+    }
+    for (size_t frame_idx = 0; frame_idx < max_frame_index; ++frame_idx) {
+        const auto &range = surfels_by_frame.equal_range(frame_idx);
+        for (auto it = range.first; it != range.second; ++it) {
+            m_surfels_by_frame.at(it->first).emplace_back(it->second);
+        }
+    }
+}
+
+/**
+ * Build the neighbours_by_surfel_frame data structure. Neighbours stay neighbours throughout and so we can compute this once
+ * We assume that
+ * -- surfels_by_frame is populated for this level
+ *
+ * But num_frames and num_surfels are both known.
+ */
+void
+AbstractOptimiser::populate_neighbours_by_surfel_frame() {
+    using namespace std;
+
+    assert(!m_surfels_by_frame.empty());
+    m_neighbours_by_surfel_frame.clear();
+
+    const auto num_frames = m_surfels_by_frame.size();
+
+    // For each Surfel
+    for (const auto &surfel_ptr_node : m_surfel_graph.nodes()) {
+        const auto surfel_ptr = surfel_ptr_node->data();
+
+        // Consider each neighbour
+        for (const auto &neighbour : m_surfel_graph.neighbours(surfel_ptr_node)) {
+
+            // And each frame
+            for (size_t frame_idx = 0; frame_idx < num_frames; ++frame_idx) {
+                if (!surfel_is_in_frame(surfel_ptr, frame_idx)) {
+                    continue;
+                }
+
+                if (!surfel_is_in_frame(neighbour->data(), frame_idx)) {
+                    continue;
+                }
+                SurfelInFrame sif{surfel_ptr, frame_idx};
+                m_neighbours_by_surfel_frame.emplace(sif, neighbour->data());
+            }
+        }
+    }
+}
+
+/**
  * Start global smoothing.
  */
 void
 AbstractOptimiser::begin_optimisation() {
+    using namespace spdlog;
+
     assert(m_state == INITIALISED);
+
+    // First we construct a mapping from frame to surfel
+    info("Mapping frames to surfels");
+    populate_frame_to_surfel();
+
+    // Populate norm and tangent for each surfel in each frame.
+    info("Computing normals and tangents for each frame.");
+    populate_norm_tan_by_surfel_frame();
+
+    // Populate map of neighbours for a surfel in a frame
+    info("Computing neighbours for each surfel-frame");
+    populate_neighbours_by_surfel_frame();
+
+    // Compute initial error values
+    info("Initialising error value");
+    m_last_smoothness = compute_smoothness_per_surfel();
 
     m_optimisation_cycles = 0;
     optimisation_began();
@@ -93,70 +216,124 @@ AbstractOptimiser::check_cancellation() {
     }
 }
 
-
-/*
- * total_neighbour_error = 0
- * for each neighbour
- *   total_neighbour_error += neighour_error
- * next
- * return total_neighbour_error / num neighours
+/**
+ * Return a vector of pairs of FrameData for each frame that these surfels have in common
  */
+std::vector<std::pair<std::reference_wrapper<const FrameData>, std::reference_wrapper<const FrameData>>>
+find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2) {
+    using namespace std;
+
+    vector<reference_wrapper<const FrameData>> surfel1_frames;
+    vector<reference_wrapper<const FrameData>> surfel2_frames;
+    for (const auto &f : surfel1->frame_data) {
+        surfel1_frames.emplace_back(f);
+    }
+    for (const auto &f : surfel2->frame_data) {
+        surfel2_frames.emplace_back(f);
+    }
+    sort(surfel1_frames.begin(), surfel1_frames.end(),
+         [](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; });
+    sort(surfel2_frames.begin(), surfel2_frames.end(),
+         [](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; });
+
+    vector<pair<reference_wrapper<const FrameData>, reference_wrapper<const FrameData>>> common_frames;
+    auto it1 = surfel1->frame_data.begin();
+    auto it2 = surfel2->frame_data.begin();
+    while (it1 != surfel1->frame_data.end() && it2 != surfel2->frame_data.end()) {
+        if (it1->pixel_in_frame.frame < it2->pixel_in_frame.frame) {
+            ++it1;
+        } else if (it2->pixel_in_frame.frame < it1->pixel_in_frame.frame) {
+            ++it2;
+        } else {
+            common_frames.emplace_back(ref(*it1), ref(*it2));
+            ++it1;
+            ++it2;
+        }
+    }
+    return common_frames;
+}
+
+FrameData
+AbstractOptimiser::frame_data_for_surfel_in_frame(const std::shared_ptr<Surfel> &surfel_ptr,
+                                                  unsigned int frame_index) const {
+    for (const auto &fd : surfel_ptr->frame_data) {
+        if (fd.pixel_in_frame.frame == frame_index) {
+            return fd;
+        }
+    }
+    throw std::runtime_error(
+            fmt::format("Frame data not found for surfel {} in frame {}", surfel_ptr->id, frame_index));
+}
+
+FrameData
+AbstractOptimiser::frame_data_for_surfel_in_frame(const SurfelInFrame &sif) const {
+    return frame_data_for_surfel_in_frame(sif.surfel_ptr, sif.frame_index);
+}
+
 float
-AbstractOptimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel,
-                                              size_t frame_id) const {
-    float total_neighbour_error = 0.0f;
+AbstractOptimiser::compute_surfel_smoothness_for_frame(const std::shared_ptr<Surfel> &surfel_ptr,
+                                                       size_t frame_id) const {
+    float total_smoothness = 0.0f;
 
     // Get all neighbours in frame
-    const SurfelInFrame surfel_in_frame{surfel, frame_id};
-
-    const auto &this_surfel_in_this_frame = m_norm_tan_by_surfel_frame.at(surfel_in_frame);
+    const SurfelInFrame surfel_in_frame{surfel_ptr, frame_id};
+    const auto &surfel_orientation_in_frame = m_norm_tan_by_surfel_frame.at(surfel_in_frame);
+    const auto &surfel_frame_data = frame_data_for_surfel_in_frame(surfel_in_frame);
+    const auto &surfel_to_frame = surfel_frame_data.transform;
+    const auto surfel_pos_in_frame = (surfel_to_frame * surfel_ptr->closest_mesh_vertex_position) +
+                                     surfel_frame_data.position;
 
     const auto &bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
     unsigned int num_neighbours = 0;
     for (auto np = bounds.first; np != bounds.second; ++np) {
-        const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(
-                SurfelInFrame{np->second, frame_id});
+        const auto & neighbour_ptr = np->second;
+        const SurfelInFrame neighbour_in_frame{neighbour_ptr, frame_id};
+        const auto &neighbour_orientation_in_frame = m_norm_tan_by_surfel_frame.at(neighbour_in_frame);
+        const auto &neighbour_frame_data = frame_data_for_surfel_in_frame(neighbour_in_frame);
+        const auto &neighbour_to_frame = neighbour_frame_data.transform;
+        const auto neighbour_pos_in_frame = (neighbour_to_frame * neighbour_ptr->closest_mesh_vertex_position) +
+                                         neighbour_frame_data.position;
 
-        // Compute the error between this surfel in this frame and the neighbour in this frame.
-        total_neighbour_error += compute_error(
-                this_surfel_in_this_frame.normal, this_surfel_in_this_frame.tangent, surfel->closest_mesh_vertex_position,
-                this_neighbour_in_this_frame.normal, this_neighbour_in_this_frame.tangent, np->second->closest_mesh_vertex_position);
+        // Compute the smoothness over this surfel in this frame and the neighbour in this frame.
+        total_smoothness += compute_smoothness(
+                // This surfels norm, tan, pos
+                surfel_orientation_in_frame.normal,
+                surfel_orientation_in_frame.tangent,
+                surfel_pos_in_frame,
+
+                // Neighbours norm tan pos in surfel frame of reference
+                neighbour_orientation_in_frame.normal,
+                neighbour_orientation_in_frame.tangent,
+                neighbour_pos_in_frame);
         ++num_neighbours;
     }
     return (num_neighbours == 0)
            ? 0.0f
-           : (total_neighbour_error / (float) num_neighbours);
+           : (total_smoothness / (float) num_neighbours);
 }
 
-/*
- * total_frame_error = 0
- * for each frame
- *   total_frame_error += compute_surfel_error_in_frame
- * next
- * total_surfel_error += (total_frame_error / num_frames)
- */
 float
-AbstractOptimiser::compute_surfel_error(const std::shared_ptr<Surfel> &surfel) const {
-    float total_frame_error = 0.0f;
+AbstractOptimiser::compute_surfel_smoothness(const std::shared_ptr<Surfel> &surfel) const {
+    float total_smoothness = 0.0f;
 
     // For each frame in which this surfel appears
     for (const auto &frame_data : surfel->frame_data) {
-        // Compute the error in this frame
-        total_frame_error += compute_surfel_error_for_frame(surfel, frame_data.pixel_in_frame.frame);
+        // Compute the smoothness in this frame
+        total_smoothness += compute_surfel_smoothness_for_frame(surfel, frame_data.pixel_in_frame.frame);
     }
-    // Return mean error per frame
-    (std::const_pointer_cast<Surfel>(surfel))->error = total_frame_error / surfel->frame_data.size();
-    return surfel->error;
+    // Return mean smoothness per frame
+    (std::const_pointer_cast<Surfel>(surfel))->posy_smoothness = total_smoothness / surfel->frame_data.size();
+    return surfel->posy_smoothness;
 }
 
 
 float
-AbstractOptimiser::compute_mean_error_per_surfel() const {
-    float total_error = 0.0f;
+AbstractOptimiser::compute_smoothness_per_surfel() const {
+    float total_smoothness = 0.0f;
     for (const auto &n : m_surfel_graph.nodes()) {
-        total_error += compute_surfel_error(n->data());
+        total_smoothness += compute_surfel_smoothness(n->data());
     }
-    return total_error / m_surfel_graph.num_nodes();
+    return total_smoothness / m_surfel_graph.num_nodes();
 }
 
 /**
@@ -166,11 +343,11 @@ void
 AbstractOptimiser::check_convergence() {
     using namespace spdlog;
 
-    float current_smoothness = compute_mean_error_per_surfel();
+    float current_smoothness = compute_smoothness_per_surfel();
     float improvement = m_last_smoothness - current_smoothness;
     m_last_smoothness = current_smoothness;
     float pct = (100.0f * improvement) / m_last_smoothness;
-    info("Mean error per surfel: {:d} ({:f}%", current_smoothness, pct);
+    info("Mean error per surfel: {} ({}%)", current_smoothness, pct);
     if ((pct >= 0) && (std::abs(pct) < m_convergence_threshold)) {
         m_state = ENDING_OPTIMISATION;
     }
@@ -203,4 +380,19 @@ AbstractOptimiser::ssa_select_all_in_random_order() {
         selected_nodes.push_back(graph_nodes.at(i));
     }
     return selected_nodes;
+}
+
+/**
+ * Return true if the given Surfel is in the specified frame.
+ */
+bool
+AbstractOptimiser::surfel_is_in_frame(const std::shared_ptr<Surfel> &surfel_ptr, size_t frame_index) const {
+    using namespace std;
+
+    for (const auto &fd : surfel_ptr->frame_data) {
+        if (fd.pixel_in_frame.frame == frame_index) {
+            return true;
+        }
+    }
+    return false;
 }

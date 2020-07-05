@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     Properties properties{property_file_name};
 
     PoSyOptimiser poSyOptimiser{properties};
-    auto surfel_graph = load_surfel_graph_from_file("smoothed_00.bin");
+    auto surfel_graph = load_surfel_graph_from_file("smoothed_04.bin");
     poSyOptimiser.set_data(surfel_graph);
 
     auto start_time = std::chrono::system_clock::now();
