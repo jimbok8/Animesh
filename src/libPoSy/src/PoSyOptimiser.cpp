@@ -58,12 +58,13 @@ void PoSyOptimiser::optimise_surfel(
     float weight = 0.0f;
 
     auto new_position = surfel_ptr->closest_mesh_vertex_position;
+    const Vector3f surfel_normal{0.0, 1.0, 0.0};
+    const auto &surfel_tangent = surfel_ptr->tangent;
 
     for (const auto &neighbour : neighbour_data) {
         float edge_weight = 1.0f;
 
-        const Vector3f surfel_normal{0.0, 1.0, 0.0};
-        const auto &surfel_tangent = surfel_ptr->tangent;
+        const auto &neighbour_pos = get<0>(neighbour);
         const auto &neighbour_normal = get<1>(neighbour);
         const auto &neighbour_tangent = get<2>(neighbour);
 
@@ -78,9 +79,9 @@ void PoSyOptimiser::optimise_surfel(
                 best_pair.first,
                 surfel_normal,
                 1.0f, //edge_weight,
-                get<0>(neighbour), // position
+                neighbour_pos, // position
                 best_pair.second, // tangent
-                get<2>(neighbour), // normal
+                neighbour_normal, // normal
                 m_rho,
                 1.0f//weight
         );
