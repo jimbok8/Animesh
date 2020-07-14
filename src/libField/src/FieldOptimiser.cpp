@@ -466,8 +466,8 @@ float
 FieldOptimiser::mean_edge_length_for_tier(std::size_t tier_idx ) const {
     float sum = 0.0f;
     for ( auto edge : m_graphs[tier_idx]->edges()) {
-        Eigen::Vector3f v1 = edge->from_node( )->data()->point();
-        Eigen::Vector3f v2 = edge->to_node( )->data()->point();
+        Eigen::Vector3f v1 = edge.from_node( )->data()->point();
+        Eigen::Vector3f v2 = edge.to_node( )->data()->point();
         Eigen::Vector3f diff = v2 - v1;
         sum = sum + diff.norm();
     }

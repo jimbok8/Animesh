@@ -213,11 +213,18 @@ private:
     get_eligible_normals_and_tangents(const SurfelGraph & surfel_graph, const SurfelGraphNodePtr& node) const;
 
     /**
-     * Calculate error between two normal/tangent pairs.
+     * Compute the error between two tangent vectors as the square of the angle between their 4RoSy rotations.
+     *
+     * @param first First normal/tangent pair.
+     * @param first_k RoSy coefficient for first vector.
+     * @param second Second normal/tangent pair.
+     * @param second_k RoSy coefficient for second vector.
+     * @return
      */
-    static float
-    compute_error(const NormalTangent &first,
-                  const NormalTangent &second);
+    float
+    compute_error(const NormalTangent &first, int &first_k,
+                  const NormalTangent &second, int &second_k) const;
+
 
     float
     compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &surfel, size_t frame_id) const;

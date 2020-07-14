@@ -121,7 +121,6 @@ compute_coordinates_by_pif(const std::vector<std::vector<PixelInFrame>> &corresp
     return coordinates_by_pif;
 }
 
-
 void
 RoSyOptimiser::generate_surfels_for_current_level() {
     using namespace spdlog;
@@ -294,7 +293,6 @@ RoSyOptimiser::check_convergence() {
     }
 }
 
-
 /*
  * total_neighbour_error = 0
  * for each neighbour
@@ -314,12 +312,15 @@ RoSyOptimiser::compute_surfel_error_for_frame(const std::shared_ptr<Surfel> &sur
 
     const auto &bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
     int num_neighbours = 0;
+    int s_k = 0;
+    int n_k = 0;
     for (auto np = bounds.first; np != bounds.second; ++np) {
         const auto &this_neighbour_in_this_frame = m_norm_tan_by_surfel_frame.at(
                 SurfelInFrame{np->second->id, frame_id});
 
         // Compute the error between this surfel in this frame and the neighbour in this frame.
-        total_neighbour_error += compute_error(this_surfel_in_this_frame, this_neighbour_in_this_frame);
+        total_neighbour_error += compute_error(this_surfel_in_this_frame, s_k, this_neighbour_in_this_frame, n_k);
+
         ++num_neighbours;
     }
     return (num_neighbours == 0)
@@ -374,18 +375,20 @@ RoSyOptimiser::compute_mean_error_per_surfel() const {
  * Compute the error between two tangent vectors as the square of the angle between their 4RoSy rotations.
  *
  * @param first First normal/tangent pair.
+ * @param first_k RoSy coefficient for first vector.
  * @param second Second normal/tangent pair.
+ * @param second_k RoSy coefficient for second vector.
  * @return
  */
 float
-RoSyOptimiser::compute_error(const NormalTangent &first,
-                             const NormalTangent &second) {
+RoSyOptimiser::compute_error(const NormalTangent &first, int &first_k,
+                             const NormalTangent &second, int &second_k) const {
     using namespace std;
     using namespace Eigen;
 
     // parameter order in RoSy is tangent, normal
-    auto best_pair = best_rosy_vector_pair(first.tangent, first.normal, second.tangent,
-                                           second.normal);
+    auto best_pair = best_rosy_vector_pair(first.tangent, first.normal, first_k,
+                                           second.tangent, second.normal, second_k);
     float theta = degrees_angle_between_vectors(best_pair.first, best_pair.second);
     return (theta * theta);
 }
