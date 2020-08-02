@@ -164,6 +164,17 @@ void PoSyOptimiser::optimise_node(const SurfelGraphNodePtr &node) {
     optimise_surfel(node->data(), neighbouring_data);
 }
 
+/**
+ * Compute the distortion of the u,v field between one surfel and another.
+ *
+ * @param normal1
+ * @param tangent1
+ * @param position1
+ * @param normal2
+ * @param tangent2
+ * @param position2
+ * @return
+ */
 float
 PoSyOptimiser::compute_smoothness(
         const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,

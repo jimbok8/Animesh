@@ -450,13 +450,6 @@ RoSyOptimiser::select_nodes_to_optimise() {
 }
 
 
-void
-RoSyOptimiser::optimise_node(const SurfelGraphNodePtr &node) {
-    // Get vector of eligible normal/tangent pairs
-    auto neighbouring_normals_and_tangents = get_eligible_normals_and_tangents(m_surfel_graph, node);
-    optimise_surfel(node->data(), neighbouring_normals_and_tangents);
-}
-
 /**
  * Perform a single step of optimisation.
  */
@@ -498,36 +491,20 @@ RoSyOptimiser::optimise_do_one_step() {
     return false;
 }
 
-/**
- * Return a vector of pairs of FrameData for each frame that these surfels have in common
- */
-std::vector<std::pair<std::reference_wrapper<const FrameData>, std::reference_wrapper<const FrameData>>>
-find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2) {
+std::vector<std::pair<FrameData, FrameData>>
+find_common_frame_data(const std::vector<FrameData>& f1, const std::vector<FrameData>& f2) {
     using namespace std;
 
-    vector<reference_wrapper<const FrameData>> surfel1_frames;
-    vector<reference_wrapper<const FrameData>> surfel2_frames;
-    for (const auto &f : surfel1->frame_data) {
-        surfel1_frames.emplace_back(f);
-    }
-    for (const auto &f : surfel2->frame_data) {
-        surfel2_frames.emplace_back(f);
-    }
-    sort(surfel1_frames.begin(), surfel1_frames.end(),
-         [](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; });
-    sort(surfel2_frames.begin(), surfel2_frames.end(),
-         [](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; });
-
-    vector<pair<reference_wrapper<const FrameData>, reference_wrapper<const FrameData>>> common_frames;
-    auto it1 = surfel1->frame_data.begin();
-    auto it2 = surfel2->frame_data.begin();
-    while (it1 != surfel1->frame_data.end() && it2 != surfel2->frame_data.end()) {
+    vector<pair<FrameData, FrameData>> common_frames;
+    auto it1 = begin(f1);
+    auto it2 = begin(f2);
+    while (it1 != end(f1) && it2 != end(f2)) {
         if (it1->pixel_in_frame.frame < it2->pixel_in_frame.frame) {
             ++it1;
         } else if (it2->pixel_in_frame.frame < it1->pixel_in_frame.frame) {
             ++it2;
         } else {
-            common_frames.emplace_back(ref(*it1), ref(*it2));
+            common_frames.emplace_back(*it1, *it2);
             ++it1;
             ++it2;
         }
@@ -536,78 +513,134 @@ find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std
 }
 
 /**
- * Populate tangents and normals with all eligible tangents, normals from surfel's neighbours
- * tan/norm is eligible iff the neighbour and surfel share a common frame
- * tan/norm are converted to the orignating surfel's frame of reference.
+ * Return a vector of pairs of FrameData for each frame that these surfels have in common
+ */
+std::vector<std::pair<FrameData, FrameData>>
+find_common_frames_for_surfels(const std::shared_ptr<Surfel> &surfel1, const std::shared_ptr<Surfel> &surfel2) {
+    using namespace std;
+
+    const auto func =[](const FrameData &f1, const FrameData &f2) { return f1.pixel_in_frame.frame < f2.pixel_in_frame.frame; };
+    sort(begin(surfel1->frame_data), end(surfel1->frame_data),func);
+    sort(begin(surfel2->frame_data), end(surfel2->frame_data), func);
+
+    return find_common_frame_data(surfel1->frame_data, surfel2->frame_data);
+}
+
+/**
+ * Return a vector of pairs of FrameData for each frame that these surfels have in common
+ */
+std::vector<std::pair<FrameData, FrameData>>
+find_common_frames_for_nodes(const SurfelGraphNodePtr& node1, const SurfelGraphNodePtr& node2) {
+    using namespace std;
+
+    return find_common_frames_for_surfels(node1->data(), node2->data());
+}
+
+/**
+ * Given a list of frame pairs and a pair of nodes, populate norms and tans for each frame
  */
 std::vector<NormalTangent>
-RoSyOptimiser::get_eligible_normals_and_tangents(const SurfelGraph &surfel_graph,
-                                                 const SurfelGraphNodePtr &node) const {
+norm_tans_for_frames(const SurfelGraphNodePtr &node1,
+                     const SurfelGraphNodePtr &node2,
+                     const std::vector<std::pair<FrameData, FrameData>> &common_frames) {
     using namespace std;
     using namespace Eigen;
 
-    vector<NormalTangent> eligible_normals_and_tangents;
+    vector<NormalTangent> norm_tans;
 
     // For each neighbour
-    int total_common_frames = 0;
+    const auto &this_surfel_ptr = node1->data();
+    const auto &that_surfel_ptr = node2->data();
+
+    // For each common frame, get normal and tangent in surfel space
+    for (auto const &frame_pair : common_frames) {
+        const auto& surfel_to_frame = frame_pair.first.transform;
+        const auto frame_to_surfel = surfel_to_frame.transpose();
+        const auto& neighbour_to_frame = frame_pair.second.transform;
+        const auto& neighbour_normal_in_frame = frame_pair.second.normal;
+
+        // Push the neighbour normal and tangent into the right frame
+        // Transform the frame tangent back to the surfel space using inv. surfel matrix
+        // So we need:
+        //    transform from free space to frame space for tangent (stored) (we already have normal in frame space)
+        //	  transform from frame space to free space using surfel data. (inv of stored)
+        auto neighbour_to_surfel = frame_to_surfel * neighbour_to_frame;
+        auto neighbour_tan_in_surfel_space = neighbour_to_surfel * that_surfel_ptr->tangent;
+        auto neighbour_norm_in_surfel_space = frame_to_surfel * neighbour_normal_in_frame;
+
+        norm_tans.emplace_back(neighbour_norm_in_surfel_space, neighbour_tan_in_surfel_space);
+    }
+    return norm_tans;
+}
+
+void
+RoSyOptimiser::optimise_node(const SurfelGraphNodePtr &node) {
+    using namespace Eigen;
+
+//    3. For each neighbour (in graph)
+//    4.     Find common frames
+//    5.     Compute norm tans
+//    6.     Smooth (returning k values)
+//    7.     Update edge with k values.
+
     const auto &this_surfel_ptr = node->data();
-    for (const auto &surfel_ptr_neighbour : surfel_graph.neighbours(node)) {
-        const auto that_surfel_ptr = surfel_ptr_neighbour->data();
-        auto common_frames = find_common_frames_for_surfels(this_surfel_ptr, that_surfel_ptr);
-        total_common_frames += common_frames.size();
+    const auto & old_tangent = this_surfel_ptr->tangent;
 
-        // For each common frame, get normal and tangent in surfel space
-        for (auto const &frame_pair : common_frames) {
-            auto surfel_to_frame = frame_pair.first.get().transform;
-            auto frame_to_surfel = surfel_to_frame.transpose();
-            auto neighbour_to_frame = frame_pair.second.get().transform;
-            auto neighbour_normal_in_frame = frame_pair.second.get().normal;
+    Vector3f new_tangent{old_tangent};
+    float weight = 0;
 
-            // Push the neighbour normal and tangent into the right frame
-            // Transform the frame tangent back to the surfel space using inv. surfel matrix
-            // So we need:
-            //    transform from free space to frame space for tangent (stored) (we already have normal in frame space)
-            //	  transform from frame space to free space using surfel data. (inv of stored)
+    for( const auto& neighbour : m_surfel_graph.neighbours(node)) {
+        const auto &that_surfel_ptr = neighbour->data();
+        auto& edge = m_surfel_graph.edge(node, neighbour);
+        float edge_weight = 1.0f;
+
+        const auto common_frames = find_common_frames_for_nodes(node, neighbour);
+        // Smooth over all frames
+        for (const auto frame_pair : common_frames) {
+            auto frame_idx = frame_pair.first.pixel_in_frame.frame;
+            assert( frame_pair.second.pixel_in_frame.frame == frame_idx);
+
+            int source_k;
+            int target_k;
+
+            // Compute the norm tan for this neighbour wrt this frame pair
+            const auto& surfel_to_frame = frame_pair.first.transform;
+            const auto frame_to_surfel = surfel_to_frame.transpose();
+            const auto& neighbour_to_frame = frame_pair.second.transform;
+            const auto& neighbour_normal_in_frame = frame_pair.second.normal;
             auto neighbour_to_surfel = frame_to_surfel * neighbour_to_frame;
             auto neighbour_tan_in_surfel_space = neighbour_to_surfel * that_surfel_ptr->tangent;
             auto neighbour_norm_in_surfel_space = frame_to_surfel * neighbour_normal_in_frame;
 
-            eligible_normals_and_tangents.emplace_back(neighbour_norm_in_surfel_space, neighbour_tan_in_surfel_space);
+            new_tangent = average_rosy_vectors(
+                    new_tangent,
+                    Vector3f::UnitY(),
+                    weight,
+                    neighbour_tan_in_surfel_space,
+                    neighbour_norm_in_surfel_space,
+                    edge_weight,
+                    target_k,
+                    source_k);
+
+            weight += edge_weight;
+
+            // Store ks
+            if( edge->k_ij.size() < frame_idx+1) {
+                edge->k_ij.resize(frame_idx+1);
+            }
+            edge->k_ij.at(frame_idx) = target_k;
+            if( edge->k_ji.size() < frame_idx+1) {
+                edge->k_ji.resize(frame_idx+1);
+            }
+            edge->k_ji.at(frame_idx) = source_k;
         }
     }
-    return eligible_normals_and_tangents;
-}
 
-/*
-  for each neighbouring surfel N of S
-    find any frame f in which both N and S are visible
-    obtain MfS the transformation matrix from frame f for S
-    obtain dirNS from MfS * dirN
-    perform 4RoSy smoothing operation on dirS and dirNS
-  end
- */
-void
-RoSyOptimiser::optimise_surfel(const std::shared_ptr<Surfel> &surfel_ptr,
-                               const std::vector<NormalTangent> &neighbouring_normals_and_tangents) {
-    using namespace std;
-    using namespace Eigen;
-
-    // Merge all neighbours; implicitly using optimising tier tangents
-    auto old_tangent = surfel_ptr->tangent;
-    Vector3f new_tangent{old_tangent};
-
-    float weight = 0;
-    for (const auto &nt : neighbouring_normals_and_tangents) {
-        float edge_weight = 1.0f;
-        new_tangent = average_rosy_vectors(new_tangent, Vector3f::UnitY(), weight, nt.tangent, nt.normal,
-                                           edge_weight);
-        weight += edge_weight;
-    }
-
-    surfel_ptr->tangent = new_tangent;
+    node->data()->tangent = new_tangent;
     auto vec_pair = best_rosy_vector_pair(new_tangent, Vector3f::UnitY(), old_tangent, Vector3f::UnitY());
-    surfel_ptr->last_correction = fmod(degrees_angle_between_vectors(vec_pair.first, vec_pair.second), 90.0f);
+    node->data()->last_correction = fmod(degrees_angle_between_vectors(vec_pair.first, vec_pair.second), 90.0f);
 }
+
 
 /**
  * Build the norm_tan_by_surfel_frame data structure for this level of the

@@ -6,14 +6,14 @@
 
 struct SurfelGraphEdge {
     float weight;
-    int rosy_ij;
-    int rosy_ji;
+    std::vector<std::pair<unsigned short, unsigned short>> rosy_ij;
+    // Best RoSy angles
+    std::vector<unsigned short> k_ij;
+    std::vector<unsigned short> k_ji;
     Eigen::Vector2i posy_tij;
     Eigen::Vector2i posy_tji;
     SurfelGraphEdge( float weight ) :
             weight{weight},
-            rosy_ij{0},
-            rosy_ji{0},
             posy_tij{Eigen::Vector2i::Zero()},
             posy_tji{Eigen::Vector2i::Zero()}
     {}

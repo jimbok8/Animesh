@@ -188,12 +188,6 @@ private:
     optimise_node(const SurfelGraphNodePtr& node );
 
     /**
-     * Optimise a single Surfel
-     */
-    static void optimise_surfel(const std::shared_ptr<Surfel>& surfel_ptr,
-                         const std::vector<NormalTangent>& neighbouring_normals_and_tangents);
-
-    /**
      * Measure the change in error. If it's below some threshold, consider this level converged.
      */
     void check_convergence();
@@ -208,9 +202,6 @@ private:
      * if this was level 0.
      */
     void optimise_end_level();
-
-    std::vector<NormalTangent>
-    get_eligible_normals_and_tangents(const SurfelGraph & surfel_graph, const SurfelGraphNodePtr& node) const;
 
     /**
      * Compute the error between two tangent vectors as the square of the angle between their 4RoSy rotations.

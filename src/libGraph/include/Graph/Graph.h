@@ -237,6 +237,15 @@ namespace animesh {
         }
 
         /**
+         * Return the edge from from_nbode to to_node
+         */
+         std::shared_ptr<EdgeData>&
+                 edge(const std::shared_ptr<GraphNode>& from_node,
+                 const std::shared_ptr<GraphNode>& to_node) {
+             return m_edges.at(std::make_pair(from_node, to_node));
+         }
+
+        /**
         * @return the number of edges in this graph
         */
         size_t num_edges() const {
