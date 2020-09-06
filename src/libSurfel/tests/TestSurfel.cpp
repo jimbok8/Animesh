@@ -20,12 +20,12 @@ void TestSurfelIO::SetUp() {
     const auto s1 = make_shared<Surfel>("a",
                                         std::vector<FrameData>{},
                                         Eigen::Vector3f{1.0f, 2.0f, 3.0f},
-                                        Eigen::Vector3f{1.5f, 2.5f, 3.5f}
+                                        Eigen::Vector2f{1.5f, 2.5f}
     );
     const auto s2 = make_shared<Surfel>("b",
                                         std::vector<FrameData>{},
                                         Eigen::Vector3f{5.0f, 6.0f, 7.0f},
-                                        Eigen::Vector3f{5.5f, 6.5f, 7.5f}
+                                        Eigen::Vector2f{5.5f, 6.5f}
     );
     const auto &sn1 = surfel_graph.add_node(s1);
     const auto &sn2 = surfel_graph.add_node(s2);
