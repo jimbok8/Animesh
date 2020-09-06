@@ -27,11 +27,11 @@ std::shared_ptr<Surfel> Surfel::surfel_for_id(const std::string& id) {
 Surfel::Surfel(std::string id,
                const std::vector<FrameData> &frames,
                Eigen::Vector3f tangent,
-               Eigen::Vector3f closest_mesh_vertex_position
+               Eigen::Vector2f closest_mesh_vertex_offset
                ) :
         id{std::move(id)},
         tangent{std::move(tangent)},
-        closest_mesh_vertex_position{std::move(closest_mesh_vertex_position)},
+        closest_mesh_vertex_offset{std::move(closest_mesh_vertex_offset)},
         last_correction{0.0f},
         error{0.0},
         posy_smoothness{0.0f} {

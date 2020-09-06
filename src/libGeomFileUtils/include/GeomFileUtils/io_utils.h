@@ -31,6 +31,12 @@ write_size_t( std::ofstream& file, size_t value );
 void
 write_vector_3f( std::ofstream& file, const Eigen::Vector3f& vector );
 
+/*
+ * Write a vector
+ */
+void
+write_vector_2f( std::ofstream& file, const Eigen::Vector2f& vector );
+
 unsigned int
 read_unsigned_int( std::ifstream& file );
 
@@ -40,6 +46,9 @@ read_size_t( std::ifstream& file );
 float
 read_float( std::ifstream& file );
 
+
+Eigen::Vector2f
+read_vector_2f( std::ifstream& file );
 
 Eigen::Vector3f
 read_vector_3f( std::ifstream& file );

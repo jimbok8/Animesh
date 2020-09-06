@@ -277,9 +277,6 @@ AbstractOptimiser::compute_surfel_smoothness_for_frame(const std::shared_ptr<Sur
     const SurfelInFrame surfel_in_frame{surfel_ptr, frame_id};
     const auto &surfel_orientation_in_frame = m_norm_tan_by_surfel_frame.at(surfel_in_frame);
     const auto &surfel_frame_data = frame_data_for_surfel_in_frame(surfel_in_frame);
-    const auto &surfel_to_frame = surfel_frame_data.transform;
-    const auto surfel_pos_in_frame = (surfel_to_frame * surfel_ptr->closest_mesh_vertex_position) +
-                                     surfel_frame_data.position;
 
     const auto &bounds = m_neighbours_by_surfel_frame.equal_range(surfel_in_frame);
     unsigned int num_neighbours = 0;
@@ -288,21 +285,19 @@ AbstractOptimiser::compute_surfel_smoothness_for_frame(const std::shared_ptr<Sur
         const SurfelInFrame neighbour_in_frame{neighbour_ptr, frame_id};
         const auto &neighbour_orientation_in_frame = m_norm_tan_by_surfel_frame.at(neighbour_in_frame);
         const auto &neighbour_frame_data = frame_data_for_surfel_in_frame(neighbour_in_frame);
-        const auto &neighbour_to_frame = neighbour_frame_data.transform;
-        const auto neighbour_pos_in_frame = (neighbour_to_frame * neighbour_ptr->closest_mesh_vertex_position) +
-                                         neighbour_frame_data.position;
 
         // Compute the smoothness over this surfel in this frame and the neighbour in this frame.
         total_smoothness += compute_smoothness(
-                // This surfels norm, tan, pos
-                surfel_orientation_in_frame.normal,
+                surfel_frame_data.position,
                 surfel_orientation_in_frame.tangent,
-                surfel_pos_in_frame,
+                surfel_orientation_in_frame.normal,
+                surfel_ptr->closest_mesh_vertex_offset,
 
                 // Neighbours norm tan pos in surfel frame of reference
-                neighbour_orientation_in_frame.normal,
+                neighbour_frame_data.position,
                 neighbour_orientation_in_frame.tangent,
-                neighbour_pos_in_frame);
+                neighbour_orientation_in_frame.normal,
+                neighbour_ptr->closest_mesh_vertex_offset);
         ++num_neighbours;
     }
     return (num_neighbours == 0)

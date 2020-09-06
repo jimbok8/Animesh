@@ -128,10 +128,11 @@ private:
      * Return true if the given Surfel is in the specified frame.
      */
     bool
-    surfel_is_in_frame(const std::shared_ptr<Surfel> & surfel_ptr, size_t frame_index) const;
+    surfel_is_in_frame(const std::shared_ptr<Surfel> &surfel_ptr, size_t frame_index) const;
 
-    FrameData frame_data_for_surfel_in_frame(const std::shared_ptr<Surfel>& surfel_ptr, unsigned int frame_index  ) const;
-    FrameData frame_data_for_surfel_in_frame(const SurfelInFrame& sif ) const;
+    FrameData frame_data_for_surfel_in_frame(const std::shared_ptr<Surfel> &surfel_ptr, unsigned int frame_index) const;
+
+    FrameData frame_data_for_surfel_in_frame(const SurfelInFrame &sif) const;
 
 
     void check_convergence();
@@ -163,9 +164,14 @@ private:
     virtual void optimise_node(const SurfelGraphNodePtr &node) = 0;
 
     virtual float
-    compute_smoothness(const Eigen::Vector3f &normal1, const Eigen::Vector3f &tangent1, const Eigen::Vector3f &position1,
-                       const Eigen::Vector3f &normal2, const Eigen::Vector3f &tangent2,
-                       const Eigen::Vector3f &position2) const = 0;
+    compute_smoothness(const Eigen::Vector3f &position1,
+                       const Eigen::Vector3f &tangent1,
+                       const Eigen::Vector3f &normal1,
+                       const Eigen::Vector2f &uv1,
+                       const Eigen::Vector3f &position2,
+                       const Eigen::Vector3f &tangent2,
+                       const Eigen::Vector3f &normal2,
+                       const Eigen::Vector2f &uv2) const = 0;
 };
 
 

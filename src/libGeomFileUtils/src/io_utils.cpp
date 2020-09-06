@@ -40,6 +40,15 @@ write_vector_3f( std::ofstream& file, const Eigen::Vector3f& vector ) {
     write_float(file, vector.z());
 }
 
+/*
+ * Write a vector
+ */
+void
+write_vector_2f( std::ofstream& file, const Eigen::Vector2f& vector ) {
+    write_float(file, vector.x());
+    write_float(file, vector.y());
+}
+
 unsigned int
 read_unsigned_int( std::ifstream& file ) {
     unsigned int i;
@@ -78,6 +87,14 @@ read_float( std::ifstream& file ) {
     return value;
 }
 
+
+Eigen::Vector2f
+read_vector_2f( std::ifstream& file ) {
+    float x, y;
+    file.read( (char *)&x, sizeof(float) );
+    file.read( (char *)&y, sizeof(float) );
+    return Eigen::Vector2f{x, y};
+}
 
 Eigen::Vector3f
 read_vector_3f( std::ifstream& file ) {

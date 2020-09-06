@@ -13,6 +13,7 @@ set(PROJECT_VERSION 0.1)
 
 # Tell cmake where to find modules
 set(CMAKE_MODULE_PATH "/Users/dave/Animesh/src/cmake_modules")
+#set (CMAKE_PREFIX_PATH "/usr/local/Cellar/pcl/1.9.1_9.reinstall/share/pcl-1.9")
 
 # Write targets to bin directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../bin)

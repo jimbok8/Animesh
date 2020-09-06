@@ -253,7 +253,7 @@ generate_surfel(const std::vector<PixelInFrame> &corresponding_pifs,
             generate_uuid(),
             populate_frame_data(corresponding_pifs, depth_maps_by_frame, coordinates_by_pif),
             Eigen::Vector3f::Zero(),
-            Eigen::Vector3f::Zero());
+            Eigen::Vector2f::Zero());
 }
 
 

@@ -16,7 +16,7 @@ struct Surfel {
     Surfel(std::string id,
            const std::vector<FrameData> &frames,
            Eigen::Vector3f tangent,
-           Eigen::Vector3f closest_mesh_vertex_position
+           Eigen::Vector2f closest_mesh_vertex_offset
     );
 
     static std::map<std::string, std::shared_ptr<Surfel>> surfel_by_id;
@@ -26,8 +26,8 @@ struct Surfel {
     std::string id;
     std::vector<FrameData> frame_data;
     Eigen::Vector3f tangent;
-    // Relative position of representation lattice intersection [0,1)
-    Eigen::Vector3f closest_mesh_vertex_position;
+    // Relative position of representation lattice intersection [0,1) in trangent plane
+    Eigen::Vector2f closest_mesh_vertex_offset;
     float last_correction;
     float error;
     float posy_smoothness;
