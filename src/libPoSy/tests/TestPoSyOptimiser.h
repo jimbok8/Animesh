@@ -7,11 +7,13 @@
 
 
 #include <gtest/gtest.h>
+#include <Properties/Properties.h>
 
 class TestPoSyOptimiser : public ::testing::Test {
 public:
     void SetUp( );
     void TearDown();
+    Properties m_properties;
 };
 
 

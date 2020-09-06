@@ -31,8 +31,8 @@ TEST_F(TestPoSy, ComputeLatticeXZ) {
 
     const auto vertices = compute_local_lattice_vertices(
             Vector3f{0.0, 0.0, 0.0},
-            Vector3f{0.0, 1.0, 0.0},
             Vector3f{1.0, 0.0, 0.0},
+            Vector3f{0.0, 0.0, -1.0},
             1.5f);
 
     expect_vector_equality(vertices.at(0), Vector3f{0.0, 0.0, 0.0});
@@ -51,8 +51,8 @@ TEST_F(TestPoSy, ComputeLatticeYZ) {
 
     const auto vertices = compute_local_lattice_vertices(
             Vector3f{0.0, 1.0, 1.0},
-            Vector3f{1.0, 0.0, 0.0},
             Vector3f{0.0, 0.0, 1.0},
+            Vector3f{0.0, -1.0, 0.0},
             2.0f);
 
     expect_vector_equality(vertices.at(0), Vector3f{0.0, 1.0, 1.0});
@@ -71,8 +71,8 @@ TEST_F(TestPoSy, ComputeLatticeXY) {
 
     const auto vertices = compute_local_lattice_vertices(
             Vector3f{-1.0, -2.0, 0.0},
-            Vector3f{0.0, 0.0, 1.0},
             Vector3f{1.0, 0.0, 0.0},
+            Vector3f{0.0, 1.0, 0.0},
             2.5f);
 
     expect_vector_equality(vertices.at(0), Vector3f{-1.0, -2.0, 0.0});

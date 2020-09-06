@@ -5,8 +5,19 @@
 #include <PoSy/PoSyOptimiser.h>
 #include "TestPoSyOptimiser.h"
 #include <memory>
+#include <map>
 
-void TestPoSyOptimiser::SetUp( ) {}
+void TestPoSyOptimiser::SetUp( ) {
+    using namespace std;
+
+    m_properties = Properties{
+            map<string, string> {
+                    {"rho", "1.5"},
+                    {"convergence-threshold", "0.01"},
+                    {"surfel-selection-algorithm", "select-all-in-random-order"}
+            }
+    };
+}
 void TestPoSyOptimiser::TearDown( ) {}
 
 /* ********************************************************************************
@@ -15,15 +26,15 @@ void TestPoSyOptimiser::TearDown( ) {}
  * *
  * ********************************************************************************/
 TEST_F(TestPoSyOptimiser, FailsAssertionOptimisingWhenUnready) {
-    Properties p{};
-    PoSyOptimiser optimiser{p};
+    using namespace std;
+    ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+    PoSyOptimiser optimiser{m_properties};
 
     ASSERT_DEATH(optimiser.optimise_do_one_step(), "(m_state != UNINITIALISED)");
 }
 
 TEST_F(TestPoSyOptimiser, IsReadyOnceDataIsSet) {
-    Properties p{};
-    PoSyOptimiser optimiser{p};
+    PoSyOptimiser optimiser{m_properties};
     SurfelGraph g;
     optimiser.set_data(g);
 
