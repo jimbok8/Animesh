@@ -118,10 +118,6 @@ DepthMap::get_valid_directions(unsigned int x, unsigned int y, bool eightConnect
     return flags;
 }
 
-inline bool DepthMap::flag_is_set(unsigned int flags, DepthMap::tDirection flag) {
-    return ((flags & flag) == flag);
-}
-
 inline unsigned int clear_flag_if_zero(float value, unsigned int flags, DepthMap::tDirection flag) {
     if (value != 0.0f) return flags;
     return flags & (~flag);

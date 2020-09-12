@@ -6,8 +6,8 @@
 #include "DepthMap.h"
 #include <vector>
 #include <Camera/Camera.h>
-
 #include <Eigen/SVD>
+#include <Eigen/Geometry>
 
 struct PixelWithDepth {
     const unsigned int x;

@@ -1,37 +1,6 @@
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
-
-
 add_subdirectory(data_gen)
 
-# GLFW
-find_package(glfw3 3.2 REQUIRED)
-
-# GLM
-set(CMAKE_PREFIX_PATH, "/usr/local/include/glm:${CMAKE_PREFIX_PATH}")
-find_package(glm REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
-
-# OpenGL
-IF (APPLE)
-	INCLUDE_DIRECTORIES(/System/Library/Frameworks)
-	INCLUDE_DIRECTORIES(${GLM_INCLUDE_DIR})
-	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
-	FIND_LIBRARY(GLUT_LIBRARY GLUT)
-	FIND_LIBRARY(OpenGL_LIBRARY OpenGL)
-	MARK_AS_ADVANCED(COCOA_LIBRARY
-			GLUT_LIBRARY
-			OpenGL_LIBRARY)
-	SET(EXTRA_LIBS ${COCOA_LIBRARY} ${GLUT_LIBRARY} ${OpenGL_LIBRARY})
-ENDIF (APPLE)
-add_definitions(-DGL_SILENCE_DEPRECATION)
-
-# ASSIMP
-find_package(assimp REQUIRED)
-if (assimp_FOUND)
-	set(ASSIMP_LIBRARY "assimp")
-	add_library(${ASSIMP_LIBRARY} SHARED IMPORTED)
-	set_target_properties(${ASSIMP_LIBRARY} PROPERTIES IMPORTED_LOCATION "${ASSIMP_LIBRARY_DIRS}/libassimp.dylib")
-endif (assimp_FOUND)
+find_package(Cpd REQUIRED)
 
 # OBJ File Converter
 add_executable(
@@ -61,18 +30,7 @@ add_executable(
 )
 target_link_libraries(
 		dmr
-		glm
 )
-
-
-# Need FGT
-set(Fgt_DIR "${PROJECT_SOURCE_DIR}/third_party/build/fgt/lib/cmake/fgt")
-find_package(Fgt REQUIRED)
-
-# Need CPD
-set(Cpd_DIR "${PROJECT_SOURCE_DIR}/third_party/build/cpd/lib/cmake/cpd")
-find_package(Cpd REQUIRED)
-
 
 add_executable(
 		dm_to_point_cloud dm_to_point_cloud.cpp

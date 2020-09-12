@@ -8,6 +8,7 @@
 #include <tuple>
 #include <unordered_set>
 #include <spdlog/spdlog.h>
+#include <fmt/format.h>
 
 #include "Path.h"
 

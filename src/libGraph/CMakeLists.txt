@@ -34,6 +34,7 @@ target_link_libraries(
 		Graph
 		GeomFileUtils
 		gtest gmock
+		fmt
 		${CMAKE_THREAD_LIBS_INIT}
 )
 

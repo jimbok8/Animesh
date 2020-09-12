@@ -28,7 +28,7 @@ protected:
                     FrameData{test_pixel, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero(), Eigen::Vector3f::Zero()}
             },
             Eigen::Vector3f{1.0, 0.0, 0.0},
-            Eigen::Vector3f{1.0, 0.0, 0.0}
+            Eigen::Vector2f{1.0, 0.0}
     };
 
     Surfel s1_neighbour{
@@ -37,7 +37,7 @@ protected:
                     FrameData{test_pixel_up, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero(), Eigen::Vector3f::Zero()}
             },
             Eigen::Vector3f{1.0, 0.0, 0.0},
-            Eigen::Vector3f{1.0, 0.0, 0.0}
+            Eigen::Vector2f{1.0, 0.0}
     };
     Surfel s1_not_neighbour{
             "id3",
@@ -45,7 +45,7 @@ protected:
                     FrameData{test_pixel_far_away, 10.0f, Eigen::Matrix3f::Identity(), Eigen::Vector3f::Zero(), Eigen::Vector3f::Zero()}
             },
             Eigen::Vector3f{1.0, 0.0, 0.0},
-            Eigen::Vector3f{1.0, 0.0, 0.0}
+            Eigen::Vector2f{1.0, 0.0}
     };
 
 public:

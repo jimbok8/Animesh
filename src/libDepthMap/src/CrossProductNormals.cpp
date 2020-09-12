@@ -6,6 +6,7 @@
 #include "Normals.h"
 #include <Camera/Camera.h>
 #include <vector>
+#include <Eigen/Geometry>
 
 /**
  * Compute normals that have all adjacent data set in the depth map,

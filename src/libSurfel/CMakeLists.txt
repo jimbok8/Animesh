@@ -1,8 +1,3 @@
-# Need spdlog
-set(Fgt_DIR "${PROJECT_SOURCE_DIR}/third_party/build/fgt/lib/cmake/fgt")
-set(SPDLOG_ROOT "/usr/local/include/spdlog")
-find_package(spdlog REQUIRED)
-
 add_library(
 		Surfel SHARED
 		src/Surfel.cpp include/Surfel/Surfel.h
@@ -32,6 +27,7 @@ target_link_libraries(
 		GeomFileUtils
 		Graph
 		Properties
+		fmt
 )
 
 # Every library has unit tests, of course
